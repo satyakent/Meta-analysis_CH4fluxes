@@ -1,0 +1,1403 @@
+---
+title: "CH4 growth rates and fluxes meta-analysis"
+author: "Satya Kent"
+date: "2024-04-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Packages
+```{r}
+library("readxl")
+library(car)
+library(tidyverse)
+library(dunn.test)
+library(ggsignif)
+library(nlme)
+library(lme4)
+library(lmerTest)
+library(performance)
+library(scales)
+```
+
+Growth rate data: boxplots
+```{r}
+
+#read in raw data
+
+microbe_growthrates=read_excel("growth_rate_meta-analysis.xlsx", range = cell_cols(1:5))
+
+
+# Specify the order of x-axis categories
+desired_order <- c("Methanogens", "Aerobic methanotrophs", "Anaerobic methanotrophs")
+
+# Convert "Microbe" column to factor with desired order
+microbe_growthrates$Microbe <- factor(microbe_growthrates$Microbe, levels = desired_order)
+
+
+
+# boxplots w significance testing
+ggplot(microbe_growthrates, aes(x = Microbe, y = growth_rate, fill = Microbe)) +
+  geom_boxplot(width = 0.7, outlier.shape = 16) +
+  scale_fill_manual(values = c("lightblue", "royalblue", "mediumblue")) +
+  geom_jitter(color = "grey39", size = 1.5, alpha = 0.3) +
+  geom_text(aes(label = "n = 5", x = "Methanogens", y= 0.25), size=4) +
+  geom_text(aes(label = "n = 8", x = "Aerobic methanotrophs", y= 0.25), size=4) +
+  geom_text(aes(label = "n = 6", x = "Anaerobic methanotrophs", y= 0.5), size=4) +
+  labs(y = "Specific growth rate (day -1)") +
+  theme_minimal() +
+  theme(legend.position = "none", 
+        text = element_text(size = 14),  # Adjust size for all text elements
+        axis.text.x = element_text(size = 12)) +  # Adjust x-axis text size
+  xlab(NULL)+
+  # Add asterisks for significant differences
+  geom_signif(comparisons = list(c("Methanogens", "Anaerobic methanotrophs")), 
+              annotations = "***", y_position = 2.2, tip_length = 0.01) +
+  geom_signif(comparisons = list(c("Aerobic methanotrophs", "Anaerobic methanotrophs")), 
+              annotations = "*", y_position = 2.4, tip_length = 0.01)
+
+#violin plot
+
+ggplot(microbe_growthrates, aes(x = Microbe, y = growth_rate, fill = Microbe)) +
+  geom_violin(width = 0.7, draw_quantiles = c(0.25, 0.5, 0.75)) +  # Draw quartiles
+  scale_fill_manual(values = c("lightblue", "royalblue", "mediumblue")) +
+  geom_jitter(color = "grey39", size = 1.5, alpha = 0.3) +
+  geom_text(aes(label = "n = 5", x = "Methanogens", y= 0.25), size=4) +
+  geom_text(aes(label = "n = 6", x = "Aerobic methanotrophs", y= 0.25), size=4) +
+  geom_text(aes(label = "n = 6", x = "Anaerobic methanotrophs", y= 0.5), size=4) +
+  labs(y = "Specific growth rate (day -1)") +
+  theme_minimal() +
+  theme(legend.position = "none", 
+        text = element_text(size = 14),  # Adjust size for all text elements
+        axis.text.x = element_text(size = 12)) +  # Adjust x-axis text size
+  xlab(NULL)
+
+#violon plot w log transformed y axis
+
+ggplot(microbe_growthrates, aes(x = Microbe, y = growth_rate, fill = Microbe)) +
+  geom_violin(width = 0.7, draw_quantiles = c(0.25, 0.5, 0.75)) +  # Draw quartiles
+  scale_fill_manual(values = c("lightblue", "royalblue", "mediumblue")) +
+  geom_jitter(color = "grey39", size = 1.5, alpha = 0.3) +
+  geom_text(aes(label = "n = 5", x = "Methanogens", y= 0.25), size=4) +
+  geom_text(aes(label = "n = 6", x = "Aerobic methanotrophs", y= 0.25), size=4) +
+  geom_text(aes(label = "n = 6", x = "Anaerobic methanotrophs", y= 0.5), size=4) +
+  labs(y = "Specific growth rate (day ^-1)") +
+  scale_y_continuous(trans = "log10") +  # Set log scale for y-axis
+  theme_minimal() +
+  theme(legend.position = "none", 
+        text = element_text(size = 14),  # Adjust size for all text elements
+        axis.text.x = element_text(size = 12)) +  # Adjust x-axis text size
+  xlab(NULL)
+
+# boxplots w log transformed y axis
+
+# Plot using ggplot
+ggplot(microbe_growthrates, aes(x = Microbe, y = growth_rate, fill = Microbe)) +
+  geom_boxplot(width = 0.7, outlier.shape = 16) +
+  scale_fill_manual(values = c("lightblue", "royalblue", "mediumblue")) +
+  geom_jitter(color = "grey39", size = 1.5, alpha = 0.3) +
+  scale_y_continuous(trans = 'log10')+
+  #geom_text(aes(label = "n = 5", x = "Methanogens", y= 0.25), size=4) +
+  #geom_text(aes(label = "n = 6", x = "Aerobic methanotrophs", y= 0.25), size=4) +
+  #geom_text(aes(label = "n = 6", x = "Anaerobic methanotrophs", y= 0.5), size=4) +
+  labs(y = "Specific growth rate (day ^-1)") +
+  theme_minimal() +
+  theme(legend.position = "none", 
+        text = element_text(size = 14),  # Adjust size for all text elements
+        axis.text.x = element_text(size = 12)) +  # Adjust x-axis text size
+  xlab(NULL)
+
+```
+
+Growth rate data: data exploration. Histograms, qq-plots, Levene's test, Kruskal-Wallis
+```{r}
+#normality. Data pass tests of normality but do not contain homogeneity of variance. 
+
+# methanogens
+ggplot(data = subset(microbe_growthrates, Microbe == "Methanogens"), aes(x = growth_rate)) +
+  geom_histogram(fill = "skyblue", color = "black") +
+  labs(x = "Specific growth rate (day ^-1)", y = "Frequency") +
+  theme_minimal()
+
+ggplot(data = subset(microbe_growthrates, Microbe == "Aerobic methanotrophs"), aes(x = growth_rate)) +
+  geom_histogram(fill = "skyblue", color = "black") +
+  labs(x = "Specific growth rate (day ^-1)", y = "Frequency") +
+  theme_minimal()
+
+ggplot(data = subset(microbe_growthrates, Microbe == "Anaerobic methanotrophs"), aes(x = growth_rate)) +
+  geom_histogram(fill = "skyblue", color = "black") +
+  labs(x = "Specific growth rate (day ^-1)", y = "Frequency") +
+  theme_minimal()
+
+#mgen
+ggplot(subset(microbe_growthrates, Microbe == "Anaerobic methanotrophs"), aes(sample = growth_rate)) +
+  geom_qq() +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(x = "Theoretical quantiles", y = "Sample quantiles") +
+  theme_minimal()
+
+
+#Shapiro-Wilks test:
+by(microbe_growthrates$growth_rate, microbe_growthrates$Microbe, shapiro.test)
+
+#Homogeneity of variance
+#Levene's test
+leveneTest(growth_rate ~ Microbe, data = microbe_growthrates)
+
+
+#Kruskal-Wallis Test with post-hoc Dunn test.
+
+# There was a statistically significant difference in growth rate between the different microbial functional groups (χ2(5)=14.05, p = 0). Significant differences were observed between AMO and ANME, (Z = 2.51, adjusted p = 0.02) and between mgen and ANME (Z = -9.51, adjusted p = 0.0004).
+
+kruskal.test(growth_rate ~ Microbe, data = microbe_growthrates)
+dunn.test(microbe_growthrates$growth_rate, microbe_growthrates$Microbe, method = "bonferroni")
+
+
+```
+
+Flux rate data: boxplots, counts 
+```{r}
+## Data exploration
+#Outliers: 11 out of 215 total points.
+#homogeneity: looks good for mgenesis, AMO, but heterogeneous for ANME. Levene's test reveals that the variances across these groups are not equal. This only relevant for modeling all 3 together which I won't be doing.
+# Normality: data non-normal and left skewed for all 3 pathways. Deviates from line on qqplots and fails the shapiro-wilkes test.
+
+flux_rates=read_csv("flux_rates_meta-analysis.csv")
+
+# Specify the order of x-axis categories
+desired_order2 <- c("Methanogenesis", "Aerobic methane oxidation", "Anaerobic methane oxidation")
+
+# Convert "Pathway" column to factor with desired order
+flux_rates$Pathway <- factor(flux_rates$Pathway, levels = desired_order2)
+
+#count how many papers, unique sites, and unique measurements for each pathway to label on boxplots
+library(dplyr)
+
+#unique measurements:
+
+flux_rates %>%
+  filter(Pathway %in% c("Methanogenesis", "Aerobic methane oxidation", "Anaerobic methane oxidation")) %>%
+  group_by(Pathway) %>%
+  summarise(row_count = n())
+
+# unique sites
+
+flux_rates %>%
+  filter(Pathway %in% c("Methanogenesis", "Aerobic methane oxidation", "Anaerobic methane oxidation")) %>%
+  group_by(Pathway) %>%
+  summarise(unique_sites = n_distinct(Site))
+
+#unique studies
+
+flux_rates %>%
+  filter(Pathway %in% c("Methanogenesis", "Aerobic methane oxidation", "Anaerobic methane oxidation")) %>%
+  group_by(Pathway) %>%
+  summarise(unique_studies = n_distinct(Study))
+
+
+#create filtered dataframe with all the environmental variables I care about.
+flux_rates_filtered <- flux_rates[, c("Pathway", "Mean_rate", "Wetland_type", "Inc_temp", "Inc_length_days","Depth_representative", "Salinity_ppt", "Salinity_cat", "dom_veg", "method","subpathway")]
+
+#boxplots
+
+#flux rate boxplot w significance testing 
+ggplot(flux_rates, aes(x = Pathway, y = Mean_rate, fill = Pathway)) +
+  geom_boxplot(width = 0.7, outlier.shape = 16) +
+  scale_fill_manual(values = c("lightblue", "royalblue", "mediumblue")) +
+  geom_jitter(color = "grey39", size = 1.5, alpha = 0.3) +
+  geom_text(aes(label = "n = 93", x = "Methanogenesis", y= 13), size=4) +
+  geom_text(aes(label = "n = 23", x = "Aerobic methane oxidation", y= 13), size=4) +
+  geom_text(aes(label = "n = 99", x = "Anaerobic methane oxidation", y= 13), size=4) +
+  labs(y = "Rate (umol CH4/g dw/day)") +
+  theme_minimal() +
+  theme(legend.position = "none", 
+        text = element_text(size = 14),  # Adjust size for all text elements
+        axis.text.x = element_text(size = 12)) +  # Adjust x-axis text size
+  xlab(NULL) +
+  # Add asterisks for significant differences
+  geom_signif(comparisons = list(c("Methanogenesis", "Anaerobic methane oxidation")), 
+              annotations = "***", y_position = 15, tip_length = 0.01) +
+  geom_signif(comparisons = list(c("Aerobic methane oxidation", "Anaerobic methane oxidation")), 
+              annotations = "***", y_position = 16, tip_length = 0.01)
+
+#violin plot
+ggplot(flux_rates, aes(x = Pathway, y = Mean_rate, fill = Pathway)) +
+  geom_violin(trim = FALSE, scale = "width") +  # Adjust scale to "width"
+  geom_jitter(color = "grey39", size = 1.5, alpha = 0.3) +
+  labs(y = "Rate (umol CH4/g dw/day)") +
+  scale_fill_manual(values = c("lightblue", "royalblue", "mediumblue")) +
+  theme_minimal() +
+  theme(legend.position = "none", 
+        text = element_text(size = 14),  # Adjust size for all text elements
+        axis.text.x = element_text(size = 12)) +  # Adjust x-axis text size
+  xlab(NULL)
+  
+# boxplots.  Log transformed y axis. 
+log10rate=ggplot(flux_rates, aes(x = Pathway, y = Mean_rate, fill = Pathway)) +
+  geom_boxplot(width = 0.7, outlier.shape = NA) +  # Remove outlier highlighting
+  scale_fill_manual(values = c("lightblue", "royalblue", "mediumblue")) +
+  geom_jitter(color = "grey39", size = 1.5, alpha = 0.3) +
+  geom_text(aes(label = "n = 93", x = "Methanogenesis", y= 27), size=4) +
+  geom_text(aes(label = "n = 23", x = "Aerobic methane oxidation", y= 27), size=4) +
+  geom_text(aes(label = "n = 99", x = "Anaerobic methane oxidation", y= 27), size=4) +
+  labs(y = expression(paste("Rate (", mu, "mol CH"[4], "/g/day)"))) +
+  scale_y_log10(breaks = c(1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100),  # Set custom breaks
+                labels = c("0.00001", "0.0001", "0.001", "0.01", "0.1", "1", "10", "100")) +  # Set corresponding labels
+  annotation_logticks(sides="l")+
+
+  geom_signif(comparisons = list(c("Methanogenesis", "Anaerobic methane oxidation")), 
+              annotations = "***", y_position = 1.5, tip_length = 0.01) +
+  geom_signif(comparisons = list(c("Aerobic methane oxidation", "Anaerobic methane oxidation")), 
+              annotations = "***", y_position = 2, tip_length = 0.01) +
+  theme_minimal() +
+  theme(legend.position = "none", 
+        text = element_text(size = 14),  # Adjust size for all text elements
+        axis.text.x = element_text(size = 12)) +  # Adjust x-axis text size
+  xlab(NULL)
+
+
+```
+
+Flux rate data: data exploration. Histograms, qq-plots, Levene's test, Kruskal-Wallis
+```{r}
+#normality. My data is non-normal, right-skewed and does not contain homogeneity of variance. Must use non-parametric significance testing and modeling.
+
+#histograms
+
+# methanogenesis
+ggplot(data = subset(flux_rates, Pathway == "Methanogenesis"), aes(x = Mean_rate)) +
+  geom_histogram(binwidth = 0.75,fill = "skyblue", color = "black") +
+  labs(x = "Rate (umol CH4/g dw/day)", y = "Frequency") +
+  theme_minimal()+
+  ggtitle("Methanogenesis")
+
+#aerobic methane oxidation
+ggplot(data = subset(flux_rates, Pathway == "Aerobic methane oxidation"), aes(x = Mean_rate)) +
+  geom_histogram(binwidth = 0.75,fill = "skyblue", color = "black") +
+  labs(x = "Rate (umol CH4/g dw/day)", y = "Frequency") +
+  theme_minimal()+
+  ggtitle("Aerobic methane oxidation")
+
+#Anaerobic methane oxidation
+ggplot(data = subset(flux_rates, Pathway == "Anaerobic methane oxidation"), aes(x = Mean_rate)) +
+  geom_histogram(binwidth = 0.05, fill = "skyblue", color = "black") +
+  labs(x = "Rate (umol CH4/g dw/day)", y = "Frequency") +
+  theme_minimal()+
+  ggtitle("Anaerobic methane oxidation")
+
+##qqplots
+
+#mgen
+ggplot(subset(flux_rates, Pathway == "Methanogenesis"), aes(sample = Mean_rate)) +
+  geom_qq() +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(x = "Theoretical quantiles", y = "Sample quantiles", title = "QQ Plot for Methanogenesis") +
+  theme_minimal()
+
+#AMO
+ggplot(subset(flux_rates, Pathway == "Aerobic methane oxidation"), aes(sample = Mean_rate)) +
+  geom_qq() +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(x = "Theoretical quantiles", y = "Sample quantiles", title = "QQ Plot for Aerobic methane oxidation") +
+  theme_minimal()
+
+#ANME
+
+ggplot(subset(flux_rates, Pathway == "Anaerobic methane oxidation"), aes(sample = Mean_rate)) +
+  geom_qq() +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(x = "Theoretical quantiles", y = "Sample quantiles", title = "QQ Plot for Anaerobic methane oxidation") +
+  theme_minimal()
+
+#Shapiro-Wilks test:
+
+by(flux_rates$Mean_rate, flux_rates$Pathway, shapiro.test)
+
+#Homogeneity of variance
+#Levene's test
+leveneTest(Mean_rate ~ Pathway, data = flux_rates)
+
+#Kruskal-Wallis Test with post-hoc Dunn test.
+
+# There was a statistically significant difference in rate between the different pathways (χ2(5)=114.59, p = 0). Significant differences were observed between AMO and ANME, (Z = 7.53, adjusted p = 0) and between mgen and ANME (Z = -9.51, adjusted p = 0).
+
+kruskal.test(Mean_rate ~ Pathway, data = flux_rates_filtered)
+dunn.test(flux_rates_filtered$Mean_rate, flux_rates_filtered$Pathway, method = "bonferroni")
+
+
+```
+
+
+Scatterplots for all relationships
+```{r}
+#Relationships
+# plot response variables vs each of covariates
+
+#Methanogenesis 
+
+ggplot(subset(flux_rates_filtered, Pathway == "Methanogenesis"), aes(x = Inc_length_days, y = Mean_rate)) +
+  geom_point() 
+
+#sig?
+ggplot(subset(flux_rates_filtered, Pathway == "Methanogenesis"), aes(x = Inc_temp, y = Mean_rate)) +
+  geom_point()   
+
+#sig?
+ggplot(subset(flux_rates_filtered, Pathway == "Methanogenesis"), aes(x = Depth_representative, y = Mean_rate)) +
+  geom_point() 
+
+#sig?
+ggplot(subset(flux_rates_filtered, Pathway == "Methanogenesis"), aes(x = Salinity_ppt, y = Mean_rate)) +
+  geom_point() 
+
+# sig?
+ggplot(subset(flux_rates_filtered, Pathway == "Methanogenesis" & !is.na(Wetland_type)), aes(x = Wetland_type, y = Mean_rate)) +
+  geom_boxplot()
+
+ggplot(subset(flux_rates_filtered, Pathway == "Methanogenesis" & !is.na(dom_veg)), aes(x = dom_veg, y = Mean_rate)) +
+  geom_boxplot()
+
+ggplot(subset(flux_rates_filtered, Pathway == "Methanogenesis" & !is.na(method)), aes(x = method, y = Mean_rate)) +
+  geom_boxplot()
+
+ggplot(subset(flux_rates_filtered, Pathway == "Methanogenesis" & !is.na(subpathway)), aes(x = subpathway, y = Mean_rate)) +
+  geom_boxplot()
+
+#MOx
+
+ggplot(subset(flux_rates_filtered, Pathway == "Aerobic methane oxidation"), aes(x = Inc_length_days, y = Mean_rate)) +
+  geom_point() 
+
+ggplot(subset(flux_rates_filtered, Pathway == "Aerobic methane oxidation"), aes(x = Inc_temp, y = Mean_rate)) +
+  geom_point()   
+
+ggplot(subset(flux_rates_filtered, Pathway == "Aerobic methane oxidation"), aes(x = Inc_length_days, y = Mean_rate)) +
+  geom_point() 
+
+# sig?
+ggplot(subset(flux_rates_filtered, Pathway == "Aerobic methane oxidation"), aes(x = Depth_representative, y = Mean_rate)) +
+  geom_point() 
+
+ggplot(subset(flux_rates_filtered, Pathway == "Aerobic methane oxidation"), aes(x = Salinity_ppt, y = Mean_rate)) +
+  geom_point() +
+  coord_cartesian(ylim = c(0, 1))
+
+ggplot(subset(flux_rates_filtered, Pathway == "Aerobic methane oxidation"), aes(x = Wetland_type, y = Mean_rate)) +
+  geom_boxplot() 
+
+ggplot(subset(flux_rates_filtered, Pathway == "Aerobic methane oxidation" & !is.na(dom_veg)), aes(x = dom_veg, y = Mean_rate)) +
+  geom_boxplot()
+
+ggplot(subset(flux_rates_filtered, Pathway == "Aerobic methane oxidation" & !is.na(method)), aes(x = method, y = Mean_rate)) +
+  geom_boxplot()
+
+
+#AOM
+
+ggplot(subset(flux_rates_filtered, Pathway == "Anaerobic methane oxidation"), aes(x = Inc_length_days, y = Mean_rate)) +
+  geom_point() 
+
+# sig?
+ggplot(subset(flux_rates_filtered, Pathway == "Anaerobic methane oxidation"), aes(x = Inc_temp, y = Mean_rate)) +
+  geom_point()   
+
+#sig?
+ggplot(subset(flux_rates_filtered, Pathway == "Anaerobic methane oxidation"), aes(x = Depth_representative, y = Mean_rate)) +
+  geom_point() 
+
+ggplot(subset(flux_rates_filtered, Pathway == "Anaerobic methane oxidation"), aes(x = Salinity_ppt, y = Mean_rate)) +
+  geom_point() +
+  coord_cartesian(ylim = c(0, 0.25))
+
+ggplot(subset(flux_rates_filtered, Pathway == "Anaerobic methane oxidation" & !is.na(Wetland_type)), aes(x = Wetland_type, y = Mean_rate)) +
+  geom_boxplot()
+
+ggplot(subset(flux_rates_filtered, Pathway == "Anaerobic methane oxidation" & !is.na(dom_veg)), aes(x = dom_veg, y = Mean_rate)) +
+  geom_boxplot()
+
+ggplot(subset(flux_rates_filtered, Pathway == "Anaerobic methane oxidation" & !is.na(method)), aes(x = method, y = Mean_rate)) +
+  geom_boxplot()
+
+ggplot(subset(flux_rates_filtered, Pathway == "Anaerobic methane oxidation" & !is.na(subpathway)), aes(x = subpathway, y = Mean_rate)) +
+  geom_boxplot()+
+  coord_cartesian(ylim = c(0, 0.15))
+
+```
+
+Subset data by pathway for modeling 
+```{r}
+
+MGEN <- flux_rates[flux_rates$Pathway == "Methanogenesis", ]
+
+AMO <- flux_rates[flux_rates$Pathway == "Aerobic methane oxidation", ]
+
+ANME <- flux_rates[flux_rates$Pathway == "Anaerobic methane oxidation", ]
+```
+
+
+Check for colinearity (between continuous variables only)
+
+```{r}
+#MGEN
+# Compute correlation matrix
+cor_matrix <- cor(MGEN[, c("Mean_rate", "Inc_temp", "Inc_length_days", "Depth_representative", "Salinity_ppt")], use = "pairwise.complete.obs")
+
+# Reshape correlation matrix to long format
+cor_matrix_long <- as.data.frame(cor_matrix) %>%
+  rownames_to_column(var = "variable1") %>%
+  pivot_longer(cols = -variable1, names_to = "variable2", values_to = "correlation")
+
+# Plot heatmap
+ggplot(data = cor_matrix_long, aes(x = variable1, y = variable2, fill = correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1,1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, 
+                                   size = 12, hjust = 1)) +
+  coord_fixed()
+
+#AMO
+# Compute correlation matrix
+cor_matrix <- cor(AMO[, c("Mean_rate", "Inc_temp", "Inc_length_days", "Depth_representative", "Salinity_ppt")], use = "pairwise.complete.obs")
+
+# Reshape correlation matrix to long format
+cor_matrix_long <- as.data.frame(cor_matrix) %>%
+  rownames_to_column(var = "variable1") %>%
+  pivot_longer(cols = -variable1, names_to = "variable2", values_to = "correlation")
+
+# Plot heatmap
+ggplot(data = cor_matrix_long, aes(x = variable1, y = variable2, fill = correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1,1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, 
+                                   size = 12, hjust = 1)) +
+  coord_fixed()
+
+
+#ANME
+# Compute correlation matrix
+cor_matrix <- cor(ANME[, c("Mean_rate", "Inc_temp", "Inc_length_days", "Depth_representative", "Salinity_ppt")], use = "pairwise.complete.obs")
+
+# Reshape correlation matrix to long format
+cor_matrix_long <- as.data.frame(cor_matrix) %>%
+  rownames_to_column(var = "variable1") %>%
+  pivot_longer(cols = -variable1, names_to = "variable2", values_to = "correlation")
+
+# Plot heatmap
+ggplot(data = cor_matrix_long, aes(x = variable1, y = variable2, fill = correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1,1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, 
+                                   size = 12, hjust = 1)) +
+  coord_fixed()
+
+
+```
+
+Multiple linear regression. Residuals were not normal, there is homogeneity of variance, and high VIF scores for most variables (high colinearity). Data dredging and stepwise regression did not work here bc of all the missing values in my dataset.
+```{r}
+
+library(performance)
+
+# Fit multiple linear regression model. Did not like pathway bc contained factors with <2 levels 
+model1 <- lm(Mean_rate ~ Wetland_type + Inc_temp + Inc_length_days + Depth_representative + Salinity_ppt + dom_veg + method, data=MGEN)
+
+AIC(model)
+
+check_model(model)
+
+# Perform stepwise regression.
+step_model <- step(model)
+
+# Print the summary of the stepwise regression model
+summary(step_model)
+
+AIC(step_model)
+
+check_model(step_model)
+
+stepAIC(model1, direction = "backward")
+
+#multi-model inference. Runs model with all combinations of predictors and gives model with highest AIC score. 
+
+library(MuMIn)
+options(na.action = "na.pass")
+allsubsets <- dredge(model1, na.action = "na.pass")
+allsubsets
+
+```
+
+
+Linear mixed models with site as random effect. For numeric predictor variables, full model better, for categorical, reduced model better.
+```{r}
+
+#LMM's assume normality, my data violates this assumption.
+
+#Across all pathways, what is the best predictor of rate?
+#pathway is a fixed effect, site is a random effect. 
+
+# wetland_type (reduced), inc_temp (reduced), inc_length (full), depth (full), salinity (full), dom veg (reduced), method (reduced), subpathway (reduced)
+
+
+#random intercept only 
+reduced=lmer(Mean_rate ~ Wetland_type + Inc_temp + Inc_length_days + Depth_representative + dom_veg + method + (1|Site), data=flux_rates)
+
+# Including random intercept and slope for Site
+full= lmer(Mean_rate ~ method + Wetland_type + (1 + Wetland_type | Site), data = flux_rates)
+
+
+# Compare the models using anova
+anova(reduced, full)
+
+library(tidyverse)
+library(performance)
+
+check_model(full)
+
+reduced=lmer(Mean_rate ~ Inc_temp + Inc_length_days + Depth_representative + Salinity_ppt + dom_veg + method + (1|Site), data=MGEN)
+
+summary(reduced)
+
+
+
+```
+
+
+Generalized linear mixed models with gamma distribution and log link. 
+
+When response variables are all run individually: For a few key variables, the model failed to converge.
+When response variables are all run together: model fails to converge bc there are a lot of missing values. I don't want to remove them since my sample size is already so small! This is why I opted for regression trees, which are robust to missing values. 
+
+1.) Email Xanthe re missing values..what to do? I want a model that accounts for multiple predictor variables.
+
+
+```{r}
+
+library(tidyverse)
+library(performance)
+
+#Run generalized linear mixed models with gamma distribution and log link. 
+#Does not assume normality of data and accounts for random effects (nesting of sites). AIC used in model selection (want smaller value).
+
+#If model doesn't converge, reduce variables and then use AICs/BICs. Ask Xanthe to send me resources on model selection. 
+#individual response variable results for each pathway:
+#mgen salinity (reduced), depth (failed to converge), inc temp(full), wetland type (reduced)
+#MOx salinity (NOT ENOUGH OBS), depth (reduced), inc temp(FAILED TO CONVERGE), wetland type (reduced)
+#AOM salinity (reduced), depth(full), inc temp(reduced), wetland type (reduced)
+
+#Next steps, 5/16/24
+
+#Compare the AIC, BIC, and anova values of different GLMMs with and without specific variables included. Random intercept only as this is a simpler model. Also look at the residual plots. 
+
+#anova() is used for testing hypotheses about the inclusion of certain predictors in the model (it gives a p-value)
+# AIC()/BIC() are used for selecting the best fitting model among different candidates (can compare across a variety of different models)
+
+#make Site a factor 
+MGEN$Site = as.factor(MGEN$Site)
+AMO$Site = as.factor(AMO$Site)
+ANME$Site = as.factor(ANME$Site)
+
+
+# Convert relevant variables to factors
+MGEN$Site <- as.factor(MGEN$Site)
+MGEN$Pathway <- as.factor(MGEN$Pathway)
+MGEN$Wetland_type <- as.factor(MGEN$Wetland_type)
+MGEN$dom_veg <- as.factor(MGEN$dom_veg)
+MGEN$method <- as.factor(MGEN$method)
+MGEN$subpathway <- as.factor(MGEN$subpathway)
+
+# Convert relevant variables to factors (if not already done)
+MGEN$Site <- as.factor(MGEN$Site)
+MGEN$Pathway <- as.factor(MGEN$Pathway)
+MGEN$Wetland_type <- as.factor(MGEN$Wetland_type)
+MGEN$dom_veg <- as.factor(MGEN$dom_veg)
+MGEN$method <- as.factor(MGEN$method)
+MGEN$subpathway <- as.factor(MGEN$subpathway)
+
+# Check the levels of each factor variable
+factor_levels <- sapply(MGEN, function(x) if(is.factor(x)) levels(x) else NA)
+print(factor_levels)
+
+# Check number of levels for each factor
+factor_nlevels <- sapply(MGEN, function(x) if(is.factor(x)) nlevels(x) else NA)
+print(factor_nlevels)
+
+# Find factors with only one level
+single_level_factors <- names(factor_nlevels[factor_nlevels == 1])
+print(single_level_factors)
+
+library(car)
+
+vif_model <- vif(lm(Mean_rate ~ Wetland_type + Inc_temp + Inc_length_days + Depth_representative + Salinity_ppt + dom_veg + method + subpathway, data = MGEN))
+print(vif_model)
+
+# Continue adding variables until the full model is fitted
+model_reduced <- glmer(Mean_rate ~ Wetland_type + Inc_temp + Inc_length_days + Depth_representative + Salinity_ppt + dom_veg + method + subpathway + (1 | Site), 
+                       data = MGEN, 
+                       family = Gamma(link = "log"),
+                       control = glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 2e5)))
+
+summary(model_reduced)
+
+# Fit the generalized mixed model with only random intercept
+model_reduced <- glmer(Mean_rate ~ Wetland_type + Inc_temp + Inc_length_days + Depth_representative + Salinity_ppt + dom_veg + method + subpathway + (1|Site), data = MGEN, family = Gamma(link = "log"),
+                       control = glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 2e5)))
+
+library(car)
+vif(lm(Mean_rate ~ Wetland_type + Inc_temp + Inc_length_days + Depth_representative + Salinity_ppt + dom_veg + method + subpathway, data = MGEN))
+
+
+
+# Compare the models using anova
+anova(model_reduced, model_full)
+
+# run check_model() to evaluate model performance
+check_model(model_reduced)
+
+
+```
+
+Prep data for regression tree modeling 
+```{r}
+#replace NAs with 'Not Reported' for categorical columns 
+# Ensure dplyr is loaded
+library(dplyr)
+
+# Modify the dataframe
+flux_rates_filtered2 <- flux_rates_filtered %>%
+  mutate(dom_veg = ifelse(is.na(dom_veg), "Not Reported", dom_veg),
+         subpathway = ifelse(is.na(subpathway), "Not Reported", subpathway),
+         Wetland_type = ifelse(is.na(Wetland_type), "Not Reported", Wetland_type),
+         Salinity_cat = ifelse(is.na(Salinity_cat), "Not Reported", Salinity_cat))
+
+# remove the continuous salinity column
+flux_rates_filtered2 <- flux_rates_filtered2 %>%
+  dplyr::select(-Salinity_ppt)
+
+
+MGEN_filtered=flux_rates_filtered2[flux_rates_filtered2$Pathway == "Methanogenesis", ]
+MGEN_filtered$Pathway <- NULL
+names(MGEN_filtered) <- c("Mean_rate", "Wetland type", "Incubation temperature", "Incubation length", "Depth", "Salinity", "Dominant vegetation", "Method", "Subpathway")
+
+
+MOX_filtered=flux_rates_filtered2[flux_rates_filtered2$Pathway == "Aerobic methane oxidation", ]
+MOX_filtered$Pathway <- NULL
+names(MOX_filtered) <- c("Mean_rate", "Wetland type", "Incubation temperature", "Incubation length", "Depth","Salinity", "Dominant vegetation", "Method", "Subpathway")
+
+AOM_filtered=flux_rates_filtered2[flux_rates_filtered2$Pathway == "Anaerobic methane oxidation", ]
+AOM_filtered$Pathway <- NULL
+names(AOM_filtered) <- c("Mean_rate", "Wetland type", "Incubation temperature", "Incubation length", "Depth", "Salinity", "Dominant vegetation", "Method", "Subpathway")
+
+```
+
+Univariate regression tree, all pathways. A decision tree (machine learning model) that is highly predictive and easily interpretable. Non-parametric model (vs statistical) that does not assume normality or linearity, and is robust to missing values. Ecology method. Only need n=10! De'Ath and Fabricius (2000)
+```{r}
+# Non-parametric models
+# univariate regression tree. 
+# caveat: sensitive to NAs. Treat missing values as another category
+
+#packages for machine learning
+library(rpart)
+library(rpart.plot)
+library(caret)
+library(rsample)
+library(ipred)
+library(vip)
+
+
+# 1.) Run univariate regression tree to predict mean rate from all the predictor variables. 
+
+## with rpart, needs bagging 
+
+tree_univariate <- rpart(Mean_rate ~. , data = flux_rates_filtered2)
+
+# Plot the tree (optional)
+rpart.plot(tree_univariate)
+plotcp(tree_univariate)
+
+#Pruning the tree
+
+#split data into 80% for training, 20% for testing 
+#set.seed(123)
+#uni_split= initial_split(flux_rates_filtered2, prop=.8)
+#uni_train=training(uni_split)
+#uni_test=testing(uni_split)
+
+tree_univariate_trained <- rpart(Mean_rate ~. , data = flux_rates_filtered2, method = "anova")
+
+
+
+#we can see 6 levels is best 
+rpart.plot(tree_univariate_trained)
+plotcp(tree_univariate_trained)
+
+#if we don't stop it at 6
+tree_univariate_trained2 <- rpart(Mean_rate ~. , data = flux_rates_filtered2, method = "anova", control=list(cp=0,xval=10))
+plotcp(tree_univariate_trained2)
+
+
+importance = tree_univariate_trained$variable.importance
+
+importance_df = data.frame(
+  Feature = names(importance),
+  Importance = importance
+)
+
+importance_df = importance_df[order(-importance_df$Importance),]
+
+#Gini importance 
+ggplot(importance_df, aes(x=reorder(Feature, -Importance), y=Importance))+
+  geom_col()+
+  theme_minimal()+
+  labs(title="Feature Importance from Regression Tree: all pathways",
+       x="Features", 
+       y= "Gini Importance")+
+  theme(axis.text.x = element_text(angle = 45, hjust =1))
+
+
+## issue with tree here. No test train split
+#perm_importance=vi(model=tree_univariate_trained, feature_names=names(flux_rates_filtered2)[-which(names(flux_rates_filtered2) == "Mean_rate")],method="permute", target=flux_rates_filtered2$Mean_rate, metric="mse")
+
+
+#Permutation Importance 
+
+# Initial model performance evaluation
+original_perf <- with(flux_rates_filtered2, mean((Mean_rate - predict(tree_univariate_trained, newdata = flux_rates_filtered2))^2))
+
+# Storage for importance scores
+feature_importance <- setNames(numeric(ncol(flux_rates_filtered2) - 1), names(flux_rates_filtered2)[-which(names(flux_rates_filtered2) == "Mean_rate")])
+
+# Calculate importance for each feature
+set.seed(123)  # For reproducibility
+for (feature in names(feature_importance)) {
+  # Copy the original data
+  data_permuted <- flux_rates_filtered2
+ 
+  # Permute the feature column
+  data_permuted[[feature]] <- sample(data_permuted[[feature]])
+ 
+  # Calculate performance with permuted data
+  permuted_perf <- with(data_permuted, mean((Mean_rate - predict(tree_univariate_trained, newdata = data_permuted))^2))
+ 
+  # Importance score is the loss in performance
+  feature_importance[feature] <- permuted_perf - original_perf
+}
+
+# Sorting features by importance
+feature_importance <- sort(feature_importance, decreasing = TRUE)
+
+# Print the importance
+print(feature_importance)
+
+
+######
+
+
+# Convert to data frame for ggplot
+importance_df <- data.frame(Feature = names(feature_importance), Importance = feature_importance)
+
+# Plot
+ggplot(importance_df, aes(x = reorder(Feature, Importance), y = Importance)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Feature Importance from Permutation: all pathways", x = "Features", y = "Decrease in Performance (MSE)") +
+  theme(axis.text.x = element_text(angle = 65, hjust = 1))
+
+```
+
+Univariate regression tree with just methanogenesis
+```{r}
+
+#packages for regression trees
+library(rpart)
+library(rpart.plot)
+
+set.seed(123)
+tree_univariate_mgen <- rpart(Mean_rate ~. , data = MGEN_filtered, method = "anova")
+
+#visualize the tree
+rpart.plot(tree_univariate_mgen)
+
+#let's check the residuals
+plot(predict(tree_univariate_mgen),residuals(tree_univariate_mgen))
+
+## Pruning the tree
+
+#"Our goal here is to see if a smaller subtree can give us comparable results to the fully grown tree. If yes, we should go for the simpler tree because it reduces the likelihood of overfitting.
+
+#One possible robust strategy of pruning the tree (or stopping the tree to grow) consists of avoiding splitting a partition if the split does not significantly improves the overall quality of the model.
+
+#In rpart package, this is controlled by the complexity parameter (cp), which imposes a penalty to the tree for having two many splits. The default value is 0.01. The higher the cp, the smaller the tree.
+
+#A too small value of cp leads to overfitting and a too large cp value will result to a too small tree. Both cases decrease the predictive performance of the model.
+
+#An optimal cp value can be estimated by testing different cp values and using cross-validation approaches to determine the corresponding prediction accuracy of the model. The best cp is then defined as the one that maximizes the cross-validation accuracy.
+
+# In plotcp() "A good choice of cp for pruning is often the leftmost value for which the mean lies below the horizontal line"
+# Here, this is cp = 0.093
+
+plotcp(tree_univariate_mgen)
+
+#Prints a table of optimal prunings based on a complexity parameter
+printcp(tree_univariate_mgen)
+
+#visualize more levels
+tree_univariate_mgen2 <- rpart(Mean_rate ~. , data = MGEN_filtered, method = "anova", control=list(cp=0,xval=10))
+
+plotcp(tree_univariate_mgen2)
+
+printcp(tree_univariate_mgen2)
+
+# Prune the model based on the optimal cp value
+tree_uni_mgen_pruned <- prune(tree_univariate_mgen, cp = 0.093)
+
+rpart.plot(tree_uni_mgen_pruned)
+
+printcp(tree_uni_mgen_pruned)
+
+
+#let's check the residuals
+plot(predict(tree_uni_mgen_pruned),residuals(tree_uni_mgen_pruned))
+
+
+#Extract importance values from tree
+importance = tree_uni_mgen_pruned$variable.importance
+
+importance_df = data.frame(
+  Feature = names(importance),
+  Importance = importance
+)
+
+importance_df = importance_df[order(-importance_df$Importance),]
+
+#Gini importance 
+ggplot(importance_df, aes(x=reorder(Feature, -Importance), y=Importance))+
+  geom_col()+
+  theme_minimal()+
+  labs(title="Feature Importance: Methanogenesis ",
+       x="Features", 
+       y= "Gini Importance")+
+  theme(axis.text.x = element_text(angle = 45, hjust =1))
+
+## Calculate the sum of importance scores
+total_importance <- sum(importance_df$Importance)
+
+# Normalize importance scores
+importance_df$Normalized_Importance <- importance_df$Importance / total_importance
+
+# Plot the normalized importance scores
+GiniMGEN=ggplot(importance_df, aes(x=reorder(Feature, -Normalized_Importance), y=Normalized_Importance)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title="Relative Feature Importance: MGEN",
+       x = NULL, 
+       y= "Gini Importance") +
+  theme(axis.text.x = element_text(angle = 45, hjust =1))
+
+
+#Permutation importance 
+
+# Initial model performance evaluation
+original_perf <- with(MGEN_filtered, mean((Mean_rate - predict(tree_uni_mgen_pruned, newdata = MGEN_filtered))^2))
+
+# Storage for importance scores
+feature_importance <- setNames(numeric(ncol(MGEN_filtered) - 1), names(MGEN_filtered)[-which(names(MGEN_filtered) == "Mean_rate")])
+
+# Calculate importance for each feature
+set.seed(123)  # For reproducibility
+for (feature in names(feature_importance)) {
+  # Copy the original data
+  data_permuted <- MGEN_filtered
+ 
+  # Permute the feature column
+  data_permuted[[feature]] <- sample(data_permuted[[feature]])
+ 
+  # Calculate performance with permuted data
+  permuted_perf <- with(data_permuted, mean((Mean_rate - predict(tree_univariate_mgen, newdata = data_permuted))^2))
+ 
+  # Importance score is the loss in performance
+  feature_importance[feature] <- permuted_perf - original_perf
+}
+
+# Sorting features by importance
+feature_importance <- sort(feature_importance, decreasing = TRUE)
+
+# Print the importance
+print(feature_importance)
+
+# Convert to data frame for ggplot
+importance_df <- data.frame(Feature = names(feature_importance), Importance = feature_importance)
+
+# Plot
+PermMGEN=ggplot(importance_df, aes(x = reorder(Feature, Importance), y = Importance)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Permutation Importance: MGEN", x = NULL, y = "Decrease in Performance (MSE)") +
+  theme(axis.text.x = element_text(angle = 65, hjust = 1))
+
+```
+Troubleshooting: 10 fold cv and pruned tree. try tidymodels.
+
+```{r}
+
+# Packages for machine learning
+library(rpart)
+library(rpart.plot)
+library(caret)
+library(rsample)
+library(ipred)
+library(vip)
+
+
+# Split the data into training and test set
+set.seed(123)
+
+training.samples <- MGEN_filtered$Mean_rate %>% 
+  createDataPartition(p = 0.8, list = FALSE)
+train  <- MGEN_filtered[training.samples, ]
+test <- MGEN_filtered[-training.samples, ]
+
+#omit missing values for train function
+#train <- na.omit(train)
+
+
+#Base Model
+#hr_base_model <- rpart(left ~ ., data = train, method = "class", control = rpart.control(cp = 0))
+
+hr_base_model <- rpart(Mean_rate ~. , data = train, method = "anova", control = rpart.control(cp = 0))
+
+
+summary(hr_base_model)
+#Plot Decision Tree
+rpart.plot(hr_base_model)
+# Examine the complexity plot
+plotcp(hr_base_model)
+
+# Compute the accuracy of the tree
+testpred <- predict(hr_base_model, test, type = "matrix")
+base_accuracy <- mean(test$pred == test$left)
+
+
+#Postpruning
+# Prune the hr_base_model based on the optimal cp value
+hr_model_pruned <- prune(hr_base_model, cp = 0.0084 )
+# Compute the accuracy of the pruned tree
+test$pred <- predict(hr_model_pruned, test, type = "class")
+accuracy_postprun <- mean(test$pred == test$left)
+data.frame(base_accuracy, accuracy_preprun, accuracy_postprun)
+
+
+
+
+
+# Set seed for reproducibility
+set.seed(123)
+
+model <- train(
+  formula = Mean_rate ~ .,  # Explicitly define the formula
+  data = train.data,         # Training data
+  method = "rpart",          # Regression tree method
+  trControl = trainControl(method = "cv", number = 10),  # 10-fold cross-validation
+  tuneLength = 10            # Tuning parameter length
+)
+
+
+# Plot model error vs different values of
+# cp (complexity parameter)
+plot(model)
+# Print the best tuning parameter cp that
+# minimize the model RMSE
+model$bestTune
+
+
+############
+# Plot the trees
+rpart.plot(tree_mgen_train)
+
+# Make predictions on the test data
+predicted <- tree_mgen_train %>% 
+  predict(test.data, type = "vector")
+
+head(predicted)
+
+# Compute model accuracy rate on test data
+mean(predicted == test.data$Mean_rate)
+
+
+# Fit the model on the training set
+set.seed(123)
+model2 <- train(
+  Mean_rate ~., data = train.data, method = "rpart",
+  trControl = trainControl("cv", number = 10),
+  tuneLength = 10
+  )
+
+
+# Plot model accuracy vs different values of
+# cp (complexity parameter)
+plot(model2)
+
+# Print the best tuning parameter cp that
+# maximizes the model accuracy
+model2$bestTune
+
+
+
+
+```
+
+
+Univariate regression tree with just MOx
+```{r}
+
+#Pruning the tree
+
+#split data into 80% for training, 20% for testing 
+#set.seed(123)
+#uni_split= initial_split(flux_rates_filtered2, prop=.8)
+#uni_train=training(uni_split)
+#uni_test=testing(uni_split)
+
+tree_univariate_MOX <- rpart(Mean_rate ~. , data = MOX_filtered, method = "anova")
+
+
+
+#the model thinks 6 levels is best (still need to cross validate)
+rpart.plot(tree_univariate_MOX)
+plotcp(tree_univariate_MOX)
+
+#if we don't stop it at 6
+tree_univariate_MOX2 <- rpart(Mean_rate ~. , data = MOX_filtered, method = "anova", control=list(cp=0,xval=10))
+plotcp(tree_univariate_MOX2)
+
+
+importance = tree_univariate_MOX$variable.importance
+
+importance_df = data.frame(
+  Feature = names(importance),
+  Importance = importance
+)
+
+importance_df = importance_df[order(-importance_df$Importance),]
+
+#Gini importance 
+ggplot(importance_df, aes(x=reorder(Feature, -Importance), y=Importance))+
+  geom_col()+
+  theme_minimal()+
+  labs(title="Feature Importance: Aerobic methane oxidation",
+       x="Features", 
+       y= "Gini Importance")+
+  theme(axis.text.x = element_text(angle = 45, hjust =1))
+
+## Calculate the sum of importance scores
+total_importance <- sum(importance_df$Importance)
+
+# Normalize importance scores
+importance_df$Normalized_Importance <- importance_df$Importance / total_importance
+
+# Plot the normalized importance scores
+GiniMOx=ggplot(importance_df, aes(x=reorder(Feature, -Normalized_Importance), y=Normalized_Importance)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title="Relative Feature Importance: MOx",
+       x = NULL, 
+       y= "Gini Importance") +
+  theme(axis.text.x = element_text(angle = 45, hjust =1))
+
+## issue with tree here. No test train split
+#perm_importance=vi(model=tree_univariate_trained, feature_names=names(flux_rates_filtered2)[-which(names(flux_rates_filtered2) == "Mean_rate")],method="permute", target=flux_rates_filtered2$Mean_rate, metric="mse")
+
+
+#Let's start from scratch 
+
+# Initial model performance evaluation
+original_perf <- with(MOX_filtered, mean((Mean_rate - predict(tree_univariate_MOX, newdata = MOX_filtered))^2))
+
+# Storage for importance scores
+feature_importance <- setNames(numeric(ncol(MOX_filtered) - 1), names(MOX_filtered)[-which(names(MOX_filtered) == "Mean_rate")])
+
+# Calculate importance for each feature
+set.seed(123)  # For reproducibility
+for (feature in names(feature_importance)) {
+  # Copy the original data
+  data_permuted <- MOX_filtered
+ 
+  # Permute the feature column
+  data_permuted[[feature]] <- sample(data_permuted[[feature]])
+ 
+  # Calculate performance with permuted data
+  permuted_perf <- with(data_permuted, mean((Mean_rate - predict(tree_univariate_MOX, newdata = data_permuted))^2))
+ 
+  # Importance score is the loss in performance
+  feature_importance[feature] <- permuted_perf - original_perf
+}
+
+# Sorting features by importance
+feature_importance <- sort(feature_importance, decreasing = TRUE)
+
+# Print the importance
+print(feature_importance)
+
+
+######
+
+
+# Convert to data frame for ggplot
+importance_df <- data.frame(Feature = names(feature_importance), Importance = feature_importance)
+
+# Plot
+PermMOx=ggplot(importance_df, aes(x = reorder(Feature, Importance), y = Importance)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Permutation Importance: MOx",x = NULL, y = "Decrease in Performance (MSE)") +
+  theme(axis.text.x = element_text(angle = 65, hjust = 1))
+```
+
+Univariate regression tree with just AOM
+```{r}
+
+#Pruning the tree
+
+#split data into 80% for training, 20% for testing 
+#set.seed(123)
+#uni_split= initial_split(flux_rates_filtered2, prop=.8)
+#uni_train=training(uni_split)
+#uni_test=testing(uni_split)
+
+tree_univariate_AOM <- rpart(Mean_rate ~. , data = AOM_filtered, method = "anova")
+
+
+
+#the model thinks 6 levels is best (still need to cross validate)
+rpart.plot(tree_univariate_AOM)
+plotcp(tree_univariate_AOM)
+
+#if we don't stop it at 6
+tree_univariate_AOM2 <- rpart(Mean_rate ~. , data = AOM_filtered, method = "anova", control=list(cp=0,xval=10))
+plotcp(tree_univariate_AOM2)
+
+
+importance = tree_univariate_AOM$variable.importance
+
+importance_df = data.frame(
+  Feature = names(importance),
+  Importance = importance
+)
+
+importance_df = importance_df[order(-importance_df$Importance),]
+
+#Gini importance 
+ggplot(importance_df, aes(x=reorder(Feature, -Importance), y=Importance))+
+  geom_col()+
+  theme_minimal()+
+  labs(title="Feature Importance: Anaerobic methane oxidation",
+       x="Features", 
+       y= "Gini Importance")+
+  theme(axis.text.x = element_text(angle = 45, hjust =1))
+
+#normalized Gini importance (easier interpretation)
+
+## Calculate the sum of importance scores
+total_importance <- sum(importance_df$Importance)
+
+# Normalize importance scores
+importance_df$Normalized_Importance <- importance_df$Importance / total_importance
+
+# Plot the normalized importance scores
+GiniAOM=ggplot(importance_df, aes(x=reorder(Feature, -Normalized_Importance), y=Normalized_Importance)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title="Relative Feature Importance: AOM",
+       x=NULL, 
+       y= "Gini Importance") +
+  theme(axis.text.x = element_text(angle = 45, hjust =1))
+
+
+
+## issue with tree here. No test train split
+#perm_importance=vi(model=tree_univariate_trained, feature_names=names(flux_rates_filtered2)[-which(names(flux_rates_filtered2) == "Mean_rate")],method="permute", target=flux_rates_filtered2$Mean_rate, metric="mse")
+
+
+#Let's start from scratch 
+
+# Initial model performance evaluation
+original_perf <- with(AOM_filtered, mean((Mean_rate - predict(tree_univariate_AOM, newdata = AOM_filtered))^2))
+
+# Storage for importance scores
+feature_importance <- setNames(numeric(ncol(AOM_filtered) - 1), names(AOM_filtered)[-which(names(AOM_filtered) == "Mean_rate")])
+
+# Calculate importance for each feature
+set.seed(123)  # For reproducibility
+for (feature in names(feature_importance)) {
+  # Copy the original data
+  data_permuted <- AOM_filtered
+ 
+  # Permute the feature column
+  data_permuted[[feature]] <- sample(data_permuted[[feature]])
+ 
+  # Calculate performance with permuted data
+  permuted_perf <- with(data_permuted, mean((Mean_rate - predict(tree_univariate_AOM, newdata = data_permuted))^2))
+ 
+  # Importance score is the loss in performance
+  feature_importance[feature] <- permuted_perf - original_perf
+}
+
+# Sorting features by importance
+feature_importance <- sort(feature_importance, decreasing = TRUE)
+
+# Print the importance
+print(feature_importance)
+
+
+######
+
+
+# Convert to data frame for ggplot
+importance_df <- data.frame(Feature = names(feature_importance), Importance = feature_importance)
+
+# Plot
+PermAOM=ggplot(importance_df, aes(x = reorder(Feature, Importance), y = Importance)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Permutation Importance: AOM", x = NULL, y = "Decrease in Performance (MSE)") +
+  theme(axis.text.x = element_text(angle = 65, hjust = 1))
+```
+
+
+Plot all Gini and Permutation Importance plots together in same figure
+```{r}
+library(ggpubr)
+
+GINI=ggarrange(GiniMGEN, GiniMOx, GiniAOM,PermMGEN, PermMOx, PermAOM, ncol = 3, nrow = 2)
+
+```
+
+
+Re-make models with caret package. Split the data into 80% for testing, 20% for training and perform a 10-fold cross validation to determine optimal tree depth. Prune the full model and list its AIC score. Plot Gini Importance and Permutation importance as barplots and plot both RMSE and R2 learning curves across model tree depth. Then calculate SHAP values for the model 
+```{r}
+# try univariate with caret packge
+
+# new dataframe dropping all rows with NAs
+flux_rates_filtered_noNAS <- na.omit(flux_rates_filtered2)
+
+
+library(caret)
+library(randomForest)
+library(vip)
+
+fitControl=trainControl(
+  method = "cv",
+  number = 10,
+  savePredictions = "final"
+)
+
+unimodel=train(Mean_rate ~. , data = flux_rates_filtered2, method="rpart",
+               trControl=fitControl,
+               tuneLength = 10)
+
+```
+
+
+Multivariate regression tree on whole dataset, NAs left as is.
+```{r}
+#run a multivariate regression tree so include interaction effects between response variables.
+#on whole dataset, then use permutation testing to separate drivers for each pathway
+
+# raw dataset, NAs as is
+
+tree_model <- rpart(Mean_rate ~ ., data = flux_rates_filtered)
+
+# Plot the tree (optional)
+rpart.plot(tree_model)
+
+#plot Gini importance
+
+# Extract variable importance measures from the tree
+var_importance <- tree_model$variable.importance
+
+var_importance_df <- data.frame(variable = names(var_importance), importance = var_importance)
+
+# Scale Gini importance to 0-1 range
+var_importance_df$importance_scaled <- var_importance_df$importance / max(var_importance_df$importance)
+
+# Rank variables based on Gini score
+var_importance_df <- var_importance_df[order(var_importance_df$importance), ]
+
+# Reverse the order of levels on the y-axis
+var_importance_df$variable <- factor(var_importance_df$variable, levels = rev(var_importance_df$variable))
+
+
+# Create the Gini importance plot
+ggplot(var_importance_df, aes(x = importance_scaled, y = variable)) +
+  geom_bar(stat = "identity", fill = "skyblue", width = 0.7) +
+  labs(title = "All data",
+       x = "Gini Importance (Scaled)",
+       y = "Variable") +
+  theme_minimal()
+
+```
+
+Multivariate regression tree on whole dataset, NAs treated as separate category
+```{r}
+# dataset with NAs treated as a separate category
+# Create a copy of the original data frame
+ALL_with_na <- flux_rates_filtered
+
+# Get the names of predictor columns (exclude the response column)
+predictor_columns <- names(flux_rates_filtered)[-which(names(flux_rates_filtered) == "Mean_rate")]
+
+# Iterate over each predictor column and treat missing values as another category
+for (col in predictor_columns) {
+  ALL_with_na[[col]] <- ifelse(is.na(flux_rates_filtered[[col]]), "NA_category", as.character(flux_rates_filtered[[col]]))
+}
+
+# Fit a univariate regression tree with missing values treated as another category
+tree_model_with_na <- rpart(Mean_rate ~ ., data = ALL_with_na)
+
+
+# Plot the tree (optional)
+rpart.plot(tree_model_with_na)
+
+#plot Gini importance
+
+# Extract variable importance measures from the tree
+var_importance <- tree_model_with_na$variable.importance
+
+var_importance_df <- data.frame(variable = names(var_importance), importance = var_importance)
+
+# Scale Gini importance to 0-1 range
+var_importance_df$importance_scaled <- var_importance_df$importance / max(var_importance_df$importance)
+
+# Rank variables based on Gini score
+var_importance_df <- var_importance_df[order(var_importance_df$importance), ]
+
+# Reverse the order of levels on the y-axis
+var_importance_df$variable <- factor(var_importance_df$variable, levels = rev(var_importance_df$variable))
+
+
+# Create the Gini importance plot
+ggplot(var_importance_df, aes(x = importance_scaled, y = variable)) +
+  geom_bar(stat = "identity", fill = "skyblue", width = 0.7) +
+  labs(title = "All data with NAs as separate category",
+       x = "Gini Importance (Scaled)",
+       y = "Variable") +
+  theme_minimal()
+
+```
+
+
