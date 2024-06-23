@@ -1,5 +1,5 @@
 ---
-title: "Regression tree modeling: CH4 wetland fluxes"
+title: "Regression tree & GLM modeling: CH4 wetland fluxes"
 author: "Satya Kent"
 date: "2024-05-24"
 output: html_document
@@ -9,8 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
-Load data and reorganize for regression tree modeling 
+Load data and reorganize for regression tree modeling & GLM modeling
 ```{r}
 library(tidyverse)
 
@@ -28,7 +27,7 @@ flux_rates_filtered <- flux_rates[, c("Pathway", "Mean_rate", "Wetland_type", "I
 
 library(dplyr)
 
-#replace NAs with 'Not Reported' for categorical columns.
+#replace NAs with 'Not Reported' for categorical columns. Regression trees like this format for categorical missing values.
 flux_rates_filtered2 <- flux_rates_filtered %>%
   mutate(dom_veg = ifelse(is.na(dom_veg), "Not Reported", dom_veg),
          subpathway = ifelse(is.na(subpathway), "Not Reported", subpathway),
@@ -42,20 +41,334 @@ flux_rates_filtered2 <- flux_rates_filtered2 %>%
 #re-organize datasets for regression tree modeling 
 MGEN_filtered=flux_rates_filtered2[flux_rates_filtered2$Pathway == "Methanogenesis", ]
 MGEN_filtered$Pathway <- NULL
-names(MGEN_filtered) <- c("Mean_rate", "Wetland type", "Incubation temperature", "Incubation length", "Depth", "Salinity", "Dominant vegetation", "Method", "Subpathway")
+names(MGEN_filtered) <- c("Mean_rate", "Wetland_type", "Incubation_temperature", "Incubation_length", "Depth", "Salinity", "Dominant_vegetation", "Method", "Subpathway")
 
 
 MOX_filtered=flux_rates_filtered2[flux_rates_filtered2$Pathway == "Aerobic methane oxidation", ]
 MOX_filtered$Pathway <- NULL
-names(MOX_filtered) <- c("Mean_rate", "Wetland type", "Incubation temperature", "Incubation length", "Depth","Salinity", "Dominant vegetation", "Method", "Subpathway")
+names(MOX_filtered) <- c("Mean_rate", "Wetland_type", "Incubation_temperature", "Incubation_length", "Depth", "Salinity", "Dominant_vegetation", "Method", "Subpathway")
 MOX_filtered$Subpathway <- NULL #no subpathways exist for MOx
 
 AOM_filtered=flux_rates_filtered2[flux_rates_filtered2$Pathway == "Anaerobic methane oxidation", ]
 AOM_filtered$Pathway <- NULL
-names(AOM_filtered) <- c("Mean_rate", "Wetland type", "Incubation temperature", "Incubation length", "Depth", "Salinity", "Dominant vegetation", "Method", "Subpathway")
+names(AOM_filtered) <- c("Mean_rate", "Wetland_type", "Incubation_temperature", "Incubation_length", "Depth", "Salinity", "Dominant_vegetation", "Method", "Subpathway")
 ```
 
-Univariate regression tree: methanogenesis
+
+
+METHANOGENESIS
+
+GLMs
+```{r}
+#GLMs do not assume normaliy and use a link function to allow for potentially non-linear relationships between the predictors and the actual response variable. Assumes observations are independent.
+
+
+# Load necessary packages
+library(dplyr)
+library(broom)
+
+# Prepare lists to store the results
+results <- list()
+coefficients_results <- list()
+
+# Loop over each predictor variable
+for (predictor in setdiff(colnames(MGEN_filtered), "Mean_rate")) {
+  # Filter out NAs for the current predictor
+  data_filtered <- MGEN_filtered %>%
+    select(Mean_rate, all_of(predictor)) %>%
+    drop_na()
+
+  # Filter out rows where the predictor is "Not Reported" if it is a categorical variable
+  if (is.factor(data_filtered[[predictor]]) || is.character(data_filtered[[predictor]])) {
+    data_filtered <- data_filtered %>%
+      filter(data_filtered[[predictor]] != "Not Reported")
+  }
+
+  # Fit the GLM using glm with Gamma family
+  formula <- as.formula(paste("Mean_rate ~", predictor))
+  glm_model <- glm(formula, data = data_filtered, family = Gamma(link = "log"))
+  
+  # Summarize the model using broom
+  model_summary <- tidy(glm_model)
+  deviance_explained <- 1 - (glm_model$deviance / glm_model$null.deviance)  # Pseudo R-squared
+  p_value <- model_summary$p.value[2]  # P-value for the predictor
+  AIC_value <- AIC(glm_model)  # AIC value for the model
+  BIC_value <- BIC(glm_model)  # BIC value for the model
+  sample_size <- nrow(data_filtered)  # Sample size after filtering
+
+  # Store the results
+  results[[predictor]] <- data.frame(
+    Predictor = predictor,
+    Pseudo_R_squared = deviance_explained,
+    P_value = p_value,
+    AIC = AIC_value,
+    BIC = BIC_value
+  )
+
+  # Store coefficient results
+  coefficients_results[[predictor]] <- data.frame(
+    Predictor = predictor,
+    Estimate = model_summary$estimate[2],
+    Std_Error = model_summary$std.error[2],
+    Z_value = model_summary$statistic[2],
+    P_value = model_summary$p.value[2],
+    Sample_Size = sample_size
+  )
+}
+
+# Combine all results into single data frames
+glm_results_df <- bind_rows(results)
+coefficients_df <- bind_rows(coefficients_results)
+
+# Sort by descending Pseudo R squared
+glm_results_df <- glm_results_df %>%
+  arrange(desc(as.numeric(glm_results_df$Pseudo_R_squared)))
+
+# Bold significant Pseudo R squared values
+glm_results_df$Pseudo_R_squared <- ifelse(as.numeric(glm_results_df$P_value) < 0.05, 
+                                          paste0("**", round(as.numeric(glm_results_df$Pseudo_R_squared), 3), "**"), 
+                                          round(as.numeric(glm_results_df$Pseudo_R_squared), 3))
+
+# Print the results dataframes
+print(glm_results_df)
+print(coefficients_df)
+
+
+```
+
+Boosted regression tree
+```{r}
+
+# from Elith 2008:
+#"The BRT approach differs fundamentally from traditional regression methods that produce a single ‘best’ model, instead using the technique of boosting to combine large numbers of relatively simple tree models adaptively, to optimize predictive performance". 
+
+#"The final BRT model can be understood as an additive regression model in which individual terms are simple trees, fitted in a forward, stagewise fashion."
+
+
+# Load necessary libraries
+library(gbm)
+library(ggplot2)
+
+# Set seed for reproducibility
+set.seed(123)
+
+#change categorical column classes to factors
+MGEN_filtered <- MGEN_filtered %>%
+  mutate_if(is.character, as.factor)
+
+# Replace spaces with underscores in column names for future plotting
+colnames(MGEN_filtered) <- gsub(" ", "_", colnames(MGEN_filtered))
+
+
+# Set variables for model
+data <- MGEN_filtered
+response <- data$Mean_rate
+predictors <- data %>% select(-Mean_rate)
+
+
+# Perform a 5-fold cross-validation to find the optimal number of trees (recommended for small datasets). Recommended method by Ridgeway 2024 (author of the gbm package).
+
+#Steps
+#The dataset is split into k folds.
+
+cv_folds <- 5
+
+
+gbm_model_cv <- gbm(
+  formula = Mean_rate ~ .,
+  data = data,
+  distribution = "gaussian", #for numerical data 
+  n.trees = 15000, #max x value on plot
+  interaction.depth = 3, #Elith 2008 recommends values of 2 or 3 for small sample sizes (<250)
+  shrinkage = 0.001, #what papers recommend for small sample sizes (Elith 2008; Ridgeway 2024), 
+  #smaller values increase model performance 
+  n.minobsinnode = 10, 
+  cv.folds = cv_folds, #5-fold cv
+  verbose = TRUE
+)
+
+#Plot shows the cross-validation performance of the boosted regression tree model, showcasing the mean squared error on both training (black) and validation (green) datasets over boosting iterations. The plot helps identify the optimal number of trees to prevent overfitting while maximizing predictive accuracy.
+
+best_ntrees <- gbm.perf(gbm_model_cv, method = "cv", plot.it = TRUE) #here the best # of trees is 7345
+print(best_ntrees)
+
+# Perform a 5-fold cross-validation to find the optimal interaction depth
+
+# Set up a grid of interaction depth values to try
+interaction_depths <- c(1, 3, 5, 7)
+
+# Perform cross-validation to evaluate performance for each interaction depth
+cv_errors <- sapply(interaction_depths, function(depth) {
+  gbm_model <- gbm(
+    formula = Mean_rate ~ .,
+    data = MGEN_filtered,
+    distribution = "gaussian",
+    n.trees = best_ntrees,  # Use the best number of trees from previous step
+    interaction.depth = depth,
+    shrinkage = 0.001,  
+    n.minobsinnode = 10, 
+    cv.folds = 5,  # Number of folds for cross-validation
+    verbose = FALSE
+  )
+  min(gbm_model$cv.error)
+})
+
+# Find the optimal interaction depth. Here that's 3.
+optimal_depth <- interaction_depths[which.min(cv_errors)]
+
+
+# Train the final model using the optimal number of trees and all data
+final_model <- gbm(
+  formula = Mean_rate ~ .,
+  data = data,
+  distribution = "gaussian",
+  n.trees = best_ntrees,
+  interaction.depth = 3,
+  shrinkage = 0.001,
+  n.minobsinnode = 10,
+  verbose = TRUE
+)
+
+
+# Summary of the final model
+print(summary(final_model))
+
+
+#Variable importance
+
+##1.) Relative Importance
+
+#Each feature in the dataset is assigned a relative importance score. These scores (on the y-axis) are measures of how much each feature contributes to the model's predictive accuracy, normalized so their sum equals 100. The higher the score, the more important the feature is in predicting the target variable. E.g. Dominant Vegetation is the most influential predictor, contributing __% to the model's accuracy.
+
+#"At each split in each tree, gbm computes the improvement in the split-criterion (MSE for regression). gbm then averages the improvement made by each variable across all the trees that the variable is used. The variables with the largest average decrease in MSE are considered most important.
+
+
+# Extract feature importance
+importance <- summary(final_model, plotit = FALSE)
+
+importance_df <- data.frame(
+  Feature = importance$var,
+  Importance = importance$rel.inf
+)
+
+importance_df <- importance_df[order(-importance_df$Importance),]
+
+# Plot feature importance
+ggplot(importance_df, aes(x = reorder(Feature, -Importance), y = Importance)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Feature Importance: Methanogenesis",
+       x = "Features",
+       y = "Relative Importance") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Normalize importance scores
+total_importance <- sum(importance_df$Importance)
+importance_df$Normalized_Importance <- importance_df$Importance / total_importance
+
+# Plot the normalized importance scores
+ggplot(importance_df, aes(x = reorder(Feature, -Normalized_Importance), y = Normalized_Importance)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Feature Importance: MGEN",
+       x = NULL,
+       y = "Relative Importance") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+##2.) Permutation Importance
+
+# computes the Mean Squared Error (MSE) of the model predictions on the original dataset to those of the permuted dataset.
+
+
+#Permutation importance scores are calculated by evaluating the change in model performance when each feature's values are randomly shuffled. Initially, the model's performance (Mean Squared Error, MSE) is measured on the original data. Then, for each feature, the values are permuted, and the model's performance is re-evaluated on this permuted data. The importance score for a feature is the difference between the permuted performance and the original performance. A larger positive difference indicates higher importance, as it shows that permuting the feature significantly degrades model performance.
+#Features with higher values are crucial for predictions; permuting them significantly increases error (RSME).
+
+# Initial model performance evaluation
+original_perf <- with(MGEN_filtered, mean((Mean_rate - predict(final_model, newdata = MGEN_filtered, n.trees = best_ntrees))^2))
+
+# Storage for importance scores
+feature_importance <- setNames(numeric(ncol(MGEN_filtered) - 1), names(MGEN_filtered)[-which(names(MGEN_filtered) == "Mean_rate")])
+
+# Calculate importance for each feature
+set.seed(123)  # For reproducibility
+for (feature in names(feature_importance)) {
+  # Copy the original data
+  data_permuted <- MGEN_filtered
+
+  # Permute the feature column
+  data_permuted[[feature]] <- sample(data_permuted[[feature]])
+
+  # Calculate performance with permuted data
+  permuted_perf <- with(data_permuted, mean((Mean_rate - predict(final_model, newdata = data_permuted, n.trees = best_ntrees))^2))
+
+  # Importance score is the loss in performance
+  feature_importance[feature] <- permuted_perf - original_perf
+}
+
+# Sorting features by importance
+feature_importance <- sort(feature_importance, decreasing = TRUE)
+
+# Print the importance
+print(feature_importance)
+
+# Convert to data frame for ggplot
+importance_df <- data.frame(Feature = names(feature_importance), Importance = feature_importance)
+
+# Plot
+ggplot(importance_df, aes(x = reorder(Feature, Importance), y = Importance)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Permutation Importance: Methanogenesis", x = NULL, y = "Decrease in Performance (MSE)") +
+  theme(axis.text.x = element_text(angle = 65, hjust = 1))
+
+
+## Partial dependency plots. 
+
+#They visualize the marginal effect of each predictor variable on the predicted outcome, averaging out the effects of other predictors. The y axis represents how the Mean_rate is changing with the change in the given predictor variable.
+
+library(pdp)
+library(ggplot2)
+
+for (predictor in setdiff(colnames(MGEN_filtered), "Mean_rate")) {
+  partial_plot <- partial(final_model, pred.var = predictor, n.trees = best_ntrees)
+  
+  # Convert partial_plot to data frame
+  partial_df <- as.data.frame(partial_plot)
+  colnames(partial_df) <- c("Value", "Response")
+  
+  # Determine the type of predictor
+  predictor_type <- ifelse(is.numeric(MGEN_filtered[[predictor]]), "continuous", "categorical")
+  
+  # Filter out "Not Reported" data points for categorical predictors. We don't want to plot these.
+  if (predictor_type == "categorical") {
+    partial_df <- partial_df[partial_df$Value != "Not Reported", ]
+  }
+  
+  # Create ggplot based on predictor type
+  if (predictor_type == "continuous") {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_line() +
+      geom_point() +  # Add points to the line plot
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal()
+  } else {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_point(size = 15, shape = 95) +  
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  }
+  
+  # Print the plot
+  print(p)
+}
+
+
+```
+
+Univariate regression tree
 ```{r}
 
 #packages for regression trees
@@ -185,9 +498,51 @@ ggplot(importance_df, aes(x = reorder(Feature, Importance), y = Importance)) +
   labs(title = "Permutation Importance: Methanogenesis", x = NULL, y = "Decrease in Performance (MSE)") +
   theme(axis.text.x = element_text(angle = 65, hjust = 1))
 
+
+##Partial dependency plots
+library(pdp)
+library(ggplot2)
+
+for (predictor in setdiff(colnames(MGEN_filtered), "Mean_rate")) {
+  partial_plot <- partial(tree_uni_mgen_pruned, pred.var = predictor)
+  
+  # Convert partial_plot to data frame
+  partial_df <- as.data.frame(partial_plot)
+  colnames(partial_df) <- c("Value", "Response")
+  
+  # Determine the type of predictor
+  predictor_type <- ifelse(is.numeric(MGEN_filtered[[predictor]]), "continuous", "categorical")
+  
+  # Filter out "Not Reported" data points for categorical predictors. We don't want to plot these.
+  if (predictor_type == "categorical") {
+    partial_df <- partial_df[partial_df$Value != "Not Reported", ]
+  }
+  
+  # Create ggplot based on predictor type
+  if (predictor_type == "continuous") {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_line() +
+      geom_point() +  
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal()
+  } else {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_point(size = 15, shape = 95) +  
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  }
+  
+  # Print the plot
+  print(p)
+}
+
+
 ```
 
-Shapley values: methanogenesis
+Shapley values
 ```{r}
 
 # Load necessary libraries
@@ -223,7 +578,325 @@ sv_importance(shap_viz, kind = "bee") # plot that shows directionality is not we
 
 ```
 
-Univariate regression tree: MOx
+
+AEROBIC METHANE OXIDATION
+
+GLMs
+```{r}
+#GLMs do not assume normaliy and use a link function to allow for potentially non-linear relationships between the predictors and the actual response variable. Assumes observations are independent.
+
+
+#Note: The predictor Salinity is removed from this model because it only has one level (low) for this pathway and it needs 2 to run. 
+
+# Load necessary packages
+library(dplyr)
+library(broom)
+
+# Prepare lists to store the results
+results <- list()
+coefficients_results <- list()
+
+# Loop over each predictor variable
+for (predictor in setdiff(colnames(MOX_filtered), c("Mean_rate", "Salinity"))) {  # Exclude Salinity from analysis
+  # Filter out NAs for the current predictor
+  data_filtered <- MOX_filtered %>%
+    select(Mean_rate, all_of(predictor)) %>%
+    drop_na()
+
+  # Filter out rows where the predictor is "Not Reported" if it is a categorical variable
+  if (is.factor(data_filtered[[predictor]]) || is.character(data_filtered[[predictor]])) {
+    data_filtered <- data_filtered %>%
+      filter(data_filtered[[predictor]] != "Not Reported")
+  }
+
+  # Fit the GLM using glm with Gamma family
+  formula <- as.formula(paste("Mean_rate ~", predictor))
+  glm_model <- glm(formula, data = data_filtered, family = Gamma(link = "log"))
+  
+  # Summarize the model using broom
+  model_summary <- tidy(glm_model)
+  deviance_explained <- 1 - (glm_model$deviance / glm_model$null.deviance)  # Pseudo R-squared
+  p_value <- model_summary$p.value[2]  # P-value for the predictor
+  AIC_value <- AIC(glm_model)  # AIC value for the model
+  BIC_value <- BIC(glm_model)  # BIC value for the model
+  sample_size <- nrow(data_filtered)  # Sample size after filtering
+
+  # Store the results
+  results[[predictor]] <- data.frame(
+    Predictor = predictor,
+    Pseudo_R_squared = deviance_explained,
+    P_value = p_value,
+    AIC = AIC_value,
+    BIC = BIC_value
+  )
+
+  # Store coefficient results
+  coefficients_results[[predictor]] <- data.frame(
+    Predictor = predictor,
+    Estimate = model_summary$estimate[2],
+    Std_Error = model_summary$std.error[2],
+    Z_value = model_summary$statistic[2],
+    P_value = model_summary$p.value[2],
+    Sample_Size = sample_size
+  )
+}
+
+# Combine all results into single data frames
+glm_results_df <- bind_rows(results)
+coefficients_df <- bind_rows(coefficients_results)
+
+# Sort by descending Pseudo R squared
+glm_results_df <- glm_results_df %>%
+  arrange(desc(as.numeric(glm_results_df$Pseudo_R_squared)))
+
+# Bold significant Pseudo R squared values
+glm_results_df$Pseudo_R_squared <- ifelse(as.numeric(glm_results_df$P_value) < 0.05, 
+                                          paste0("**", round(as.numeric(glm_results_df$Pseudo_R_squared), 3), "**"), 
+                                          round(as.numeric(glm_results_df$Pseudo_R_squared), 3))
+
+# Print the results dataframes
+print(glm_results_df)
+print(coefficients_df)
+
+
+
+```
+
+Boosted regression tree. Sample size too small to run :(
+```{r}
+
+# from Elith 2008:
+#"The BRT approach differs fundamentally from traditional regression methods that produce a single ‘best’ model, instead using the technique of boosting to combine large numbers of relatively simple tree models adaptively, to optimize predictive performance". 
+
+#"The final BRT model can be understood as an additive regression model in which individual terms are simple trees, fitted in a forward, stagewise fashion."
+
+
+# Load necessary libraries
+library(gbm)
+library(ggplot2)
+
+# Set seed for reproducibility
+set.seed(123)
+
+#change categorical column classes to factors
+MOX_filtered <- MOX_filtered %>%
+  mutate_if(is.character, as.factor)
+
+# Replace spaces with underscores in column names for future plotting
+colnames(MOX_filtered) <- gsub(" ", "_", colnames(MOX_filtered))
+
+
+# Set variables for model
+data <- MOX_filtered
+response <- data$Mean_rate
+predictors <- data %>% select(-Mean_rate)
+
+
+# Perform a 5-fold cross-validation to find the optimal number of trees (recommended for small datasets). Recommended method by Ridgeway 2024 (author of the gbm package).
+
+#Steps
+#The dataset is split into k folds.
+
+cv_folds <- 5
+
+
+gbm_model_cv <- gbm(
+  formula = Mean_rate ~ .,
+  data = data,
+  distribution = "gaussian", #for numerical data 
+  n.trees = 100, #max x value on plot
+  interaction.depth = 2, #Elith 2008 recommends values of 2 or 3 for small sample sizes (<250)
+  shrinkage = 0.001, #what papers recommend for small sample sizes (Elith 2008; Ridgeway 2024), 
+  #smaller values increase model performance 
+  n.minobsinnode = 5, 
+  bag.fraction = 0.3,
+  cv.folds = cv_folds, #5-fold cv
+  verbose = TRUE
+)
+
+
+#Plot shows the cross-validation performance of the boosted regression tree model, showcasing the mean squared error on both training (black) and validation (green) datasets over boosting iterations. The plot helps identify the optimal number of trees to prevent overfitting while maximizing predictive accuracy.
+
+best_ntrees <- gbm.perf(gbm_model_cv, method = "cv", plot.it = TRUE) #here the best # of trees is 7345
+print(best_ntrees)
+
+# Perform a 5-fold cross-validation to find the optimal interaction depth
+
+# Set up a grid of interaction depth values to try
+interaction_depths <- c(1, 3, 5, 7)
+
+# Perform cross-validation to evaluate performance for each interaction depth
+cv_errors <- sapply(interaction_depths, function(depth) {
+  gbm_model <- gbm(
+    formula = Mean_rate ~ .,
+    data = MOX_filtered,
+    distribution = "gaussian",
+    n.trees = best_ntrees,  # Use the best number of trees from previous step
+    interaction.depth = depth,
+    shrinkage = 0.001,  
+    n.minobsinnode = 10, 
+    cv.folds = 5,  # Number of folds for cross-validation
+    verbose = FALSE
+  )
+  min(gbm_model$cv.error)
+})
+
+# Find the optimal interaction depth. Here that's 3.
+optimal_depth <- interaction_depths[which.min(cv_errors)]
+
+
+# Train the final model using the optimal number of trees and all data
+final_model <- gbm(
+  formula = Mean_rate ~ .,
+  data = data,
+  distribution = "gaussian",
+  n.trees = best_ntrees,
+  interaction.depth = 3,
+  shrinkage = 0.001,
+  n.minobsinnode = 10,
+  verbose = TRUE
+)
+
+
+# Summary of the final model
+print(summary(final_model))
+
+
+#Variable importance
+
+##1.) Relative Importance
+
+#Each feature in the dataset is assigned a relative importance score. These scores (on the y-axis) are measures of how much each feature contributes to the model's predictive accuracy, normalized so their sum equals 100. The higher the score, the more important the feature is in predicting the target variable. E.g. Dominant Vegetation is the most influential predictor, contributing __% to the model's accuracy.
+
+#"At each split in each tree, gbm computes the improvement in the split-criterion (MSE for regression). gbm then averages the improvement made by each variable across all the trees that the variable is used. The variables with the largest average decrease in MSE are considered most important.
+
+
+# Extract feature importance
+importance <- summary(final_model, plotit = FALSE)
+
+importance_df <- data.frame(
+  Feature = importance$var,
+  Importance = importance$rel.inf
+)
+
+importance_df <- importance_df[order(-importance_df$Importance),]
+
+# Plot feature importance
+ggplot(importance_df, aes(x = reorder(Feature, -Importance), y = Importance)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Feature Importance: Methanogenesis",
+       x = "Features",
+       y = "Relative Importance") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Normalize importance scores
+total_importance <- sum(importance_df$Importance)
+importance_df$Normalized_Importance <- importance_df$Importance / total_importance
+
+# Plot the normalized importance scores
+ggplot(importance_df, aes(x = reorder(Feature, -Normalized_Importance), y = Normalized_Importance)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Feature Importance: MGEN",
+       x = NULL,
+       y = "Relative Importance") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+##2.) Permutation Importance
+
+# computes the Mean Squared Error (MSE) of the model predictions on the original dataset to those of the permuted dataset.
+
+
+#Permutation importance scores are calculated by evaluating the change in model performance when each feature's values are randomly shuffled. Initially, the model's performance (Mean Squared Error, MSE) is measured on the original data. Then, for each feature, the values are permuted, and the model's performance is re-evaluated on this permuted data. The importance score for a feature is the difference between the permuted performance and the original performance. A larger positive difference indicates higher importance, as it shows that permuting the feature significantly degrades model performance.
+#Features with higher values are crucial for predictions; permuting them significantly increases error (RSME).
+
+# Initial model performance evaluation
+original_perf <- with(MOX_filtered, mean((Mean_rate - predict(final_model, newdata = MOX_filtered, n.trees = best_ntrees))^2))
+
+# Storage for importance scores
+feature_importance <- setNames(numeric(ncol(MOX_filtered) - 1), names(MOX_filtered)[-which(names(MOX_filtered) == "Mean_rate")])
+
+# Calculate importance for each feature
+set.seed(123)  # For reproducibility
+for (feature in names(feature_importance)) {
+  # Copy the original data
+  data_permuted <- MOX_filtered
+
+  # Permute the feature column
+  data_permuted[[feature]] <- sample(data_permuted[[feature]])
+
+  # Calculate performance with permuted data
+  permuted_perf <- with(data_permuted, mean((Mean_rate - predict(final_model, newdata = data_permuted, n.trees = best_ntrees))^2))
+
+  # Importance score is the loss in performance
+  feature_importance[feature] <- permuted_perf - original_perf
+}
+
+# Sorting features by importance
+feature_importance <- sort(feature_importance, decreasing = TRUE)
+
+# Print the importance
+print(feature_importance)
+
+# Convert to data frame for ggplot
+importance_df <- data.frame(Feature = names(feature_importance), Importance = feature_importance)
+
+# Plot
+ggplot(importance_df, aes(x = reorder(Feature, Importance), y = Importance)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Permutation Importance: MOx", x = NULL, y = "Decrease in Performance (MSE)") +
+  theme(axis.text.x = element_text(angle = 65, hjust = 1))
+
+
+## Partial dependency plots. 
+
+#They visualize the marginal effect of each predictor variable on the predicted outcome, averaging out the effects of other predictors. The y axis represents how the Mean_rate is changing with the change in the given predictor variable.
+
+library(pdp)
+library(ggplot2)
+
+for (predictor in setdiff(colnames(MOX_filtered), "Mean_rate")) {
+  partial_plot <- partial(final_model, pred.var = predictor, n.trees = best_ntrees)
+  
+  # Convert partial_plot to data frame
+  partial_df <- as.data.frame(partial_plot)
+  colnames(partial_df) <- c("Value", "Response")
+  
+  # Determine the type of predictor
+  predictor_type <- ifelse(is.numeric(MGEN_filtered[[predictor]]), "continuous", "categorical")
+  
+  # Filter out "Not Reported" data points for categorical predictors. We don't want to plot these.
+  if (predictor_type == "categorical") {
+    partial_df <- partial_df[partial_df$Value != "Not Reported", ]
+  }
+  
+  # Create ggplot based on predictor type
+  if (predictor_type == "continuous") {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_line() +
+      geom_point() +  # Add points to the line plot
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal()
+  } else {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_point(size = 15, shape = 95) +  
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  }
+  
+  # Print the plot
+  print(p)
+}
+
+
+```
+
+Univariate regression tree
 ```{r}
 
 #packages for regression trees
@@ -354,10 +1027,49 @@ ggplot(importance_df, aes(x = reorder(Feature, Importance), y = Importance)) +
   theme(axis.text.x = element_text(angle = 65, hjust = 1))
 
 
+##Partial dependency plots
+library(pdp)
+library(ggplot2)
+
+for (predictor in setdiff(colnames(MOX_filtered), "Mean_rate")) {
+  partial_plot <- partial(tree_uni_MOX_pruned, pred.var = predictor)
+  
+  # Convert partial_plot to data frame
+  partial_df <- as.data.frame(partial_plot)
+  colnames(partial_df) <- c("Value", "Response")
+  
+  # Determine the type of predictor
+  predictor_type <- ifelse(is.numeric(MOX_filtered[[predictor]]), "continuous", "categorical")
+  
+  # Filter out "Not Reported" data points for categorical predictors. We don't want to plot these.
+  if (predictor_type == "categorical") {
+    partial_df <- partial_df[partial_df$Value != "Not Reported", ]
+  }
+  
+  # Create ggplot based on predictor type
+  if (predictor_type == "continuous") {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_line() +
+      geom_point() +  
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal()
+  } else {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_point(size = 15, shape = 95) +  
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  }
+  
+  # Print the plot
+  print(p)
+}
 
 ```
 
-Shapley values: MOx
+Shapley values
 ```{r}
 
 # Load necessary libraries
@@ -393,7 +1105,323 @@ sv_importance(shap_viz, kind = "bee") # plot that shows directionality is not we
 
 ```
 
-Univariate regression tree: AOM
+ANAEROBIC METHANE OXIDATION
+
+GLMs. Failed to converge on most parameters :(
+```{r}
+#GLMs do not assume normaliy and use a link function to allow for potentially non-linear relationships between the predictors and the actual response variable. Assumes observations are independent.
+
+
+# Load necessary packages
+library(dplyr)
+library(broom)
+
+# Prepare lists to store the results
+results <- list()
+coefficients_results <- list()
+
+# Loop over each predictor variable
+for (predictor in setdiff(colnames(AOM_filtered), "Mean_rate")) {
+  # Filter out NAs for the current predictor
+  data_filtered <- AOM_filtered %>%
+    select(Mean_rate, all_of(predictor)) %>%
+    drop_na()
+
+  # Filter out rows where the predictor is "Not Reported" if it is a categorical variable
+  if (is.factor(data_filtered[[predictor]]) || is.character(data_filtered[[predictor]])) {
+    data_filtered <- data_filtered %>%
+      filter(data_filtered[[predictor]] != "Not Reported")
+  }
+
+  # Fit the GLM using glm with Gamma family
+  formula <- as.formula(paste("Mean_rate ~", predictor))
+  glm_model <- glm(formula, data = data_filtered, family = Gamma(link = "log"))
+  
+  # Summarize the model using broom
+  model_summary <- tidy(glm_model)
+  deviance_explained <- 1 - (glm_model$deviance / glm_model$null.deviance)  # Pseudo R-squared
+  p_value <- model_summary$p.value[2]  # P-value for the predictor
+  AIC_value <- AIC(glm_model)  # AIC value for the model
+  BIC_value <- BIC(glm_model)  # BIC value for the model
+  sample_size <- nrow(data_filtered)  # Sample size after filtering
+
+  # Store the results
+  results[[predictor]] <- data.frame(
+    Predictor = predictor,
+    Pseudo_R_squared = deviance_explained,
+    P_value = p_value,
+    AIC = AIC_value,
+    BIC = BIC_value
+  )
+
+  # Store coefficient results
+  coefficients_results[[predictor]] <- data.frame(
+    Predictor = predictor,
+    Estimate = model_summary$estimate[2],
+    Std_Error = model_summary$std.error[2],
+    Z_value = model_summary$statistic[2],
+    P_value = model_summary$p.value[2],
+    Sample_Size = sample_size
+  )
+}
+
+# Combine all results into single data frames
+glm_results_df <- bind_rows(results)
+coefficients_df <- bind_rows(coefficients_results)
+
+# Sort by descending Pseudo R squared
+glm_results_df <- glm_results_df %>%
+  arrange(desc(as.numeric(glm_results_df$Pseudo_R_squared)))
+
+# Bold significant Pseudo R squared values
+glm_results_df$Pseudo_R_squared <- ifelse(as.numeric(glm_results_df$P_value) < 0.05, 
+                                          paste0("**", round(as.numeric(glm_results_df$Pseudo_R_squared), 3), "**"), 
+                                          round(as.numeric(glm_results_df$Pseudo_R_squared), 3))
+
+# Print the results dataframes
+print(glm_results_df)
+print(coefficients_df)
+
+
+
+
+
+
+```
+
+Boosted regression tree
+```{r}
+
+# from Elith 2008:
+#"The BRT approach differs fundamentally from traditional regression methods that produce a single ‘best’ model, instead using the technique of boosting to combine large numbers of relatively simple tree models adaptively, to optimize predictive performance". 
+
+#"The final BRT model can be understood as an additive regression model in which individual terms are simple trees, fitted in a forward, stagewise fashion."
+
+
+# Load necessary libraries
+library(gbm)
+library(ggplot2)
+
+# Set seed for reproducibility
+set.seed(123)
+
+#change categorical column classes to factors
+AOM_filtered <- AOM_filtered %>%
+  mutate_if(is.character, as.factor)
+
+# Replace spaces with underscores in column names for future plotting
+colnames(AOM_filtered) <- gsub(" ", "_", colnames(AOM_filtered))
+
+
+# Set variables for model
+data <- AOM_filtered
+response <- data$Mean_rate
+predictors <- data %>% select(-Mean_rate)
+
+
+# Perform a 5-fold cross-validation to find the optimal number of trees (recommended for small datasets). Recommended method by Ridgeway 2024 (author of the gbm package).
+
+#Steps
+#The dataset is split into k folds.
+
+cv_folds <- 5
+
+
+gbm_model_cv <- gbm(
+  formula = Mean_rate ~ .,
+  data = data,
+  distribution = "gaussian", #for numerical data 
+  n.trees = 10000, #max x value on plot
+  interaction.depth = 3, #Elith 2008 recommends values of 2 or 3 for small sample sizes (<250)
+  shrinkage = 0.004, #what papers recommend for small sample sizes (Elith 2008; Ridgeway 2024), 
+  #smaller values increase model performance 
+  n.minobsinnode = 10, 
+  cv.folds = cv_folds, #5-fold cv
+  verbose = TRUE
+)
+
+#Plot shows the cross-validation performance of the boosted regression tree model, showcasing the mean squared error on both training (black) and validation (green) datasets over boosting iterations. The plot helps identify the optimal number of trees to prevent overfitting while maximizing predictive accuracy.
+
+best_ntrees <- gbm.perf(gbm_model_cv, method = "cv", plot.it = TRUE) #here the best # of trees is 5487
+print(best_ntrees)
+
+# Perform a 5-fold cross-validation to find the optimal interaction depth
+
+# Set up a grid of interaction depth values to try
+interaction_depths <- c(1, 3, 5, 7)
+
+# Perform cross-validation to evaluate performance for each interaction depth
+cv_errors <- sapply(interaction_depths, function(depth) {
+  gbm_model <- gbm(
+    formula = Mean_rate ~ .,
+    data = AOM_filtered,
+    distribution = "gaussian",
+    n.trees = best_ntrees,  # Use the best number of trees from previous step
+    interaction.depth = depth,
+    shrinkage = 0.004,  
+    n.minobsinnode = 10, 
+    cv.folds = 5,  # Number of folds for cross-validation
+    verbose = FALSE
+  )
+  min(gbm_model$cv.error)
+})
+
+# Find the optimal interaction depth. Here that's 3.
+optimal_depth <- interaction_depths[which.min(cv_errors)]
+
+
+# Train the final model using the optimal number of trees and all data
+final_model <- gbm(
+  formula = Mean_rate ~ .,
+  data = data,
+  distribution = "gaussian",
+  n.trees = best_ntrees,
+  interaction.depth = 3,
+  shrinkage = 0.004,
+  n.minobsinnode = 10,
+  verbose = TRUE
+)
+
+
+# Summary of the final model
+print(summary(final_model))
+
+
+#Variable importance
+
+##1.) Relative Importance
+
+#Each feature in the dataset is assigned a relative importance score. These scores (on the y-axis) are measures of how much each feature contributes to the model's predictive accuracy, normalized so their sum equals 100. The higher the score, the more important the feature is in predicting the target variable. E.g. Dominant Vegetation is the most influential predictor, contributing __% to the model's accuracy.
+
+#"At each split in each tree, gbm computes the improvement in the split-criterion (MSE for regression). gbm then averages the improvement made by each variable across all the trees that the variable is used. The variables with the largest average decrease in MSE are considered most important.
+
+
+# Extract feature importance
+importance <- summary(final_model, plotit = FALSE)
+
+importance_df <- data.frame(
+  Feature = importance$var,
+  Importance = importance$rel.inf
+)
+
+importance_df <- importance_df[order(-importance_df$Importance),]
+
+# Plot feature importance
+ggplot(importance_df, aes(x = reorder(Feature, -Importance), y = Importance)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Feature Importance: AOM",
+       x = "Features",
+       y = "Relative Importance") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Normalize importance scores
+total_importance <- sum(importance_df$Importance)
+importance_df$Normalized_Importance <- importance_df$Importance / total_importance
+
+# Plot the normalized importance scores
+ggplot(importance_df, aes(x = reorder(Feature, -Normalized_Importance), y = Normalized_Importance)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Feature Importance: AMO",
+       x = NULL,
+       y = "Relative Importance") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+##2.) Permutation Importance
+
+# computes the Mean Squared Error (MSE) of the model predictions on the original dataset to those of the permuted dataset.
+
+
+#Permutation importance scores are calculated by evaluating the change in model performance when each feature's values are randomly shuffled. Initially, the model's performance (Mean Squared Error, MSE) is measured on the original data. Then, for each feature, the values are permuted, and the model's performance is re-evaluated on this permuted data. The importance score for a feature is the difference between the permuted performance and the original performance. A larger positive difference indicates higher importance, as it shows that permuting the feature significantly degrades model performance.
+#Features with higher values are crucial for predictions; permuting them significantly increases error (RSME).
+
+# Initial model performance evaluation
+original_perf <- with(AOM_filtered, mean((Mean_rate - predict(final_model, newdata = AOM_filtered, n.trees = best_ntrees))^2))
+
+# Storage for importance scores
+feature_importance <- setNames(numeric(ncol(AOM_filtered) - 1), names(AOM_filtered)[-which(names(AOM_filtered) == "Mean_rate")])
+
+# Calculate importance for each feature
+set.seed(123)  # For reproducibility
+for (feature in names(feature_importance)) {
+  # Copy the original data
+  data_permuted <- AOM_filtered
+
+  # Permute the feature column
+  data_permuted[[feature]] <- sample(data_permuted[[feature]])
+
+  # Calculate performance with permuted data
+  permuted_perf <- with(data_permuted, mean((Mean_rate - predict(final_model, newdata = data_permuted, n.trees = best_ntrees))^2))
+
+  # Importance score is the loss in performance
+  feature_importance[feature] <- permuted_perf - original_perf
+}
+
+# Sorting features by importance
+feature_importance <- sort(feature_importance, decreasing = TRUE)
+
+# Print the importance
+print(feature_importance)
+
+# Convert to data frame for ggplot
+importance_df <- data.frame(Feature = names(feature_importance), Importance = feature_importance)
+
+# Plot
+ggplot(importance_df, aes(x = reorder(Feature, Importance), y = Importance)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Permutation Importance: AOM", x = NULL, y = "Decrease in Performance (MSE)") +
+  theme(axis.text.x = element_text(angle = 65, hjust = 1))
+
+
+## Partial dependency plots. 
+
+#They visualize the marginal effect of each predictor variable on the predicted outcome, averaging out the effects of other predictors. The y axis represents how the Mean_rate is changing with the change in the given predictor variable.
+
+library(pdp)
+library(ggplot2)
+
+for (predictor in setdiff(colnames(AOM_filtered), "Mean_rate")) {
+  partial_plot <- partial(final_model, pred.var = predictor, n.trees = best_ntrees)
+  
+  # Convert partial_plot to data frame
+  partial_df <- as.data.frame(partial_plot)
+  colnames(partial_df) <- c("Value", "Response")
+  
+  # Determine the type of predictor
+  predictor_type <- ifelse(is.numeric(MGEN_filtered[[predictor]]), "continuous", "categorical")
+  
+  # Filter out "Not Reported" data points for categorical predictors. We don't want to plot these.
+  if (predictor_type == "categorical") {
+    partial_df <- partial_df[partial_df$Value != "Not Reported", ]
+  }
+  
+  # Create ggplot based on predictor type
+  if (predictor_type == "continuous") {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_line() +
+      geom_point() +  # Add points to the line plot
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal()
+  } else {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_point(size = 15, shape = 95) +  
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  }
+  
+  # Print the plot
+  print(p)
+}
+
+
+```
+
+Univariate regression tree
 ```{r}
 
 #packages for regression trees
@@ -522,9 +1550,51 @@ ggplot(importance_df, aes(x = reorder(Feature, Importance), y = Importance)) +
   theme_minimal() +
   labs(title = "Permutation Importance: AOM", x = NULL, y = "Decrease in Performance (MSE)") +
   theme(axis.text.x = element_text(angle = 65, hjust = 1))
+
+
+##Partial dependency plots
+library(pdp)
+library(ggplot2)
+
+for (predictor in setdiff(colnames(AOM_filtered), "Mean_rate")) {
+  partial_plot <- partial(tree_uni_AOM_pruned, pred.var = predictor)
+  
+  # Convert partial_plot to data frame
+  partial_df <- as.data.frame(partial_plot)
+  colnames(partial_df) <- c("Value", "Response")
+  
+  # Determine the type of predictor
+  predictor_type <- ifelse(is.numeric(AOM_filtered[[predictor]]), "continuous", "categorical")
+  
+  # Filter out "Not Reported" data points for categorical predictors. We don't want to plot these.
+  if (predictor_type == "categorical") {
+    partial_df <- partial_df[partial_df$Value != "Not Reported", ]
+  }
+  
+  # Create ggplot based on predictor type
+  if (predictor_type == "continuous") {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_line() +
+      geom_point() +  
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal()
+  } else {
+    p <- ggplot(partial_df, aes(x = Value, y = Response)) +
+      geom_point(size = 15, shape = 95) +  
+      labs(title = paste("Partial Dependency Plot for", predictor),
+           x = predictor, y = "Predicted rate") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  }
+  
+  # Print the plot
+  print(p)
+}
+
 ```
 
-Shapley values: AOM
+Shapley values
 ```{r}
 
 # Load necessary libraries
