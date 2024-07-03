@@ -58,7 +58,7 @@ names(AOM_filtered) <- c("Mean_rate", "Wetland_type", "Incubation_temperature", 
 
 METHANOGENESIS
 
-GLMs
+GLMs w gamma distribution & log link
 ```{r}
 #GLMs do not assume normaliy and use a link function to allow for potentially non-linear relationships between the predictors and the actual response variable. Assumes observations are independent.
 
@@ -542,7 +542,7 @@ for (predictor in setdiff(colnames(MGEN_filtered), "Mean_rate")) {
 
 ```
 
-Shapley values
+Shapley values from pruned univariate regression tree
 ```{r}
 
 # Load necessary libraries
@@ -581,7 +581,7 @@ sv_importance(shap_viz, kind = "bee") # plot that shows directionality is not we
 
 AEROBIC METHANE OXIDATION
 
-GLMs
+GLMs w gamma distribution & log link
 ```{r}
 #GLMs do not assume normaliy and use a link function to allow for potentially non-linear relationships between the predictors and the actual response variable. Assumes observations are independent.
 
@@ -662,7 +662,8 @@ print(coefficients_df)
 
 ```
 
-Boosted regression tree. Sample size too small to run :(
+Boosted regression tree
+(Failed to converge due to small sample size so decreased the minimum number of observations in the terminal nodes from 10 to 3)
 ```{r}
 
 # from Elith 2008:
@@ -704,45 +705,19 @@ gbm_model_cv <- gbm(
   formula = Mean_rate ~ .,
   data = data,
   distribution = "gaussian", #for numerical data 
-  n.trees = 100, #max x value on plot
-  interaction.depth = 2, #Elith 2008 recommends values of 2 or 3 for small sample sizes (<250)
+  n.trees = 5000, #max x value on plot
+  interaction.depth = 3, #Elith 2008 recommends values of 2 or 3 for small sample sizes (<250)
   shrinkage = 0.001, #what papers recommend for small sample sizes (Elith 2008; Ridgeway 2024), 
   #smaller values increase model performance 
-  n.minobsinnode = 5, 
-  bag.fraction = 0.3,
+  n.minobsinnode = 3, #reduced here from 10 since the sample size is so small 
+  bag.fraction = 0.5,
   cv.folds = cv_folds, #5-fold cv
   verbose = TRUE
 )
-
-
 #Plot shows the cross-validation performance of the boosted regression tree model, showcasing the mean squared error on both training (black) and validation (green) datasets over boosting iterations. The plot helps identify the optimal number of trees to prevent overfitting while maximizing predictive accuracy.
 
-best_ntrees <- gbm.perf(gbm_model_cv, method = "cv", plot.it = TRUE) #here the best # of trees is 7345
+best_ntrees <- gbm.perf(gbm_model_cv, method = "cv", plot.it = TRUE) #here the best # of trees is 4327
 print(best_ntrees)
-
-# Perform a 5-fold cross-validation to find the optimal interaction depth
-
-# Set up a grid of interaction depth values to try
-interaction_depths <- c(1, 3, 5, 7)
-
-# Perform cross-validation to evaluate performance for each interaction depth
-cv_errors <- sapply(interaction_depths, function(depth) {
-  gbm_model <- gbm(
-    formula = Mean_rate ~ .,
-    data = MOX_filtered,
-    distribution = "gaussian",
-    n.trees = best_ntrees,  # Use the best number of trees from previous step
-    interaction.depth = depth,
-    shrinkage = 0.001,  
-    n.minobsinnode = 10, 
-    cv.folds = 5,  # Number of folds for cross-validation
-    verbose = FALSE
-  )
-  min(gbm_model$cv.error)
-})
-
-# Find the optimal interaction depth. Here that's 3.
-optimal_depth <- interaction_depths[which.min(cv_errors)]
 
 
 # Train the final model using the optimal number of trees and all data
@@ -753,7 +728,8 @@ final_model <- gbm(
   n.trees = best_ntrees,
   interaction.depth = 3,
   shrinkage = 0.001,
-  n.minobsinnode = 10,
+  n.minobsinnode = 3,
+  bag.fraction = 0.5,
   verbose = TRUE
 )
 
@@ -785,7 +761,7 @@ importance_df <- importance_df[order(-importance_df$Importance),]
 ggplot(importance_df, aes(x = reorder(Feature, -Importance), y = Importance)) +
   geom_col() +
   theme_minimal() +
-  labs(title = "Feature Importance: Methanogenesis",
+  labs(title = "Feature Importance: MOx",
        x = "Features",
        y = "Relative Importance") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -798,7 +774,7 @@ importance_df$Normalized_Importance <- importance_df$Importance / total_importan
 ggplot(importance_df, aes(x = reorder(Feature, -Normalized_Importance), y = Normalized_Importance)) +
   geom_col() +
   theme_minimal() +
-  labs(title = "Feature Importance: MGEN",
+  labs(title = "Feature Importance: MOx",
        x = NULL,
        y = "Relative Importance") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -1069,7 +1045,7 @@ for (predictor in setdiff(colnames(MOX_filtered), "Mean_rate")) {
 
 ```
 
-Shapley values
+Shapley values from pruned univariate regression tree
 ```{r}
 
 # Load necessary libraries
@@ -1107,10 +1083,10 @@ sv_importance(shap_viz, kind = "bee") # plot that shows directionality is not we
 
 ANAEROBIC METHANE OXIDATION
 
-GLMs. Failed to converge on most parameters :(
+GLMs w gamma distribution & log link
+(Failed to converge with the Incubation length parameter so I removed it and increased max iterations up to 100.)
 ```{r}
-#GLMs do not assume normaliy and use a link function to allow for potentially non-linear relationships between the predictors and the actual response variable. Assumes observations are independent.
-
+#GLMs do not assume normality and use a link function to allow for potentially non-linear relationships between the predictors and the actual response variable. Assumes observations are independent.
 
 # Load necessary packages
 library(dplyr)
@@ -1134,35 +1110,40 @@ for (predictor in setdiff(colnames(AOM_filtered), "Mean_rate")) {
   }
 
   # Fit the GLM using glm with Gamma family
-  formula <- as.formula(paste("Mean_rate ~", predictor))
-  glm_model <- glm(formula, data = data_filtered, family = Gamma(link = "log"))
-  
-  # Summarize the model using broom
-  model_summary <- tidy(glm_model)
-  deviance_explained <- 1 - (glm_model$deviance / glm_model$null.deviance)  # Pseudo R-squared
-  p_value <- model_summary$p.value[2]  # P-value for the predictor
-  AIC_value <- AIC(glm_model)  # AIC value for the model
-  BIC_value <- BIC(glm_model)  # BIC value for the model
-  sample_size <- nrow(data_filtered)  # Sample size after filtering
+  tryCatch({
+    formula <- as.formula(paste("Mean_rate ~", predictor))
+    glm_model <- glm(formula, data = data_filtered, family = Gamma(link = "log"), control = glm.control(maxit = 100)) # Increase max iterations to 100 which helps model convergence
 
-  # Store the results
-  results[[predictor]] <- data.frame(
-    Predictor = predictor,
-    Pseudo_R_squared = deviance_explained,
-    P_value = p_value,
-    AIC = AIC_value,
-    BIC = BIC_value
-  )
+    # Summarize the model using broom
+    model_summary <- tidy(glm_model)
+    deviance_explained <- 1 - (glm_model$deviance / glm_model$null.deviance)  # Pseudo R-squared
+    p_value <- model_summary$p.value[2]  # P-value for the predictor
+    AIC_value <- AIC(glm_model)  # AIC value for the model
+    BIC_value <- BIC(glm_model)  # BIC value for the model
+    sample_size <- nrow(data_filtered)  # Sample size after filtering
 
-  # Store coefficient results
-  coefficients_results[[predictor]] <- data.frame(
-    Predictor = predictor,
-    Estimate = model_summary$estimate[2],
-    Std_Error = model_summary$std.error[2],
-    Z_value = model_summary$statistic[2],
-    P_value = model_summary$p.value[2],
-    Sample_Size = sample_size
-  )
+    # Store the results
+    results[[predictor]] <- data.frame(
+      Predictor = predictor,
+      Pseudo_R_squared = deviance_explained,
+      P_value = p_value,
+      AIC = AIC_value,
+      BIC = BIC_value
+    )
+
+    # Store coefficient results
+    coefficients_results[[predictor]] <- data.frame(
+      Predictor = predictor,
+      Estimate = model_summary$estimate[2],
+      Std_Error = model_summary$std.error[2],
+      Z_value = model_summary$statistic[2],
+      P_value = model_summary$p.value[2],
+      Sample_Size = sample_size
+    )
+  }, error = function(e) {
+    # Print a message if an error occurs
+    message("Error with predictor ", predictor, ": ", e$message)
+  })
 }
 
 # Combine all results into single data frames
@@ -1181,11 +1162,6 @@ glm_results_df$Pseudo_R_squared <- ifelse(as.numeric(glm_results_df$P_value) < 0
 # Print the results dataframes
 print(glm_results_df)
 print(coefficients_df)
-
-
-
-
-
 
 ```
 
@@ -1233,7 +1209,7 @@ gbm_model_cv <- gbm(
   distribution = "gaussian", #for numerical data 
   n.trees = 10000, #max x value on plot
   interaction.depth = 3, #Elith 2008 recommends values of 2 or 3 for small sample sizes (<250)
-  shrinkage = 0.004, #what papers recommend for small sample sizes (Elith 2008; Ridgeway 2024), 
+  shrinkage = 0.004, #what papers recommend for small sample sizes (Elith 2008; Ridgeway 2024), increased here from 0.001 for better model fit
   #smaller values increase model performance 
   n.minobsinnode = 10, 
   cv.folds = cv_folds, #5-fold cv
@@ -1594,7 +1570,7 @@ for (predictor in setdiff(colnames(AOM_filtered), "Mean_rate")) {
 
 ```
 
-Shapley values
+Shapley values from pruned univariate regression tree
 ```{r}
 
 # Load necessary libraries
