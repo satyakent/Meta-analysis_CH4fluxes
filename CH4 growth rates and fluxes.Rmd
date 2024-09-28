@@ -241,7 +241,7 @@ log10rate=ggplot(flux_rates, aes(x = Pathway, y = Mean_rate, fill = Pathway)) +
   geom_boxplot(width = 0.7, outlier.shape = NA) +  # Remove outlier highlighting
   scale_fill_manual(values = c("lightblue", "royalblue", "mediumblue")) +
   geom_jitter(color = "grey39", size = 1.5, alpha = 0.3) +
-  geom_text(aes(label = "n = 93", x = "Methanogenesis", y= 27), size=4) +
+  geom_text(aes(label = "n = 114", x = "Methanogenesis", y= 27), size=4) +
   geom_text(aes(label = "n = 23", x = "Aerobic methane oxidation", y= 27), size=4) +
   geom_text(aes(label = "n = 99", x = "Anaerobic methane oxidation", y= 27), size=4) +
   labs(y = expression(paste("Rate (", mu, "mol CH"[4], "/g/day)"))) +
@@ -326,10 +326,19 @@ leveneTest(Mean_rate ~ Pathway, data = flux_rates)
 
 #Kruskal-Wallis Test with post-hoc Dunn test.
 
-# There was a statistically significant difference in rate between the different pathways (χ2(5)=114.59, p = 0). Significant differences were observed between AMO and ANME, (Z = 7.53, adjusted p = 0) and between mgen and ANME (Z = -9.51, adjusted p = 0).
+# There was a statistically significant difference in rate between the different pathways (χ2(2)=126.52, p = 0). Significant differences were observed between AMO and ANME, (Z = 7.89, adjusted p = 0) and between mgen and ANME (Z = -10.11, adjusted p = 0).
 
 kruskal.test(Mean_rate ~ Pathway, data = flux_rates_filtered)
 dunn.test(flux_rates_filtered$Mean_rate, flux_rates_filtered$Pathway, method = "bonferroni")
+
+
+#calculate median and IQR for each Pathway
+flux_rates_filtered %>%
+  group_by(Pathway) %>%
+  summarize(
+    Median = median(Mean_rate, na.rm = TRUE),
+    IQR = IQR(Mean_rate, na.rm = TRUE)
+  )
 
 
 ```
@@ -583,7 +592,6 @@ Generalized linear mixed models with gamma distribution and log link.
 When response variables are all run individually: For a few key variables, the model failed to converge.
 When response variables are all run together: model fails to converge bc there are a lot of missing values. I don't want to remove them since my sample size is already so small! This is why I opted for regression trees, which are robust to missing values. 
 
-1.) Email Xanthe re missing values..what to do? I want a model that accounts for multiple predictor variables.
 
 
 ```{r}

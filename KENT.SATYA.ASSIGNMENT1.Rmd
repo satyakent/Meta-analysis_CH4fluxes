@@ -1,0 +1,225 @@
+---
+title: "Assignment 1"
+author: "Satya Kent"
+date: "2024-09-26"
+output:
+   pdf_document:
+    toc: true
+    toc_depth: 3
+    latex_engine: xelatex
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 5.5, fig.height = 4.5,warning = FALSE, message = FALSE)
+```
+
+*Explain (in a paragraph) the purpose of the study that yielded the data.*
+
+This study is a meta-analysis I'm currently working on for the first chapter of my PhD. The purpose is to quantify the relative magnitudes of the three processes that produce and consume methane in wetlands (methanogenesis, aerobic methane oxidation, anaerobic methane oxidation) and identify environmental and methodological variables that are important predictors for each process. To date, no one has published a meta-analysis that compares all three rates of these processes in wetlands and investigates their drivers together.
+
+*Explain the specific data set you are using. For example, say where the data are from, give the meaning of the variables, and so on.*
+
+This dataset is the result of a literature search I performed on the Web of Science with the search topic set to wetland* AND microb* AND methane, which yielded 1,342 records on 3/28/24. Articles were then selected based on the following criteria: 1.) articles reported rates of methanogenesis, aerobic methane oxidation, and/or anaerobic methane oxidation, 2.) rates were either directly reported in units of umol CH4/g dry weight soil/day or they were able to be directly converted to this rate (i.e. reported in nmol CH4/g/hr), 3.) studies reported rates from either rice paddies or wetlands, as defined by the EPA, which include marshes, swamps, fens, and bogs. Rate data was recorded along with these additional environmental and methodological variables, when reported: site, sample size, standard deviation, soil depth (cm), incubation temperature (C), incubation length (days), method used to calculate rate (soil slurry, shaken soil slurry, non-slurried incubation, 13C tracer soil slurry, or 13C tracer non-slurried incubation), wetland type (marsh, swamp, bog, or fen plus rice paddy), and subpathway (electron donor or acceptor used in each pathway. Methanogenesis: acetoclastic, hydrogenotrophic, or methylotrophic, Anaerobic methane oxidation: nitrite-dependent, nitrate-dependent, manganese-dependent, iron-dependent, humic-acid-dependent, sulfate-dependent). The database consists of 31 studies yielding 236 unique observations: 114 for methanogenesis, 23 for aerobic methane oxidation, and 99 for anaerobic methane oxidation.
+
+*Illustrate and describe the main patterns revealed in the data.*
+
+There appears to be a difference in median rate across the three pathways of methane production and consumption, particularly between aerobic methane odixation and anaerobic methane oxidation and between methanogenesis and anaerobic methane oxidation. The median [IQR] rates were 0.475 [1.89] umol CH4/g/day for methanogenesis, 2.19 [2.31] umol CH4/g/day for MOx, and 0.0024 [0.0167] umol CH4/g/day for AOM. This comparison reveals that in wetlands and rice paddies, the median rate of AOM is 912x smaller than that of MOx and 198x smaller than that of methanogenesis. 
+
+For each pathway, there appears to be relationships between the explanatory variables and the response variable, although they are rarely linear. Each dataset is not normally distributed, contains outliers, and does not contain homogeneity of variance across covariates, all important considerations to account for in future modeling. 
+
+
+*State what parameters (magnitudes) you will estimate with these data.*
+I will estimate medians and IQRs of the rates for each pathway and some sort of effect size or contribution from each environmental/methodological variable on rate for each pathway. I will likely be using regression tree modeling so in that case I will generate feature importance for each predictor for each pathway. I also want to quantify the relationship between specific predictors and the response variable (rate) so I will estimate partial dependencies.
+
+*State what hypotheses you will test with these data.*
+I hypothesize that 1.) rates of methanogenesis in wetlands will be highest, followed by rates of aerobic methane oxidation, followed by rates of anaerobic methane oxidation and 2.) depth and incubation temperature will emerge as important drivers of these processes, with aerobic methane oxidation decreasing with depth, methanogenesis and anaerobic methane oxidation increasing with depth, and methanogenesis and anaerobic methane oxidation increasing with temperature.
+
+*Identify the attribute type of each attribute in your dataset. If it's not clear, you may need to justify why you chose the type.*
+
+The response variable is the mean rate which is numeric.
+
+The predictor variables are a combination of numeric and categorical, as described below:
+Wetland type: categorical
+Incubation temperature: numeric
+Incubation length: numeric
+Depth: numeric
+Salinity: categorical (I assigned the salinity of the site to three levels: 1 = 0-1.6ppm, 2 = 1.6-3.3ppm, or 3 = 3-3.5ppm. I did this to decrease the amount of missing values in the dataset since many bog sites did not report a numeric salinity value but did state "freshwater bog"; since this wetland type is characteristic of a low salinity under 0.5ppt I assigned them the lowest salinity level to preserve more of the information)
+Dominant vegetation: categorical
+Method: categorical
+Subpathway: categorical
+
+*Identify the values of the summarizing properties for the attributes, including frequency, location and spread (e.g. value ranges of the attributes, frequency of values, distributions, medians, means, variances, percentiles, etc). Note that not all of these summary statistics will make sense for all the attribute types, so use your judgment!*
+
+Methanogenesis
+Mean rate: mean 1.39, sd 1.88, p25 0.08, median 0.475, p75 1.975, right skewed data
+Incubation temperature: mean 19.9 sd 8.37, p25 15, median 18, p75 23, normally distributed data
+Incubation length: mean 36.7 sd 55.5, p25 7, median 8, p75 25, right skewed data
+Depth: mean 37.3 sd 54.7, p25 7.5, median 12.5, p75 45, right skewed data
+Wetland type: mode marsh
+Salinity: mode 1
+Dominant vegetation: mode sphagnum
+Method: mode soil slurry
+Subpathway: mode methylotrophic
+
+Aerobic methane oxidation
+Mean rate: mean 2.77, sd 3.66, p25 0.08, median 2.19, p75 3.17, right skewed data
+Incubation temperature: mean 22.2 sd 4.87, p25 22, median 22, p75 24.5, right skewed data
+Incubation length: mean 11, sd 22.2, p25 2, median 3, p75 8.5, right skewed data
+Depth: mean 10.2, sd 9.4, p25 2.5 , median 7.5, p75 15, right skewed data
+Wetland type: mode swamp
+Salinity: mode 1
+Dominant vegetation: mode Fraxinus caroliniana
+Method: mode shaken soil slurry
+
+Anaerobic methane oxidation
+Mean rate: mean 0.077, sd 0.31, p25 0.00125, median	0.0024, p75 0.018, right skewed data
+Incubation temperature: mean 23.56,	sd 7.2524794, p25 15, median 28, p75 30, left skewed data
+Incubation length: mean 29.1, sd 41.1	p25 1, median 5, p75 50, right skewed data
+Depth: mean 31.07, sd	30.55, p25 3.75, median	25, p75 50, right skewed data
+Wetland type: mode marsh
+Salinity: mode 1
+Dominant vegetation: mode Spartina alterniflora
+Method: mode 13C tracer, soil slurry
+Subpathway: mode nitrate-dependent
+
+*Proceed through the 8 steps of data exploration we covered in class and in the Zuur reading.*
+
+Methanogenesis
+1. Outliers y & x: yes, 5 out of 114 points
+2. Homogeneity y: yes, across many explanatory variables
+3. Normality y: not normally distributed, right skewed
+4. Zero trouble y: NA, there are no zeroes for y in the dataset
+5. Colinearity x: the explanatory variables do not appear to be colinear
+6. Relationships y & x: there appear to be relationships although they are not linear
+7. Interactions: the quality of the data is not good enough to allow for the interactions between any of the explanatory variables.
+8. Independence Y: the data are independent 
+
+Aerobic methane oxidation
+1. Outliers y & x: yes, 2 out of 23 points
+2. Homogeneity y: yes, across many explanatory variables
+3. Normality y: not normally distributed, right skewed
+4. Zero trouble y: NA, there are no zeroes for y in the dataset
+5. Colinearity x: the explanatory variables do not appear to be colinear
+6. Relationships y & x: there appear to be relationships although they are not linear
+7. Interactions: the quality of the data is not good enough to allow for the interactions between any of the explanatory variables.  Often there is not enough data between the groups.
+8. Independence Y: the data are independent 
+
+Anaerobic methane oxidation
+1. Outliers y & x: yes, 5 out of 99 points
+2. Homogeneity y: yes, across many explanatory variables
+3. Normality y: not normally distributed, right skewed
+4. Zero trouble y: NA, there are no zeroes for y in the dataset
+5. Colinearity x: the explanatory variables do not appear to be colinear
+6. Relationships y & x: there appear to be relationships although they are not linear
+7. Interactions: the quality of the data is not good enough to allow for the interactions between any of the explanatory variables. Often there is not enough data between the groups.
+8. Independence Y: the data are independent 
+
+*Include your clean R code in an appendix.*
+
+```{r, warning=FALSE, message=FALSE}
+## Load and clean data
+
+library(readr)
+flux_rates=read_csv("flux_rates_meta-analysis.csv")
+
+desired_order2 <- c("Methanogenesis", "Aerobic methane oxidation", "Anaerobic methane oxidation")
+
+flux_rates$Pathway <- factor(flux_rates$Pathway, levels = desired_order2)
+
+flux_rates_filtered <- flux_rates[, c("Pathway", "Mean_rate", "Wetland_type", "Inc_temp", "Inc_length_days","Depth_representative", "Salinity_cat", "dom_veg", "method","subpathway")]
+
+MGEN<- subset(flux_rates_filtered, Pathway == "Methanogenesis")
+MGEN <- MGEN[, !colnames(MGEN) %in% "Pathway"]
+
+MOx<- subset(flux_rates_filtered, Pathway == "Aerobic methane oxidation")
+MOx <- MOx[, !colnames(MOx) %in% "Pathway"]
+
+AOM<- subset(flux_rates_filtered, Pathway == "Anaerobic methane oxidation")
+AOM <- AOM[, !colnames(AOM) %in% "Pathway"]
+```
+
+```{r, warning=FALSE, message=FALSE}
+## Summary statistics
+
+library(skimr)
+
+skim(MGEN)
+table(MGEN$Wetland_type)
+table(MGEN$Salinity_cat)
+table(MGEN$dom_veg)
+table(MGEN$method)
+table(MGEN$subpathway)
+
+skim(MOx)
+table(MOx$Wetland_type)
+table(MOx$Salinity_cat)
+table(MOx$dom_veg)
+table(MOx$method)
+
+skim(AOM)
+table(AOM$Wetland_type)
+table(AOM$Salinity_cat)
+table(AOM$dom_veg)
+table(AOM$method)
+table(AOM$subpathway)
+
+##boxplots comparing rates across pathways
+boxplot(Mean_rate ~ Pathway, data = flux_rates_filtered)
+
+## Data exploration 
+library(GGally)
+
+#Methanogenesis 
+boxplot(MGEN$Mean_rate)
+dotchart(MGEN$Mean_rate)
+
+hist(MGEN$Mean_rate)
+qqnorm(MGEN$Mean_rate)
+qqline(MGEN$Mean_rate)
+
+ggpairs(MGEN[, sapply(MGEN, is.numeric)])
+boxplot(MGEN$Mean_rate ~ MGEN$Wetland_type)
+boxplot(MGEN$Mean_rate ~ MGEN$Salinity_cat)
+boxplot(MGEN$Mean_rate ~ MGEN$dom_veg)
+boxplot(MGEN$Mean_rate ~ MGEN$method)
+boxplot(MGEN$Mean_rate ~ MGEN$subpathway)
+
+coplot(Mean_rate ~ Inc_temp | Wetland_type,
+       data = MGEN,
+       panel = function(x, y, ...) {
+         tmp <- lm(y ~ x, na.action = na.omit)
+         abline(tmp)
+         points(x, y) })
+
+#Aerobic methane oxidation 
+boxplot(MOx$Mean_rate)
+dotchart(MOx$Mean_rate)
+
+hist(MOx$Mean_rate)
+qqnorm(MOx$Mean_rate)
+qqline(MOx$Mean_rate)
+
+ggpairs(MOx[, sapply(MOx, is.numeric)])
+boxplot(MOx$Mean_rate ~ MOx$Wetland_type)
+boxplot(MOx$Mean_rate ~ MOx$Salinity_cat)
+boxplot(MOx$Mean_rate ~ MOx$dom_veg)
+boxplot(MOx$Mean_rate ~ MOx$method)
+
+#Anaerobic methane oxidation
+boxplot(AOM$Mean_rate)
+dotchart(AOM$Mean_rate)
+
+hist(AOM$Mean_rate)
+qqnorm(AOM$Mean_rate)
+qqline(AOM$Mean_rate)
+
+ggpairs(AOM[, sapply(AOM, is.numeric)])
+boxplot(AOM$Mean_rate ~ AOM$Wetland_type)
+boxplot(AOM$Mean_rate ~ AOM$Salinity_cat)
+boxplot(AOM$Mean_rate ~ AOM$dom_veg)
+boxplot(AOM$Mean_rate ~ AOM$method)
+```
+
+
+

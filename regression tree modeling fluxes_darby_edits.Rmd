@@ -27,28 +27,37 @@ flux_rates_filtered <- flux_rates[, c("Pathway", "Mean_rate", "Wetland_type", "I
 
 library(dplyr)
 
-#replace NAs with 'Not Reported' for categorical columns. Regression trees like this format for categorical missing values.
-flux_rates_filtered2 <- flux_rates_filtered %>%
-  mutate(dom_veg = ifelse(is.na(dom_veg), "Not Reported", dom_veg),
-         subpathway = ifelse(is.na(subpathway), "Not Reported", subpathway),
-         Wetland_type = ifelse(is.na(Wetland_type), "Not Reported", Wetland_type),
-         Salinity_cat = ifelse(is.na(Salinity_cat), "Not Reported", Salinity_cat))
+#keep NAs in categorical values instead of converting to Not Reported
+
+#flux_rates_filtered2 <- flux_rates_filtered %>%
+  #mutate(dom_veg = ifelse(is.na(dom_veg), "Not Reported", dom_veg),
+         #subpathway = ifelse(is.na(subpathway), "Not Reported", subpathway),
+         #Wetland_type = ifelse(is.na(Wetland_type), "Not Reported", Wetland_type),
+         #Salinity_cat = ifelse(is.na(Salinity_cat), "Not Reported", Salinity_cat))
+
+colnames(flux_rates_filtered)
 
 # remove the continuous salinity column
-flux_rates_filtered2 <- flux_rates_filtered2 %>%
-  dplyr::select(-Salinity_ppt)
+flux_rates_filtered <- flux_rates_filtered %>%
+  dplyr::select(-Salinity_cat)
+
+
+#hot encoding of categorical values to integers (MLMs with a comb of categorical + numeric predictors)
+# convert categorical variables to integers 
+flux_rates_encoded <- flux_rates_filtered %>% mutate( Wetland_type = as.integer(factor(Wetland_type)), dom_veg = as.integer(factor(dom_veg)), method = as.integer(factor(method)), subpathway = as.integer(factor(subpathway)) ) 
+
 
 #re-organize datasets for regression tree modeling 
-MGEN_filtered=flux_rates_filtered2[flux_rates_filtered2$Pathway == "Methanogenesis", ]
+MGEN_filtered=flux_rates_encoded[flux_rates_encoded$Pathway == "Methanogenesis", ]
 MGEN_filtered$Pathway <- NULL
 names(MGEN_filtered) <- c("Mean_rate", "Wetland_type", "Incubation_temperature", "Incubation_length", "Depth", "Salinity", "Dominant_vegetation", "Method", "Subpathway")
 
-MOX_filtered=flux_rates_filtered2[flux_rates_filtered2$Pathway == "Aerobic methane oxidation", ]
+MOX_filtered=flux_rates_encoded[flux_rates_encoded$Pathway == "Aerobic methane oxidation", ]
 MOX_filtered$Pathway <- NULL
 names(MOX_filtered) <- c("Mean_rate", "Wetland_type", "Incubation_temperature", "Incubation_length", "Depth", "Salinity", "Dominant_vegetation", "Method", "Subpathway")
 MOX_filtered$Subpathway <- NULL #no subpathways exist for MOx
 
-AOM_filtered=flux_rates_filtered2[flux_rates_filtered2$Pathway == "Anaerobic methane oxidation", ]
+AOM_filtered=flux_rates_encoded[flux_rates_encoded$Pathway == "Anaerobic methane oxidation", ]
 AOM_filtered$Pathway <- NULL
 names(AOM_filtered) <- c("Mean_rate", "Wetland_type", "Incubation_temperature", "Incubation_length", "Depth", "Salinity", "Dominant_vegetation", "Method", "Subpathway")
 ```
@@ -242,7 +251,7 @@ print(gam_results_df)
 ```
 
 
-Boosted regression tree
+Boosted regression tree w caret
 ```{r}
 
 # from Elith 2008:
@@ -254,6 +263,53 @@ Boosted regression tree
 # Load necessary libraries
 library(gbm)
 library(ggplot2)
+library(caret)
+
+
+#Random Search 
+random_grid <- data.frame( n.trees = sample(seq(500, 10000, by = 100), 15, replace = TRUE), interaction.depth = sample(seq(1, 10), 15, replace = TRUE), shrinkage = runif(15, 0.0001, 0.1), n.minobsinnode = sample(seq(1, 20), 15, replace = TRUE))
+
+# Grid of hyperparameters
+param_grid <- expand.grid(
+  n.trees = c(500, 5000, 7000),  # Number of trees
+  interaction.depth = c(1, 3, 5),  # Depth of trees
+  shrinkage = c(0.001, 0.1),  # Learning rate
+  n.minobsinnode = c(5, 10)  # Minimum observations in node
+)
+
+# Initialize a vector to store results
+cv_errors <- numeric(nrow(random_grid))
+
+# Iterate over the parameter grid
+for (i in 1:nrow(random_grid)) {
+  params <- random_grid[i, ]
+ 
+  # Fit the model for the given parameters
+  gbm_model <- gbm(
+    formula = Mean_rate ~ Wetland_type+Incubation_temperature+Incubation_length+Depth+Salinity+Dominant_vegetation+Method+Subpathway,
+    distribution = "gaussian",
+    data = MGEN_filtered,
+    n.trees = params$n.trees,
+    interaction.depth = params$interaction.depth,
+    shrinkage = params$shrinkage,
+    n.minobsinnode = params$n.minobsinnode,
+    cv.folds = 10,
+    verbose = FALSE
+  )
+ 
+  # Get cross-validation error
+  cv_errors[i] <- gbm.perf(gbm_model, method = "cv", plot.it = FALSE)
+}
+
+# Find the best parameter combination
+best_params <- random_grid[which.min(cv_errors), ]
+print(best_params)
+
+
+
+
+
+
 
 # Set seed for reproducibility
 set.seed(123)
@@ -283,19 +339,19 @@ predictors <- data %>% select(-Mean_rate)
 #Steps
 #The dataset is split into k folds.
 
-cv_folds <- 5
+cv_folds <- 10
 
 set.seed(123)
 gbm_model_cv <- gbm(
   formula = Mean_rate ~ .,
   data = data,
   distribution = "gaussian", #for numerical data 
-  n.trees = 10000, #max x value on plot, change depending on best # trees identified
-  interaction.depth = 3, #Elith 2008 recommends values of 2 or 3 for small sample sizes (<250)
-  shrinkage = 0.001, #what papers recommend for small sample sizes (Elith 2008; Ridgeway 2024), 
+  n.trees = best_params$n.trees, #max x value on plot, change depending on best # trees identified
+  interaction.depth = best_params$interaction.depth, #Elith 2008 recommends values of 2 or 3 for small sample sizes (<250)
+  shrinkage = best_params$shrinkage, #what papers recommend for small sample sizes (Elith 2008; Ridgeway 2024), 
   #smaller values increase model performance 
-  n.minobsinnode = 10, #default is 10
-  cv.folds = cv_folds, #5-fold cv
+  n.minobsinnode = best_params$n.minobsinnode, #default is 10
+  cv.folds = cv_folds, #10-fold cv
   verbose = TRUE
 )
 
