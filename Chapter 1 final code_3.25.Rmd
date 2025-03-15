@@ -1,0 +1,1657 @@
+---
+title: "A quantitative synthesis of wetland methane production and consumption rates with regression tree driver analysis—full reproducible code"
+author: "Satya Kent"
+date: "2025-3-14"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Abbreviations:
+MOx = aerobic methane oxidation
+AOM = anaerobic methane oxidation
+
+Load data and clean for modeling
+```{r}
+
+#Load data 
+
+library(tidyverse)
+library(dplyr)
+
+flux_rates=read_csv("flux_rates_meta-analysis_final.csv") 
+
+# Specify the order of x-axis categories
+desired_order2 <- c("Methanogenesis", "Aerobic methane oxidation", "Anaerobic methane oxidation")
+
+# Convert "Pathway" column to factor with desired order
+flux_rates$Pathway <- factor(flux_rates$Pathway, levels = desired_order2)
+
+#create filtered dataframe with all the environmental variables I care about.
+flux_rates_filtered <- flux_rates[, c("Pathway", "Mean_rate", "Wetland_type", "Inc_temp", "Inc_length_days","Depth_representative", "Salinity_ppt", "Salinity_cat", "dom_veg", "method","subpathway")]
+
+#keep NAs in categorical values
+
+# remove the continuous salinity column
+flux_rates_filtered <- flux_rates_filtered %>%
+  dplyr::select(-Salinity_cat)
+
+#re-organize datasets for modeling of each pathway separately 
+#hot encode categorical values to integers (ML models generally perform better when hot encoding categorical predictors)
+#Save the factor levels for categorical variables before encoding (we'll need later to plot the PDPs for categorical predictors)
+
+#MGEN
+MGEN_filtered <- flux_rates_filtered[flux_rates_filtered$Pathway == "Methanogenesis", ]
+MGEN_filtered$Pathway <- NULL
+names(MGEN_filtered) <- c("Mean_rate", "Wetland_type", "Incubation_temperature", "Incubation_length", "Depth", "Salinity", "Dominant_vegetation", "Method", "Subpathway")
+
+wetland_type_levels_MGEN <- levels(factor(MGEN_filtered$Wetland_type))
+dom_veg_levels_MGEN <- levels(factor(MGEN_filtered$Dominant_vegetation))
+method_levels_MGEN <- levels(factor(MGEN_filtered$Method))
+subpathway_levels_MGEN <- levels(factor(MGEN_filtered$Subpathway))
+
+MGEN_encoded <- MGEN_filtered %>%
+  mutate(
+    Wetland_type = as.integer(factor(Wetland_type)),
+    Dominant_vegetation = as.integer(factor(Dominant_vegetation)),
+    Method = as.integer(factor(Method)),
+    Subpathway = as.integer(factor(Subpathway))
+  )
+
+#MOX
+MOX_filtered=flux_rates_filtered[flux_rates_filtered$Pathway == "Aerobic methane oxidation", ]
+MOX_filtered$Pathway <- NULL
+names(MOX_filtered) <- c("Mean_rate", "Wetland_type", "Incubation_temperature", "Incubation_length", "Depth", "Salinity", "Dominant_vegetation", "Method", "Subpathway")
+MOX_filtered$Subpathway <- NULL #no subpathways exist for MOx
+
+wetland_type_levels_MOX <- levels(factor(MOX_filtered$Wetland_type))
+dom_veg_levels_MOX <- levels(factor(MOX_filtered$Dominant_vegetation))
+method_levels_MOX <- levels(factor(MOX_filtered$Method))
+
+MOX_encoded <- MOX_filtered %>%
+  mutate(
+    Wetland_type = as.integer(factor(Wetland_type)),
+    Dominant_vegetation = as.integer(factor(Dominant_vegetation)),
+    Method = as.integer(factor(Method))
+  )
+
+#AOM
+AOM_filtered=flux_rates_filtered[flux_rates_filtered$Pathway == "Anaerobic methane oxidation", ]
+AOM_filtered$Pathway <- NULL
+names(AOM_filtered) <- c("Mean_rate", "Wetland_type", "Incubation_temperature", "Incubation_length", "Depth", "Salinity", "Dominant_vegetation", "Method", "Subpathway")
+
+wetland_type_levels_AOM <- levels(factor(AOM_filtered$Wetland_type))
+dom_veg_levels_AOM <- levels(factor(AOM_filtered$Dominant_vegetation))
+method_levels_AOM <- levels(factor(AOM_filtered$Method))
+subpathway_levels_AOM <- levels(factor(AOM_filtered$Subpathway))
+
+AOM_encoded <- AOM_filtered %>%
+  mutate(
+    Wetland_type = as.integer(factor(Wetland_type)),
+    Dominant_vegetation = as.integer(factor(Dominant_vegetation)),
+    Method = as.integer(factor(Method)),
+    Subpathway = as.integer(factor(Subpathway))
+  )
+
+```
+
+Data exploration 
+```{r, warning=FALSE, message=FALSE}
+library(GGally)
+
+#Methanogenesis 
+
+boxplot(MGEN_filtered$Mean_rate)
+dotchart(MGEN_filtered$Mean_rate)
+
+hist(MGEN_filtered$Mean_rate)
+qqnorm(MGEN_filtered$Mean_rate)
+qqline(MGEN_filtered$Mean_rate)
+
+#numeric relationships 
+ggpairs(MGEN_filtered[, sapply(MGEN_filtered, is.numeric)])
+#categorical relationships 
+boxplot(MGEN_filtered$Mean_rate ~ MGEN_filtered$Wetland_type)
+boxplot(MGEN_filtered$Mean_rate ~ MGEN_filtered$Salinity)
+boxplot(MGEN_filtered$Mean_rate ~ MGEN_filtered$Dominant_vegetation)
+boxplot(MGEN_filtered$Mean_rate ~ MGEN_filtered$Method)
+boxplot(MGEN_filtered$Mean_rate ~ MGEN_filtered$Subpathway)
+
+#Aerobic methane oxidation
+
+boxplot(MOX_filtered$Mean_rate)
+dotchart(MOX_filtered$Mean_rate)
+
+hist(MOX_filtered$Mean_rate)
+qqnorm(MOX_filtered$Mean_rate)
+qqline(MOX_filtered$Mean_rate)
+
+#numeric relationships 
+ggpairs(MOX_filtered[, sapply(MOX_filtered, is.numeric)])
+#categorical relationships 
+boxplot(MOX_filtered$Mean_rate ~ MOX_filtered$Wetland_type)
+boxplot(MOX_filtered$Mean_rate ~ MOX_filtered$Salinity)
+boxplot(MOX_filtered$Mean_rate ~ MOX_filtered$Dominant_vegetation)
+boxplot(MOX_filtered$Mean_rate ~ MOX_filtered$Method)
+
+
+#Anaerobic oxidation of methane
+boxplot(AOM_filtered$Mean_rate)
+dotchart(AOM_filtered$Mean_rate)
+
+hist(AOM_filtered$Mean_rate)
+qqnorm(AOM_filtered$Mean_rate)
+qqline(AOM_filtered$Mean_rate)
+
+#numeric relationships 
+ggpairs(AOM_filtered[, sapply(AOM_filtered, is.numeric)])
+#categorical relationships 
+boxplot(AOM_filtered$Mean_rate ~ AOM_filtered$Wetland_type)
+boxplot(AOM_filtered$Mean_rate ~ AOM_filtered$Salinity)
+boxplot(AOM_filtered$Mean_rate ~ AOM_filtered$Dominant_vegetation)
+boxplot(AOM_filtered$Mean_rate ~ AOM_filtered$Method)
+boxplot(AOM_filtered$Mean_rate ~ AOM_filtered$Subpathway)
+
+#Investigate confounding effect between wetland type and dominant vegetation with chi squared tests and by plotting proportions 
+
+#methanogenesis
+chisq_test_MGEN <- MGEN_filtered %>%
+    filter(!is.na(Dominant_vegetation)) %>%
+    with(table(Dominant_vegetation, Wetland_type)) %>%
+    chisq.test()
+
+print(chisq_test_MGEN)
+
+library(forcats)
+
+proportions_MGEN <- MGEN_filtered %>%
+    filter(!is.na(Dominant_vegetation), !is.na(Wetland_type)) %>%
+    count(Dominant_vegetation, Wetland_type) %>%
+    group_by(Wetland_type) %>%
+    mutate(Proportion = n / sum(n)) %>%
+    ungroup()
+
+ggplot(proportions_MGEN, aes(x = fct_reorder(Dominant_vegetation, Proportion), y = Proportion, fill = Wetland_type)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(title = "Methanogenesis",
+         x = "Dominant Vegetation",
+         y = "Proportion",
+         fill = "Wetland Type")
+
+
+#MOx
+chisq_test_MOX <- MOX_filtered %>%
+    filter(!is.na(Dominant_vegetation)) %>%
+    with(table(Dominant_vegetation, Wetland_type)) %>%
+    chisq.test()
+
+print(chisq_test_MOX)
+
+proportions_MOX <- MOX_filtered %>%
+    filter(!is.na(Dominant_vegetation), !is.na(Wetland_type)) %>%
+    count(Dominant_vegetation, Wetland_type) %>%
+    group_by(Wetland_type) %>%
+    mutate(Proportion = n / sum(n)) %>%
+    ungroup()
+
+ggplot(proportions_MOX, aes(x = fct_reorder(Dominant_vegetation, Proportion), y = Proportion, fill = Wetland_type)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(title = "Aerobic methane oxidation",
+         x = "Dominant Vegetation",
+         y = "Proportion",
+         fill = "Wetland Type")
+
+#AOM
+chisq_test_AOM <- AOM_filtered %>%
+    filter(!is.na(Dominant_vegetation)) %>%
+    with(table(Dominant_vegetation, Wetland_type)) %>%
+    chisq.test()
+
+print(chisq_test_AOM)
+
+proportions_AOM <- AOM_filtered %>%
+    filter(!is.na(Dominant_vegetation), !is.na(Wetland_type)) %>%
+    count(Dominant_vegetation, Wetland_type) %>%
+    group_by(Wetland_type) %>%
+    mutate(Proportion = n / sum(n)) %>%
+    ungroup()
+
+ggplot(proportions_AOM, aes(x = fct_reorder(Dominant_vegetation, Proportion), y = Proportion, fill = Wetland_type)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(title = "Anaerobic methane oxidation",
+         x = "Dominant Vegetation",
+         y = "Proportion",
+         fill = "Wetland Type")
+
+
+
+#count how many papers, unique sites, and unique measurements for each pathway 
+
+#unique measurements:
+flux_rates %>%
+  filter(Pathway %in% c("Methanogenesis", "Aerobic methane oxidation", "Anaerobic methane oxidation")) %>%
+  group_by(Pathway) %>%
+  summarise(row_count = n())
+
+# unique sites. Site is defined as unique Lat Long combination for a measurement. 
+flux_rates %>%
+  filter(Pathway %in% c("Methanogenesis", "Aerobic methane oxidation", "Anaerobic methane oxidation")) %>%
+  group_by(Pathway) %>%
+  summarise(unique_sites = n_distinct(paste0(Lat, "_", Long)))
+
+#total unique sites.
+flux_rates %>%
+  distinct(Lat, Long) %>%
+  summarise(unique_sites = n())
+
+#unique studies.
+flux_rates %>%
+  filter(Pathway %in% c("Methanogenesis", "Aerobic methane oxidation", "Anaerobic methane oxidation")) %>%
+  group_by(Pathway) %>%
+  summarise(unique_studies = n_distinct(Study))
+
+flux_rates %>%
+summarise(unique_studies = n_distinct(Study))
+
+```
+
+Rate data significance testing and boxplot figure.
+```{r}
+library(dunn.test)
+library(ggsignif)
+
+#Kruskal-Wallis Test with post-hoc Dunn test.
+
+# There was a statistically significant difference in rate between the different pathways (χ2(2)=150.12, p<2.2e-16). Significant differences were observed between MOx and AOM (Z = 11.06, adjusted p<0.00001), MGEN and AOM (Z = 9.82, adjusted p<0.00001), and MOx and MGEN (Z = 2.69, adjusted p=0.01).
+
+kruskal.test(Mean_rate ~ Pathway, data = flux_rates_filtered)
+dunn.test(flux_rates_filtered$Mean_rate, flux_rates_filtered$Pathway, method = "bonferroni")
+
+#calculate median rate and IQR for each pathway
+flux_rates_filtered %>%
+  group_by(Pathway) %>%
+  summarize(
+    Median = median(Mean_rate, na.rm = TRUE),
+    IQR = IQR(Mean_rate, na.rm = TRUE)
+  )
+
+
+## boxplot. Log transformed y axis. 
+Fig2=ggplot(flux_rates, aes(x = Pathway, y = Mean_rate, fill = Pathway)) +
+geom_boxplot(width = 0.7, outlier.shape = NA, alpha = 0.9) +  # Remove outlier highlighting
+  scale_fill_manual(values = c("#66c2a5", "#fc8d62", "#8da0cb")) +
+  geom_jitter(color = "grey39", size = 1.5, alpha = 0.3) +
+  geom_text(aes(label = "b", x = "Methanogenesis", y = 100), size = 4.5) +
+  geom_text(aes(label = "a", x = "Aerobic methane oxidation", y = 100), size = 4.5) +
+  geom_text(aes(label = "c", x = "Anaerobic methane oxidation", y = 100), size = 4.5) +
+  labs(y = expression(paste("Rate (", mu, "mol CH"[4], " g"^{-1}, "soil d"^{-1}, ")"))) +
+  scale_y_log10(
+    breaks = c(1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100),  # Set custom breaks
+    labels = c("0.00001", "0.0001", "0.001", "0.01", "0.1", "1", "10", "100")
+  ) +
+  annotation_logticks(sides = "l") +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text(color = "black"),  # Set color for x-axis text
+    axis.text.y = element_text(color = "black"),  # Set color for y-axis text
+    axis.title.y = element_text(color = "black"),  # Set color for y-axis title
+    text = element_text(size = 12, color = "black")  # Set color for all text
+  ) +
+  xlab(NULL)
+
+
+```
+
+Map figure
+```{r}
+#function to convert coordinates from to degrees and decimal minutes to decimal degrees.
+
+ convert_to_decimal <- function(coord) {
+  # Split the coordinate into degrees, decimal minutes, and direction
+  parts <- strsplit(coord, "_")[[1]]  # Split at "_"
+  degrees <- as.numeric(parts[1])    # First part is degrees
+  minutes <- as.numeric(substr(parts[2], 1, nchar(parts[2]) - 1))  # Extract decimal minutes
+  direction <- substr(parts[2], nchar(parts[2]), nchar(parts[2]))  # Extract direction (N/S/E/W)
+  
+  # Convert to decimal degrees
+  decimal <- degrees + (minutes / 60) 
+  
+  # Apply hemisphere: S/W are negative
+  if (direction %in% c("S", "W")) {
+    decimal <- -decimal
+  }
+  
+  return(decimal)
+}
+
+flux_rates$Lat_Dec <- sapply(flux_rates$Lat, convert_to_decimal)
+flux_rates$Long_Dec <- sapply(flux_rates$Long, convert_to_decimal)
+
+# create a count column counting each coordinate grouped by process (this is only for plotting purposes)
+library(dplyr)
+flux_rates <- flux_rates %>%
+  group_by(Lat_Dec, Long_Dec, Pathway) %>%
+  mutate(count = n()) %>% 
+  ungroup()
+
+
+library(maps)
+
+# Create a world map
+world_map <- map_data("world")
+
+## Map figure.
+Fig1=ggplot() +
+  geom_polygon(data = world_map, aes(x = long, y = lat, group = group), fill = "lightgray") +
+  geom_path(data = world_map, aes(x = long, y = lat, group = group), 
+            color = "black", size = 0.2, alpha = 0.1) + 
+  geom_point(data = flux_rates, 
+             aes(x = Long_Dec, y = Lat_Dec, 
+                 size = count,               
+                 fill = Pathway,            
+                 shape = Pathway),          
+             color = "black",             
+             stroke = 0.6,                
+             alpha = 0.9) +               
+  scale_size_continuous(range = c(2, 8), name = "Measurements") + 
+  scale_fill_manual(values = c("Methanogenesis" = "#66c2a5",
+                                "Aerobic methane oxidation" = "#fc8d62",
+                                "Anaerobic methane oxidation" = "#8da0cb")) + 
+  scale_shape_manual(values = c("Methanogenesis" = 21,  
+                                 "Aerobic methane oxidation" = 24, 
+                                 "Anaerobic methane oxidation" = 22)) + 
+  guides(size = "none",              
+         shape = guide_legend(override.aes = list(alpha = 1, size = 4), nrow = 1, title = NULL),  
+         fill = guide_legend(title = NULL, nrow = 1)) +  
+  labs(x = "Longitude", y = "Latitude") +
+  theme_minimal() +
+  theme(text = element_text(size = 12, color = "black"),
+        legend.position = "bottom", 
+        legend.box = "horizontal",
+        plot.margin = margin(t = 5, r = 5, b = 10, l = 5))  
+
+```
+
+Methanogenesis boosted regression tree model
+```{r}
+#This workflow combines the strengths of xgboost for model building and tidymodels for cross-validation, tuning, and organizing the workflow.
+
+# Load necessary libraries
+library(xgboost)
+library(tidymodels)
+
+# Set variables for model
+data <- MGEN_encoded
+response <- data$Mean_rate
+
+predictors <- data %>% select(-Mean_rate)
+
+# Grid search setup
+set.seed(12)
+
+# Model specification with early stopping
+xgb_spec <- boost_tree(
+  trees = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  loss_reduction = tune(),
+  sample_size = tune(),
+  mtry = tune(),
+  learn_rate = tune()
+) %>%
+  set_engine("xgboost") %>%
+  set_mode("regression")
+
+# Parameter grid
+Xgb_grid <- grid_space_filling(
+  trees(), tree_depth(), min_n(), loss_reduction(),
+  sample_size = sample_prop(), finalize(mtry(), data),
+  learn_rate(), size = 50
+)
+
+# Workflow setup
+workflow <- workflow() %>%
+  add_formula(Mean_rate ~ .) %>%
+  add_model(xgb_spec)
+
+# Cross-validation
+set.seed(14) #was 12
+folds <- vfold_cv(data, v = 5, repeats = 10) #was 2
+
+# Model tuning
+doParallel::registerDoParallel()
+set.seed(14) #was 12
+Xgb_res <- tune_grid(
+  workflow, resample = folds, grid = Xgb_grid,
+  control = control_grid(save_pred = TRUE)
+)
+
+# Extract best model parameters
+Best_rmse <- select_best(Xgb_res)
+
+#This object contains the final model parameters
+final_xgb <- finalize_workflow(workflow, Best_rmse)
+
+# Final model and variable importance. This object contains even more hyperparameters (under params)
+final_xgb_fit <- final_xgb %>%
+  fit(data = data)
+
+# Extract the trained model and plot variable importance
+xgb_model <- extract_fit_engine(final_xgb_fit)
+importance_matrix <- xgb.importance(model = xgb_model)
+
+# Convert the importance matrix to a dataframe
+importance_df <- as.data.frame(importance_matrix)
+
+# Convert Gain scores to percentages
+importance_df$Gain_percentage <- importance_df$Gain * 100
+
+# Plotting the variable importance with Gain percentage as the x-axis
+ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gain_percentage)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Variable Importance", x = "Features", y = "Importance Score (%)")
+
+
+final_fit_with_metrics <- final_xgb %>%
+  fit_resamples(
+    resamples = folds,
+    control = control_resamples(save_pred = TRUE, save_workflow = TRUE)
+  )
+
+# Collect metrics from the model. RMSE/R2 for model validation table.
+metrics <- final_fit_with_metrics %>%
+  collect_metrics()
+
+#Let's compare model metrics to the range and sd of my response variable
+range(data$Mean_rate)
+sd(data$Mean_rate)
+
+#CV learning curves. Plot to tune number of trees, alpha and lambda values. 
+
+# Step 1: Perform cross-validation with the full data
+set.seed(123)
+folds <- vfold_cv(data, v = 5, repeats = 10)
+
+
+num_columns <- ncol(data) - 1 
+params <- list(
+  colsample_bytree = min(1, 5 / num_columns),
+  colsample_bynode = 0.125, 
+  min_child_weight = 6, 
+  max_depth = 10, 
+  eta = 0.0184206996932672, 
+  gamma = 0.00954095476349994, 
+  subsample = 0.46734693877551, 
+  lambda = 2, 
+  alpha = 3 
+   
+)
+
+# Step 2: Create learning curve data structure
+train_sizes <- seq(0.4, 1.0, by = 0.1)
+learning_curve_data <- data.frame()
+
+# Loop over each fold in cross-validation
+for (fold in folds$splits) {
+ 
+  # Extract training and testing data for this fold
+  train_data <- analysis(fold)
+  test_data <- assessment(fold)
+ 
+  # Prepare the test data for xgboost (held constant for evaluation)
+  test_x <- data.matrix(test_data[, -which(colnames(test_data) == "Mean_rate")])
+  test_y <- test_data[["Mean_rate"]]
+  dtest <- xgb.DMatrix(data = test_x, label = test_y)
+ 
+  # Step 3: Iterate over training sizes
+  for (size in train_sizes) {
+   
+    # Create a subset of the training data
+    train_subset <- sample_frac(train_data, size = size)
+   
+    # Prepare the subset for xgboost
+    train_x <- data.matrix(train_subset[, -which(colnames(train_subset) == "Mean_rate")])
+    train_y <- train_subset[["Mean_rate"]]
+    dtrain <- xgb.DMatrix(data = train_x, label = train_y)
+   
+    # Train the model using the subset
+    xgb_model <- xgb.train(
+      params = params,
+      data = dtrain,
+      nrounds = 10000,
+      watchlist = list(train = dtrain, test = dtest),
+      early_stopping_rounds = NULL,
+      eval_metric = "rmse",
+      verbose = 0,
+    )
+   
+    # Extract evaluation log for this subset
+    evals <- xgb_model$evaluation_log
+    final_train_rmse <- tail(evals$train_rmse, 1)
+    final_test_rmse <- tail(evals$test_rmse, 1)
+   
+    # Store results in learning curve data
+    learning_curve_data <- rbind(
+      learning_curve_data,
+      data.frame(fold = as.numeric(fold$id),
+                 size = size,
+                 train_rmse = final_train_rmse,
+                 test_rmse = final_test_rmse)
+    )
+  }
+}
+
+
+
+evaluation_log <- xgb_model$evaluation_log
+
+# Plot the learning curve
+
+MGEN_LC=ggplot(evaluation_log, aes(x = iter)) +
+  geom_line(aes(y = train_rmse, color = 'Train')) +
+  geom_line(aes(y = test_rmse, color = 'Test')) +
+  geom_vline(xintercept = 9000, linetype = "dashed", color = "black") +  
+  labs(y = 'RMSE', x = 'Iterations', color = 'Dataset',
+       title = 'Methanogenesis', 
+       tag = "a)") +
+  scale_color_manual(values = c('Train' = '#1f78b4', 'Test' = '#f26928')) + 
+  theme_minimal()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+# Fit final model with all tuned hyperparameters
+
+# Define cross-validation folds
+set.seed(14) #was 12
+folds <- vfold_cv(data, v = 5, repeats = 10)
+
+# Specify final model parameters
+num_columns <- ncol(data) - 1  
+final_params <- list(
+  colsample_bytree = min(1, 5 / num_columns),
+  colsample_bynode = 0.125,
+  min_child_weight = 6,
+  max_depth = 10,
+  eta = 0.0184206996932672, 
+  gamma = 0.00954095476349994, 
+  subsample = 0.46734693877551, 
+  lambda = 2, 
+  alpha = 3 
+   
+)
+
+# Final XGBoost model specification
+xgb_spec_final <- boost_tree(
+  trees = 9000,                        
+  tree_depth = 10,                      
+  min_n = 6,                           
+  loss_reduction = 0.00954095476349994, 
+  sample_size = 0.46734693877551,     
+  mtry = 1,                            
+  learn_rate = 0.0184206996932672      
+) %>%
+  set_engine("xgboost", lambda = 2, alpha = 3) %>% 
+  set_mode("regression")
+
+# Workflow setup. Hyperparameters.
+workflow_final <- workflow() %>%
+  add_formula(Mean_rate ~ .) %>%
+  add_model(xgb_spec_final)
+
+# Model fitting and resampling
+final_fit_with_metrics <- workflow_final %>%
+  fit_resamples(
+    resamples = folds,
+    control = control_resamples(save_pred = TRUE, save_workflow = TRUE)
+  )
+
+# Collect model metrics (e.g., RMSE, R-squared)
+metrics_final <- final_fit_with_metrics %>%
+  collect_metrics()
+
+#Calculate AIC
+# Extract predictions from the final model
+preds <- predict(final_xgb_fit, new_data = data)$.pred
+
+# Compute residual sum of squares (RSS)
+rss <- sum((data$Mean_rate - preds)^2)
+
+# Number of observations
+n <- nrow(data)
+
+# Number of parameters (approximate as number of trees)
+k <- 9000 
+
+# Compute AIC
+aic_xgb <- n * log(rss / n) + 2 * k
+
+
+# Fit the final model on the full dataset. 
+final_xgb_fit <- workflow_final %>%
+  fit(data = data)
+
+# Extract the trained model and plot variable importance
+xgb_model_final <- extract_fit_engine(final_xgb_fit)
+importance_matrix_final <- xgb.importance(model = xgb_model_final)
+
+# Convert the importance matrix to a dataframe and plot
+importance_df <- as.data.frame(importance_matrix_final)
+importance_df$Gain_percentage <- importance_df$Gain * 100
+
+# Plot variable importance
+ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gain_percentage)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Variable Importance", x = "Features", y = "Importance Score (%)") +
+  theme_minimal()
+
+
+## Feature importance plots.
+triMGEN=ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gain_percentage, fill = Feature)) +
+  geom_col() +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Methanogenesis",
+       x = "Features",
+       y = "Relative Importance (%)",
+       tag = "a)") +
+  scale_x_discrete(labels = c("Salinity","Wetland type","Method","Pathway","Incubation temperature","Incubation length","Dominant vegetation","Depth")) +
+  scale_fill_manual(values = c("Depth" = "#a65628", 
+                               "Dominant_vegetation" = "#4daf4a", 
+                               "Incubation_length" = "#B3B3B3",
+                               "Pathway" = "#B3B3B3", 
+                               "Method"="#B3B3B3",
+                               "Wetland_type"="#B3B3B3",
+                               "Incubation_temperature"="#e41a1c", 
+                               "Salinity"="#B3B3B3")) +
+  theme(axis.text.y = element_text(hjust = 1, color = c("#999999","#999999","#999999","#999999","#e41a1c","#999999", "#4daf4a", "#a65628")), 
+        plot.title = element_text(hjust = 0.5, face = "bold"), 
+        legend.position = "none", text = element_text(size = 12))
+
+
+##partial dependency plots. 
+
+library(pdp)
+
+predictor_names <- colnames(predictors)
+
+
+# Loop through each predictor to generate PDPs
+for (pred in predictor_names) {
+  pdp_result <- partial(
+    xgb_model_final, 
+    pred.var = pred, 
+    train = as.matrix(predictors),
+    plot = FALSE
+  )
+  
+  # Convert the partial dependence result to a dataframe
+  pdp_df <- as.data.frame(pdp_result)
+  
+  # Plot using ggplot2
+  p <- ggplot(pdp_df, aes_string(x = pred, y = "yhat")) +
+    geom_line(color = "steelblue", size = 1) +
+    labs(
+      title = paste("Partial Dependency of", pred),
+      x = pred,
+      y = "Predicted Mean Rate"
+    ) +
+    theme_minimal()
+  
+  # Print each plot
+  print(p)
+}
+
+
+# Partial dependence plot for Depth
+pdp_depth <- partial(
+  xgb_model_final, 
+  pred.var = "Depth", 
+  train = as.matrix(predictors),
+  plot = FALSE
+)
+
+# Convert the partial dependence result to a dataframe
+pdp_depth_df <- as.data.frame(pdp_depth)
+
+# Plot using ggplot2 for Depth
+MGEN_pdp_depth <- ggplot(pdp_depth_df, aes_string(x = "Depth", y = "yhat")) +
+      geom_line() +
+    geom_rug(data = MGEN_filtered, aes(x = Depth, y = NULL), sides = "t", color = "blue", size = 0.4) +
+    labs(
+         x = "Depth (cm)", y = expression(paste("Rate (", mu, "mol CH"[4], " g"^{-1}, "soil d"^{-1}, ")")), tag = "g)") +
+    theme_minimal()
+
+
+# Partial dependence plot for Incubation Temperature
+pdp_temp <- partial(
+  xgb_model_final, 
+  pred.var = "Incubation_temperature", 
+  train = as.matrix(predictors),
+  plot = FALSE
+)
+
+# Convert the partial dependence result to a dataframe
+pdp_temp_df <- as.data.frame(pdp_temp)
+
+# Plot using ggplot2 for Incubation Temperature
+MGEN_pdp_temp <- ggplot(pdp_temp_df, aes_string(x = "Incubation_temperature", y = "yhat")) +
+    geom_line() +
+    geom_rug(data = MGEN_filtered, aes(x = Incubation_temperature, y = NULL), sides = "t", color = "blue", size = 0.4) +
+    labs(
+         x = "Incubation Temperature (\u00b0C)", y = expression(paste("Rate (", mu, "mol CH"[4], " g"^{-1}, "soil d"^{-1}, ")")),tag = "d)") +
+    theme_minimal()
+
+
+# Partial dependence plot for Dominant Vegetation
+pdp_domveg <- partial(
+  xgb_model_final, 
+  pred.var = "Dominant_vegetation", 
+  train = as.matrix(predictors),
+  plot = FALSE
+)
+
+# Convert the partial dependence result to a dataframe
+pdp_domveg_df <- as.data.frame(pdp_domveg)
+
+# map the species integers back to their categories for plotting
+species_list <- c(
+  "Bare mudflat", "Caladium jamaicense", "Carex sp.", "Cyperus malacensis", 
+  "Cyrilla racemiflora", "Equisetum variegatum", "Fraxinus caroliniana", 
+  "Hippuris vulgaris", "Juncus effuses", "Lythrum salicaria", 
+  "Menyanthes trifoliata", "Nuphar polysepalum", "Phragmites australis", 
+  "Spartina alterniflora", "Spartina mariqueter", "Sphagnum sp.", "Typha sp."
+)
+
+# Remove the first row from the dataframe
+pdp_domveg_df <- pdp_domveg_df[-1, ]
+
+# Assuming 'Dominant_vegetation' column exists in pdp_domveg_df and is ranked 1-17
+pdp_domveg_df <- pdp_domveg_df %>%
+  mutate(species = species_list[Dominant_vegetation])
+
+
+# Plot using ggplot2 for Dom veg
+MGEN_pdp_domveg <- ggplot(pdp_domveg_df, aes(x = factor(species, levels = species[order(yhat)]), y = yhat)) +
+  geom_point(size = 8, shape = 95) +
+  labs(
+    title = "Methanogenesis",
+    x = "Dominant Vegetation", 
+    y = expression(paste("Rate (", mu, "mol CH"[4], " g"^{-1}, "soil d"^{-1}, ")")),
+    tag = "a)") + 
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+
+
+
+```
+
+Aerobic methane oxidation boosted regression tree model
+```{r}
+#This workflow combines the strengths of xgboost for model building and tidymodels for cross-validation, tuning, and organizing the workflow.
+
+# Load necessary libraries
+library(xgboost)
+library(tidymodels)
+
+# Set variables for model
+data <- MOX_encoded
+response <- data$Mean_rate
+predictors <- data %>% select(-Mean_rate)
+
+# Grid search setup
+set.seed(362)
+
+# Model specification with early stopping
+xgb_spec <- boost_tree(
+  trees = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  loss_reduction = tune(),
+  sample_size = tune(),
+  mtry = tune(),
+  learn_rate = tune()
+) %>%
+  set_engine("xgboost") %>%
+  set_mode("regression")
+
+# Parameter grid
+Xgb_grid <- grid_space_filling(
+  trees(), tree_depth(), min_n(), loss_reduction(),
+  sample_size = sample_prop(), finalize(mtry(), data),
+  learn_rate(), size = 50
+)
+
+# Workflow setup
+workflow <- workflow() %>%
+  add_formula(Mean_rate ~ .) %>%
+  add_model(xgb_spec)
+
+# Cross-val1dation
+set.seed(376)
+folds <- vfold_cv(data, v = 5, repeats = 10)
+
+# Model tuning
+doParallel::registerDoParallel()
+set.seed(376)
+
+Xgb_res <- tune_grid(
+  workflow, resample = folds, grid = Xgb_grid,
+  control = control_grid(save_pred = TRUE)
+)
+
+# Extract best model parameters
+Best_rmse <- select_best(Xgb_res)
+
+#This object contains the final model parameters
+final_xgb <- finalize_workflow(workflow, Best_rmse)
+
+# Final model and variable importance. 
+final_xgb_fit <- final_xgb %>%
+  fit(data = data)
+
+# Extract the trained model and plot variable importance
+xgb_model <- extract_fit_engine(final_xgb_fit)
+importance_matrix <- xgb.importance(model = xgb_model)
+
+# Convert the importance matrix to a dataframe
+importance_df <- as.data.frame(importance_matrix)
+
+# Convert Gain scores to percentages
+importance_df$Gain_percentage <- importance_df$Gain * 100
+
+# Plotting the variable importance with Gain percentage as the x-axis
+ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gain_percentage)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Variable Importance", x = "Features", y = "Importance Score (%)")
+
+
+final_fit_with_metrics <- final_xgb %>%
+  fit_resamples(
+    resamples = folds,
+    control = control_resamples(save_pred = TRUE, save_workflow = TRUE)
+  )
+
+# Collect metrics from the model. RMSE/R2 for model validation table.
+metrics <- final_fit_with_metrics %>%
+  collect_metrics()
+
+#Let's compare model metrics to the range and sd of my response variable
+range(data$Mean_rate)
+sd(data$Mean_rate)
+
+#CV learning curves. Plot to tune number of trees, alpha and lambda values. 
+
+# Step 1: Perform cross-validation with the full data
+set.seed(456)
+folds <- vfold_cv(data, v = 5, repeats = 10)
+
+num_columns <- ncol(data) - 1 
+params <- list(
+  colsample_bytree = min(1, 5 / num_columns),
+  colsample_bynode = 0.142857142857143,
+  min_child_weight = 6,
+  max_depth = 10, #was 10
+  eta = 0.0184206996932672,
+  gamma = 0.00954095476349994,
+  subsample = 0.46734693877551,
+  lambda = 4, 
+  alpha = 8 
+   
+)
+
+# Step 2: Create learning curve data structure
+train_sizes <- seq(0.4, 1.0, by = 0.1)  
+learning_curve_data <- data.frame()
+
+# Loop over each fold in cross-validation
+for (fold in folds$splits) {
+ 
+  # Extract training and testing data for this fold
+  train_data <- analysis(fold)
+  test_data <- assessment(fold)
+ 
+  # Prepare the test data for xgboost (held constant for evaluation)
+  test_x <- data.matrix(test_data[, -which(colnames(test_data) == "Mean_rate")])
+  test_y <- test_data[["Mean_rate"]]
+  dtest <- xgb.DMatrix(data = test_x, label = test_y)
+ 
+  # Step 3: Iterate over training sizes
+  for (size in train_sizes) {
+   
+    # Create a subset of the training data
+    train_subset <- sample_frac(train_data, size = size)
+   
+    # Prepare the subset for xgboost
+    train_x <- data.matrix(train_subset[, -which(colnames(train_subset) == "Mean_rate")])
+    train_y <- train_subset[["Mean_rate"]]
+    dtrain <- xgb.DMatrix(data = train_x, label = train_y)
+   
+    # Train the model using the subset
+    xgb_model <- xgb.train(
+      params = params,
+      data = dtrain,
+      nrounds = 10000,
+      watchlist = list(train = dtrain, test = dtest),
+      early_stopping_rounds = NULL,
+      eval_metric = "rmse",
+      verbose = 0,
+    )
+   
+    # Extract evaluation log for this subset
+    evals <- xgb_model$evaluation_log
+    final_train_rmse <- tail(evals$train_rmse, 1)
+    final_test_rmse <- tail(evals$test_rmse, 1)
+   
+    # Store results in learning curve data
+    learning_curve_data <- rbind(
+      learning_curve_data,
+      data.frame(fold = as.numeric(fold$id),
+                 size = size,
+                 train_rmse = final_train_rmse,
+                 test_rmse = final_test_rmse)
+    )
+  }
+}
+
+
+
+evaluation_log <- xgb_model$evaluation_log
+
+# Plot the learning curve
+
+MOX_LC=ggplot(evaluation_log, aes(x = iter)) +
+  geom_line(aes(y = train_rmse, color = 'Train')) +
+  geom_line(aes(y = test_rmse, color = 'Test')) +
+  geom_vline(xintercept = 8500, linetype = "dashed", color = "black") +  
+  labs(y = 'RMSE', x = 'Iterations', color = 'Dataset',
+       title = 'Aerobic methane oxidation',
+       tag = "b)") +
+  scale_color_manual(values = c('Train' = '#1f78b4', 'Test' = '#f26928')) + 
+  theme_minimal()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+# Fit final model with all tuned hyperparameters.
+
+# Define cross-validation folds
+set.seed(4013) #was 4002
+folds <- vfold_cv(data, v = 5, repeats = 10)
+
+  
+# Specify final model parameters
+num_columns <- ncol(data) - 1  
+final_params <- list(
+  colsample_bytree = min(1, 5 / num_columns),
+  colsample_bynode = 0.142857142857143,
+  min_child_weight = 6,
+  max_depth = 10,
+  eta = 0.0184206996932672, 
+  gamma = 0.00954095476349994,
+  subsample = 0.46734693877551                 
+)
+
+# Final XGBoost model specification
+xgb_spec_final <- boost_tree(
+  trees = 8500,                        
+  tree_depth = 10,                      
+  min_n = 6,                           
+  loss_reduction = 0.00954095476349994, 
+  sample_size = 0.46734693877551,     
+  mtry = 1,                           
+  learn_rate = 0.0184206996932672      
+) %>%
+    set_engine("xgboost", lambda = 4, alpha = 8) %>% 
+  set_mode("regression")
+
+
+# Workflow setup. Hyperparameters.
+workflow_final <- workflow() %>%
+  add_formula(Mean_rate ~ .) %>%
+  add_model(xgb_spec_final)
+
+# Model fitting and resampling
+final_fit_with_metrics <- workflow_final %>%
+  fit_resamples(
+    resamples = folds,
+    control = control_resamples(save_pred = TRUE, save_workflow = TRUE)
+  )
+
+# Collect model metrics (e.g., RMSE, R-squared)
+metrics_final <- final_fit_with_metrics %>%
+  collect_metrics()
+
+
+# Fit the final model on the full dataset. 
+final_xgb_fit <- workflow_final %>%
+  fit(data = data)
+
+#Calculate AIC
+# Extract predictions from the final model
+preds <- predict(final_xgb_fit, new_data = data)$.pred
+
+# Compute residual sum of squares (RSS)
+rss <- sum((data$Mean_rate - preds)^2)
+
+# Number of observations
+n <- nrow(data)
+
+# Number of parameters (approximate as number of trees)
+k <- 8500 
+
+# Compute AIC
+aic_xgb <- n * log(rss / n) + 2 * k
+
+# Extract the trained model and plot variable importance
+xgb_model_final <- extract_fit_engine(final_xgb_fit)
+importance_matrix_final <- xgb.importance(model = xgb_model_final)
+
+# Convert the importance matrix to a dataframe and plot
+importance_df <- as.data.frame(importance_matrix_final)
+importance_df$Gain_percentage <- importance_df$Gain * 100
+
+# Plot variable importance
+ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gain_percentage)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Variable Importance", x = "Features", y = "Importance Score (%)") +
+  theme_minimal()
+
+
+## feature importance plot.
+triMOX=ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gain_percentage, fill = Feature)) +
+  geom_col() +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Aerobic methane oxidation",
+       x = "Features",
+       y = "Relative Importance (%)",
+       tag = "b)") +
+  scale_x_discrete(labels = c("Salinity","Method","Wetland type","Incubation temperature","Incubation length","Depth","Dominant vegetation")) +
+  scale_fill_manual(values = c("Depth" = "#a65628", 
+                               "Dominant_vegetation" = "#4daf4a", 
+                               "Incubation_length" = "#B3B3B3",
+                               "Method"="#B3B3B3",
+                               "Wetland_type"="#B3B3B3",
+                               "Incubation_temperature"="#e41a1c", 
+                               "Salinity"="#B3B3B3")) +
+  theme(axis.text.y = element_text(hjust = 1, color = c("#999999","#999999","#999999","#e41a1c","#999999","#a65628","#4daf4a")), 
+        plot.title = element_text(hjust = 0.5, face = "bold"), 
+        legend.position = "none", text = element_text(size = 12))
+
+
+##partial dependency plots. 
+
+library(pdp)
+
+predictor_names <- colnames(predictors)
+
+
+# Loop through each predictor to generate PDPs
+for (pred in predictor_names) {
+  pdp_result <- partial(
+    xgb_model_final, 
+    pred.var = pred, 
+    train = as.matrix(predictors),
+    plot = FALSE
+  )
+  
+  # Convert the partial dependence result to a dataframe
+  pdp_df <- as.data.frame(pdp_result)
+  
+  # Plot using ggplot2
+  p <- ggplot(pdp_df, aes_string(x = pred, y = "yhat")) +
+    geom_line(color = "steelblue", size = 1) +
+    labs(
+      title = paste("Partial Dependency of", pred),
+      x = pred,
+      y = "Predicted Mean Rate"
+    ) +
+    theme_minimal()
+  
+  # Print each plot
+  print(p)
+}
+
+
+# Partial dependence plot for Depth
+pdp_depth <- partial(
+  xgb_model_final, 
+  pred.var = "Depth", 
+  train = as.matrix(predictors),
+  plot = FALSE
+)
+
+# Convert the partial dependence result to a dataframe
+pdp_depth_df <- as.data.frame(pdp_depth)
+
+# Plot using ggplot2 for Depth
+MOX_pdp_depth <- ggplot(pdp_depth_df, aes_string(x = "Depth", y = "yhat")) +
+      geom_line() +
+    geom_rug(data = MOX_filtered, aes(x = Depth, y = NULL), sides = "t", color = "blue", size = 0.4) +
+    labs(
+         x = "Depth (cm)",  y = expression(paste("Rate (", mu, "mol CH"[4], " g"^{-1}, "soil d"^{-1}, ")")),tag = "h)") +
+    theme_minimal()
+
+# Print the Depth plot
+print(MOX_pdp_depth)
+
+
+# Partial dependence plot for Incubation Temperature
+pdp_temp <- partial(
+  xgb_model_final, 
+  pred.var = "Incubation_temperature", 
+  train = as.matrix(predictors),
+  plot = FALSE
+)
+
+# Convert the partial dependence result to a dataframe
+pdp_temp_df <- as.data.frame(pdp_temp)
+
+# Plot using ggplot2 for Incubation Temperature
+MOX_pdp_temp <- ggplot(pdp_temp_df, aes_string(x = "Incubation_temperature", y = "yhat")) +
+    geom_line() +
+    geom_rug(data = MOX_filtered, aes(x = Incubation_temperature, y = NULL), sides = "t", color = "blue", size = 0.4) +
+    labs(
+         x = "Incubation Temperature (\u00b0C)",  y = expression(paste("Rate (", mu, "mol CH"[4], " g"^{-1}, "soil d"^{-1}, ")")),tag = "e)") +
+    theme_minimal()
+
+# Print the Incubation Temperature plot
+print(MOX_pdp_temp)
+
+# Partial dependence plot for Dominant Vegetation
+pdp_domveg <- partial(
+  xgb_model_final, 
+  pred.var = "Dominant_vegetation", 
+  train = as.matrix(predictors),
+  plot = FALSE
+)
+
+# Convert the partial dependence result to a dataframe
+pdp_domveg_df <- as.data.frame(pdp_domveg)
+
+# map the species integers back to their categories for plotting
+species_list <- c(
+  "Bare mudflat", "Carex sp.", "Cyrilla racemiflora", "Eriophorum angustifolium", "Fraxinus caroliniana", "Oryza sp.","Phragmites australis", "Spartina alterniflora", "Spartina mariqueter", "Sphagnum sp.", "Typha sp."
+)
+
+# Remove the first row from the dataframe
+pdp_domveg_df <- pdp_domveg_df[-1, ]
+
+# Assuming 'Dominant_vegetation' column exists in pdp_domveg_df and is ranked 1-9
+pdp_domveg_df <- pdp_domveg_df %>%
+  mutate(species = species_list[Dominant_vegetation])
+
+
+# Plot using ggplot2 for Dom veg
+MOX_pdp_domveg <- ggplot(pdp_domveg_df, aes_string(x = "reorder(species, yhat)", y = "yhat")) +
+    geom_point(size = 8, shape = 95) +
+    labs(title = "Aerobic methane oxidation",
+         x = "Dominant Vegetation", 
+          y = expression(paste("Rate (", mu, "mol CH"[4], " g"^{-1}, "soil d"^{-1}, ")")), tag = "b)") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.title = element_text(hjust = 0.5, face = "bold"))
+
+
+# Print the Dom veg plot
+print(MOX_pdp_domveg)
+
+
+```
+
+Anaerobic methane oxidation boosted regression tree model
+```{r}
+#This workflow combines the strengths of xgboost for model building and tidymodels for cross-validation, tuning, and organizing the workflow.
+
+# Load necessary libraries
+library(xgboost)
+library(tidymodels)
+
+# Set variables for model
+data <- AOM_encoded
+response <- data$Mean_rate
+predictors <- data %>% select(-Mean_rate)
+
+# Grid search setup
+set.seed(57)
+
+# Model specification with early stopping
+xgb_spec <- boost_tree(
+  trees = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  loss_reduction = tune(),
+  sample_size = tune(),
+  mtry = tune(),
+  learn_rate = tune()
+) %>%
+  set_engine("xgboost") %>%
+  set_mode("regression")
+
+# Parameter grid
+Xgb_grid <- grid_space_filling(
+  trees(), tree_depth(), min_n(), loss_reduction(),
+  sample_size = sample_prop(), finalize(mtry(), data),
+  learn_rate(), size = 50
+)
+
+# Workflow setup
+workflow <- workflow() %>%
+  add_formula(Mean_rate ~ .) %>%
+  add_model(xgb_spec)
+
+# Cross-validation
+set.seed(914)
+folds <- vfold_cv(data, v = 5, repeats = 10) #was 5
+
+
+# Model tuning
+doParallel::registerDoParallel()
+set.seed(914)
+Xgb_res <- tune_grid(
+  workflow, resample = folds, grid = Xgb_grid,
+  control = control_grid(save_pred = TRUE)
+)
+
+# Extract best model parameters
+Best_rmse <- select_best(Xgb_res)
+
+#This object contains the final model parameters
+final_xgb <- finalize_workflow(workflow, Best_rmse)
+
+# Final model and variable importance. 
+final_xgb_fit <- final_xgb %>%
+  fit(data = data)
+
+# Extract the trained model and plot variable importance
+xgb_model <- extract_fit_engine(final_xgb_fit)
+importance_matrix <- xgb.importance(model = xgb_model)
+
+# Convert the importance matrix to a dataframe
+importance_df <- as.data.frame(importance_matrix)
+
+# Convert Gain scores to percentages
+importance_df$Gain_percentage <- importance_df$Gain * 100
+
+# Plotting the variable importance with Gain percentage as the x-axis
+ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gain_percentage)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Variable Importance", x = "Features", y = "Importance Score (%)")
+
+
+final_fit_with_metrics <- final_xgb %>%
+  fit_resamples(
+    resamples = folds,
+    control = control_resamples(save_pred = TRUE, save_workflow = TRUE)
+  )
+
+# Collect metrics from the model. RMSE/R2 for model validation table.
+metrics <- final_fit_with_metrics %>%
+  collect_metrics()
+
+#Let's compare model metrics to the range and sd of my response variable
+range(data$Mean_rate)
+sd(data$Mean_rate)
+
+#CV learning curves. Plot to tune number of trees, alpha and lambda values. 
+
+# Step 1: Perform cross-validation with the full data
+set.seed(301)
+folds <- vfold_cv(data, v = 5, repeats = 10)
+
+num_columns <- ncol(data) - 1 
+params <- list(
+  colsample_bytree = min(1, 5 / num_columns),
+  colsample_bynode = 0.125,
+  min_child_weight = 6,
+  max_depth = 10,
+  eta = 0.0184206996932672,
+  gamma = 0.00954095476349994,
+  subsample = 0.46734693877551
+  #lambda = 4, #adjusting lambda did not improve the learning curves 
+  #alpha = 8 #adjusting alpha did not improve the learning curves 
+   
+)
+
+# Step 2: Create learning curve data structure
+train_sizes <- seq(0.4, 1.0, by = 0.1)  
+learning_curve_data <- data.frame()
+
+# Loop over each fold in cross-validation
+for (fold in folds$splits) {
+ 
+  # Extract training and testing data for this fold
+  train_data <- analysis(fold)
+  test_data <- assessment(fold)
+ 
+  # Prepare the test data for xgboost (held constant for evaluation)
+  test_x <- data.matrix(test_data[, -which(colnames(test_data) == "Mean_rate")])
+  test_y <- test_data[["Mean_rate"]]
+  dtest <- xgb.DMatrix(data = test_x, label = test_y)
+ 
+  # Step 3: Iterate over training sizes
+  for (size in train_sizes) {
+   
+    # Create a subset of the training data
+    train_subset <- sample_frac(train_data, size = size)
+   
+    # Prepare the subset for xgboost
+    train_x <- data.matrix(train_subset[, -which(colnames(train_subset) == "Mean_rate")])
+    train_y <- train_subset[["Mean_rate"]]
+    dtrain <- xgb.DMatrix(data = train_x, label = train_y)
+   
+    # Train the model using the subset
+    xgb_model <- xgb.train(
+      params = params,
+      data = dtrain,
+      nrounds = 10000,
+      watchlist = list(train = dtrain, test = dtest),
+      early_stopping_rounds = NULL,
+      eval_metric = "rmse",
+      verbose = 0,
+    )
+   
+    # Extract evaluation log for this subset
+    evals <- xgb_model$evaluation_log
+    final_train_rmse <- tail(evals$train_rmse, 1)
+    final_test_rmse <- tail(evals$test_rmse, 1)
+   
+    # Store results in learning curve data
+    learning_curve_data <- rbind(
+      learning_curve_data,
+      data.frame(fold = as.numeric(fold$id),
+                 size = size,
+                 train_rmse = final_train_rmse,
+                 test_rmse = final_test_rmse)
+    )
+  }
+}
+
+
+
+evaluation_log <- xgb_model$evaluation_log
+
+# Plot the learning curve
+
+AOM_LC=ggplot(evaluation_log, aes(x = iter)) +
+  geom_line(aes(y = train_rmse, color = 'Train')) +
+  geom_line(aes(y = test_rmse, color = 'Test')) +
+  geom_vline(xintercept = 7500, linetype = "dashed", color = "black") +  
+  labs(y = 'RMSE', x = 'Iterations', color = 'Dataset',
+       title = 'Anaerobic methane oxidation', 
+       tag = "c)") +
+  scale_color_manual(values = c('Train' = '#1f78b4', 'Test' = '#f26928')) +  
+  theme_minimal()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+# Fit final model with all tuned hyperparameters
+
+# Define cross-validation folds
+set.seed(418)
+folds <- vfold_cv(data, v = 5, repeats = 10)
+
+# Specify final model parameters
+num_columns <- ncol(data) - 1  # Count features only
+final_params <- list(
+  colsample_bytree = min(1, 5 / num_columns),
+  colsample_bynode = 0.125,
+  min_child_weight = 6,
+  max_depth = 10,
+  eta = 0.0184206996932672,
+  gamma = 0.00954095476349994,
+  subsample = 0.46734693877551
+)
+
+# Final XGBoost model specification
+xgb_spec_final <- boost_tree(
+  trees = 7500,                        
+  tree_depth = 10,                      
+  min_n = 6,                           
+  loss_reduction = 0.00954095476349994, 
+  sample_size = 0.46734693877551,     
+  mtry = 1,                            
+  learn_rate = 0.0184206996932672     
+) %>%
+  set_engine("xgboost") %>%  
+  set_mode("regression")
+
+# Workflow setup. Hyperparameters.
+workflow_final <- workflow() %>%
+  add_formula(Mean_rate ~ .) %>%
+  add_model(xgb_spec_final)
+
+# Model fitting and resampling
+final_fit_with_metrics <- workflow_final %>%
+  fit_resamples(
+    resamples = folds,
+    control = control_resamples(save_pred = TRUE, save_workflow = TRUE)
+  )
+
+# Collect model metrics (e.g., RMSE, R-squared)
+metrics_final <- final_fit_with_metrics %>%
+  collect_metrics()
+
+
+# Fit the final model on the full dataset. Here are the hyperparameters.
+final_xgb_fit <- workflow_final %>%
+  fit(data = data)
+
+#Calculate AIC
+# Extract predictions from the final model
+preds <- predict(final_xgb_fit, new_data = data)$.pred
+
+# Compute residual sum of squares (RSS)
+rss <- sum((data$Mean_rate - preds)^2)
+
+# Number of observations
+n <- nrow(data)
+
+# Number of parameters (approximate as number of trees)
+k <- 7500
+
+# Compute AIC
+aic_xgb <- n * log(rss / n) + 2 * k
+
+
+
+# Extract the trained model and plot variable importance
+xgb_model_final <- extract_fit_engine(final_xgb_fit)
+importance_matrix_final <- xgb.importance(model = xgb_model_final)
+
+# Convert the importance matrix to a dataframe and plot
+importance_df <- as.data.frame(importance_matrix_final)
+
+importance_df$Gain_percentage <- importance_df$Gain * 100
+
+# Plot variable importance
+ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gain_percentage)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Variable Importance", x = "Features", y = "Importance Score (%)") +
+  theme_minimal()
+
+## feature importance plot.
+triAOM=ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gain_percentage, fill = Feature)) +
+  geom_col() +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Anaerobic methane oxidation",
+       x = "Features",
+       y = "Relative Importance (%)",
+       tag = "c)") +
+  scale_x_discrete(labels = c("Method","Wetland type","Salinity","Incubation length","Pathway","Depth","Dominant vegetation","Incubation temperature")) +
+  scale_fill_manual(values = c("Depth" = "#a65628", 
+                               "Dominant_vegetation" = "#4daf4a", 
+                               "Incubation_length" = "#B3B3B3",
+                               "Pathway" = "#B3B3B3", 
+                               "Method"="#B3B3B3",
+                               "Wetland_type"="#B3B3B3",
+                               "Incubation_temperature"="#e41a1c", 
+                               "Salinity"="#B3B3B3")) +
+  theme(axis.text.y = element_text(hjust = 1, color = c("#999999","#999999","#999999","#999999","#999999","#a65628","#4daf4a","#e41a1c")), 
+        plot.title = element_text(hjust = 0.5, face = "bold"), 
+        legend.position = "none", text = element_text(size = 12))
+
+##partial dependency plots. 
+
+library(pdp)
+
+predictor_names <- colnames(predictors)
+
+
+# Loop through each predictor to generate PDPs
+for (pred in predictor_names) {
+  pdp_result <- partial(
+    xgb_model_final, 
+    pred.var = pred, 
+    train = as.matrix(predictors),
+    plot = FALSE
+  )
+  
+  # Convert the partial dependence result to a dataframe
+  pdp_df <- as.data.frame(pdp_result)
+  
+  # Plot using ggplot2
+  p <- ggplot(pdp_df, aes_string(x = pred, y = "yhat")) +
+    geom_line(color = "steelblue", size = 1) +
+    labs(
+      title = paste("Partial Dependency of", pred),
+      x = pred,
+      y = "Predicted Mean Rate"
+    ) +
+    theme_minimal()
+  
+  # Print each plot
+  print(p)
+}
+
+
+# Partial dependence plot for Depth
+pdp_depth <- partial(
+  xgb_model_final, 
+  pred.var = "Depth", 
+  train = as.matrix(predictors),
+  plot = FALSE
+)
+
+# Convert the partial dependence result to a dataframe
+pdp_depth_df <- as.data.frame(pdp_depth)
+
+# Plot using ggplot2 for Depth
+AOM_pdp_depth <- ggplot(pdp_depth_df, aes_string(x = "Depth", y = "yhat")) +
+      geom_line() +
+    geom_rug(data = AOM_filtered, aes(x = Depth, y = NULL), sides = "t", color = "blue", size = 0.4) +
+    labs(
+         x = "Depth (cm)",  y = expression(paste("Rate (", mu, "mol CH"[4], " g"^{-1}, "soil d"^{-1}, ")")), tag = "i)") +
+    theme_minimal()
+
+# Print the Depth plot
+print(AOM_pdp_depth)
+
+
+# Partial dependence plot for Incubation Temperature
+pdp_temp <- partial(
+  xgb_model_final, 
+  pred.var = "Incubation_temperature", 
+  train = as.matrix(predictors),
+  plot = FALSE
+)
+
+# Convert the partial dependence result to a dataframe
+pdp_temp_df <- as.data.frame(pdp_temp)
+
+# Plot using ggplot2 for Incubation Temperature
+AOM_pdp_temp <- ggplot(pdp_temp_df, aes_string(x = "Incubation_temperature", y = "yhat")) +
+    geom_line() +
+    geom_rug(data = AOM_filtered, aes(x = Incubation_temperature, y = NULL), sides = "t", color = "blue", size = 0.4) +
+    labs(
+         x = "Incubation Temperature (\u00b0C)",  y = expression(paste("Rate (", mu, "mol CH"[4], " g"^{-1}, "soil d"^{-1}, ")")), tag = "f)") +
+    theme_minimal()
+
+# Print the Incubation Temperature plot
+print(AOM_pdp_temp)
+
+# Partial dependence plot for Dominant Vegetation
+pdp_domveg <- partial(
+  xgb_model_final, 
+  pred.var = "Dominant_vegetation", 
+  train = as.matrix(predictors),
+  plot = FALSE
+)
+
+# Convert the partial dependence result to a dataframe
+pdp_domveg_df <- as.data.frame(pdp_domveg)
+
+# map the species integers back to their categories for plotting
+
+species_list <- c("Bare mudflat", "Cyrilla racemiflora","Oryza sp.","Phragmites australis","Spartina alterniflora", "Spartina mariqueter", "Sphagnum sp.", "Suaeda glauca", "Tamarix sp.", "Unidentified reed")
+
+species_df <- data.frame(species = species_list)
+
+# Remove the first row from the dataframe
+pdp_domveg_df <- pdp_domveg_df[-nrow(pdp_domveg_df), ]
+
+# Assuming 'Dominant_vegetation' column exists in pdp_domveg_df and is ranked 1-9
+pdp_domveg_df <- cbind(pdp_domveg_df, species = species_df$species)
+
+
+# Plot using ggplot2 for Dom veg
+AOM_pdp_domveg <- ggplot(pdp_domveg_df, aes_string(x = "reorder(species, yhat)", y = "yhat")) +
+    geom_point(size = 8, shape = 95) +
+    labs(title = "Anaerobic methane oxidation",
+         x = "Dominant vegetation",  y = expression(paste("Rate (", mu, "mol CH"[4], " g"^{-1}, "soil d"^{-1}, ")")), tag = "c)") +
+    theme_minimal()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.title = element_text(hjust = 0.5, face = "bold"))
+
+
+# Print the Dom veg plot
+print(AOM_pdp_domveg)
+
+
+```
+
+Final figures for paper
+```{r}
+library(ggpubr)
+
+#Main paper. Saved as .tiff files with dpi=1000
+
+# Fig 1
+ggsave("Fig1.tiff", plot = Fig1, device = "tiff", dpi = 800, width = 8, height = 5.3, bg="white")
+
+# Fig 2
+ggsave("Fig2.tiff", plot = Fig2, device = "tiff", dpi = 800, width = 7, height = 6, bg="white")
+
+# Fig 3
+Fig3=ggarrange(triMGEN, triMOX, triAOM, ncol = 1, nrow = 3)
+
+ggsave("Fig3.tiff", plot = Fig3, device = "tiff", dpi = 800, width = 6, height = 10, bg="white")
+
+# Fig 4
+Fig4=ggarrange(MGEN_pdp_domveg,MOX_pdp_domveg, AOM_pdp_domveg, MGEN_pdp_temp, MOX_pdp_temp, AOM_pdp_temp,MGEN_pdp_depth, MOX_pdp_depth,AOM_pdp_depth, ncol = 3, nrow = 3)
+
+ggsave("Fig4.tiff", plot = Fig4, device = "tiff", dpi = 1000, width = 13, height = 11,  bg="white")
+
+#supplement
+
+#learning curves. Vertical
+ggarrange(MGEN_LC,MOX_LC, AOM_LC, ncol = 1, nrow = 3)
+
+```
+
