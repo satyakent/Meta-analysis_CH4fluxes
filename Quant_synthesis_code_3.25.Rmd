@@ -18,7 +18,6 @@ Load data and clean for modeling
 ```{r}
 
 #Load data 
-
 library(tidyverse)
 library(dplyr)
 
@@ -39,9 +38,10 @@ flux_rates_filtered <- flux_rates[, c("Pathway", "Mean_rate", "Wetland_type", "I
 flux_rates_filtered <- flux_rates_filtered %>%
   dplyr::select(-Salinity_cat)
 
-#re-organize datasets for modeling of each pathway separately 
-#hot encode categorical values to integers (ML models generally perform better when hot encoding categorical predictors)
-#Save the factor levels for categorical variables before encoding (we'll need later to plot the PDPs for categorical predictors)
+#re-organize datasets for modeling of each pathway separately.
+
+#hot encode categorical values to integers (machine learning models generally perform better when hot encoding categorical predictors, plus xgboost requires this)
+#Save the factor levels for categorical variables before encoding (we'll need later to plot the PDP's for categorical predictors)
 
 #MGEN
 MGEN_filtered <- flux_rates_filtered[flux_rates_filtered$Pathway == "Methanogenesis", ]
@@ -634,6 +634,26 @@ k <- 9000
 aic_xgb <- n * log(rss / n) + 2 * k
 
 
+
+# AIC=nlog(RMSE)+2p (Shabani 2017)
+
+# Get number of observations
+n <- nrow(MGEN_encoded)
+
+# Extract RMSE from collected metrics
+RMSE_value <- 1.27
+
+# Define number of explanatory variables (excluding response variable)
+P <- ncol(MGEN_encoded) - 1  
+
+# Compute AIC
+AIC_value <- n * log(RMSE_value) + 2 * P
+
+# Print result
+AIC_value
+
+
+
 # Fit the final model on the full dataset. 
 final_xgb_fit <- workflow_final %>%
   fit(data = data)
@@ -1054,6 +1074,23 @@ k <- 8500
 # Compute AIC
 aic_xgb <- n * log(rss / n) + 2 * k
 
+# AIC=nlog(RMSE)+2p (Shabani 2017)
+
+# Get number of observations
+n <- nrow(MOX_encoded)
+
+# Extract RMSE from collected metrics
+RMSE_value <- 2.76
+
+# Define number of explanatory variables (excluding response variable)
+P <- ncol(MOX_encoded) - 1  
+
+# Compute AIC
+AIC_value <- n * log(RMSE_value) + 2 * P
+
+# Print result
+AIC_value
+
 # Extract the trained model and plot variable importance
 xgb_model_final <- extract_fit_engine(final_xgb_fit)
 importance_matrix_final <- xgb.importance(model = xgb_model_final)
@@ -1452,6 +1489,9 @@ final_xgb_fit <- workflow_final %>%
   fit(data = data)
 
 #Calculate AIC
+
+#RSS method. AIC=nlog(rss/n) + 2k
+
 # Extract predictions from the final model
 preds <- predict(final_xgb_fit, new_data = data)$.pred
 
@@ -1467,7 +1507,22 @@ k <- 7500
 # Compute AIC
 aic_xgb <- n * log(rss / n) + 2 * k
 
+# RMSE method. AIC=nlog(RMSE)+2p (Shabani 2017)
 
+# Get number of observations
+n <- nrow(AOM_encoded)
+
+# Extract RMSE from collected metrics
+RMSE_value <- 0.21
+
+# Define number of explanatory variables (excluding response variable)
+P <- ncol(AOM_encoded) - 1  
+
+# Compute AIC
+AIC_value <- n * log(RMSE_value) + 2 * P
+
+# Print result
+AIC_value
 
 # Extract the trained model and plot variable importance
 xgb_model_final <- extract_fit_engine(final_xgb_fit)
