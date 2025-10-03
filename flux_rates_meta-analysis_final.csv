@@ -1,281 +1,281 @@
-Paper,Lat,Long,Study,Site,Pathway,Mean_rate,errorbar_values,error_reported,sample_size,Wetland_type_reported,Wetland_type,Inc_temp,Inc_length_days,Depth_cm,Depth_representative,Salinity_ppt,Salinity_cat,dom_veg,method,labeled_substrate,subpathway
-Blazewicz et al 2012,18_18N,65_48S,1,1,Methanogenesis ,0.351,0.069,SE,4,wet tropical forest,Swamp,25,80,0-15,7.5,NA,NA,Cyrilla racemiflora,"13C tracer, soil slurry",NA,NA
-Blazewicz et al 2012,18_18N,65_48S,1,1,Aerobic methane oxidation,0.533,0.083,SE,4,wet tropical forest,Swamp,25,80,0-15,7.5,NA,NA,Cyrilla racemiflora,"13C tracer, soil slurry",NA,NA
-Blazewicz et al 2012,18_18N,65_48S,1,1,Anaerobic methane oxidation,0.0029,0.0005,SE,4,wet tropical forest,Swamp,25,80,0-15,7.5,NA,NA,Cyrilla racemiflora,"13C tracer, soil slurry",NA,NA
-Blazewicz et al 2012,64_48N,147_54W,1,2,Methanogenesis ,7.858,0.423,SE,5,Fen,Fen,25,80,0-15,7.5,NA,low,NA,"13C tracer, soil slurry",NA,NA
-Blazewicz et al 2012,64_48N,147_54W,1,2,Aerobic methane oxidation,1.255,0.058,SE,5,Fen,Fen,25,80,0-15,7.5,NA,low,NA,"13C tracer, soil slurry",NA,NA
-Blazewicz et al 2012,64_48N,147_54W,1,2,Anaerobic methane oxidation,0.021,0.002,SE,5,Fen,Fen,25,80,0-15,7.5,NA,low,NA,"13C tracer, soil slurry",NA,NA
-Holmes et al 2014,26_17.27N, 80_24.67W,2,3,Methanogenesis ,0.6,NA,NA,3,Subtropical wetland,Marsh,23,35,NA,NA,NA,NA,Caladium jamaicense,soil slurry ,Acetate,Acetoclastic
-Holmes et al 2014,26_19.02N,80_23.10W,2,4,Methanogenesis ,2.3,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,NA,soil slurry ,Acetate,Acetoclastic
-Holmes et al 2014,26_21.59N,80_22.20W,2,5,Methanogenesis ,1.9,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,Typha sp.,soil slurry ,Acetate,Acetoclastic
-Holmes et al 2014,26_17.27N, 80_24.67W,2,3,Methanogenesis ,0.2,NA,NA,3,Subtropical wetland,Marsh,23,35,NA,NA,NA,NA,Caladium jamaicense,soil slurry ,H2/CO2,Hydrogenotrophic
-Holmes et al 2014,26_19.02N,80_23.10W,2,4,Methanogenesis ,0.8,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,NA,soil slurry ,H2/CO2,Hydrogenotrophic
-Holmes et al 2014,26_21.59N,80_22.20W,2,5,Methanogenesis ,1.8,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,Typha sp.,soil slurry ,H2/CO2,Hydrogenotrophic
-Holmes et al 2014,26_17.27N, 80_24.67W,2,3,Methanogenesis ,0.8,NA,NA,3,Subtropical wetland,Marsh,23,35,NA,NA,NA,NA,Caladium jamaicense,soil slurry ,NA,NA
-Holmes et al 2014,26_19.02N,80_23.10W,2,4,Methanogenesis ,3.1,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,NA,soil slurry ,NA,NA
-Holmes et al 2014,26_21.59N,80_22.20W,2,5,Methanogenesis ,3.7,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,Typha sp.,soil slurry ,NA,NA
-Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,4.23,0.385,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,NA,NA
-Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,4.07,0.385,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Acetate,Acetoclastic
-Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,4.61,0.385,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,H2/CO2,Hydrogenotrophic
-Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,4.07,0.769,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Methanol,Methylotrophic 
-Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,4.09,0.769,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,monomethylamine,Methylotrophic 
-Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,3.84,0.385,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,dimethylsulfide,Methylotrophic 
-Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,1.52,0.435,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,NA,NA
-Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,1.74,0.435,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Acetate,Acetoclastic
-Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,2.17,0.87,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,H2/CO2,Hydrogenotrophic
-Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,1.72,0.217,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Methanol,Methylotrophic 
-Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,2.17,0.109,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,monomethylamine,Methylotrophic 
-Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,2.17,0.13,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,dimethylsulfide,Methylotrophic 
-Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.58,0.032,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,NA,NA
-Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.65,0.13,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Acetate,Acetoclastic
-Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.45,0.006,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,H2/CO2,Hydrogenotrophic
-Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.58,0.013,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Methanol,Methylotrophic 
-Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.58,0.006,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,monomethylamine,Methylotrophic 
-Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.58,0.13,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,dimethylsulfide,Methylotrophic 
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,3.5,3.5,SE,3,Arctic wetland,Marsh,5,7,0,0,0.007,low,NA,non-slurried incubation,NA,NA
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,4.2,2,SE,3,Arctic wetland,Marsh,20,7,0,0,0.007,low,NA,non-slurried incubation,NA,NA
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,4.4,2,SE,3,Arctic wetland,Marsh,30,7,0,0,0.007,low,NA,non-slurried incubation,NA,NA
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,2,1.5,SE,3,Arctic wetland,Marsh,40,7,0,0,0.007,low,NA,non-slurried incubation,NA,NA
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,3.9,NA,SE,3,Arctic wetland,Marsh,5,7,0,0,0.007,low,NA,non-slurried incubation,Acetate,Acetoclastic
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,3.9,1,SE,3,Arctic wetland,Marsh,20,7,0,0,0.007,low,NA,non-slurried incubation,Acetate,Acetoclastic
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,5.1,0.75,SE,3,Arctic wetland,Marsh,30,7,0,0,0.007,low,NA,non-slurried incubation,Acetate,Acetoclastic
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,3.5,0.25,SE,3,Arctic wetland,Marsh,40,7,0,0,0.007,low,NA,non-slurried incubation,Acetate,Acetoclastic
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,1.7,1,SE,3,Arctic wetland,Marsh,5,7,0,0,0.007,low,NA,non-slurried incubation,Methanol,Methylotrophic 
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,1.8,1.5,SE,3,Arctic wetland,Marsh,20,7,0,0,0.007,low,NA,non-slurried incubation,Methanol,Methylotrophic 
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,1,NA,SE,3,Arctic wetland,Marsh,30,7,0,0,0.007,low,NA,non-slurried incubation,Methanol,Methylotrophic 
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,0.8,NA,SE,3,Arctic wetland,Marsh,40,7,0,0,0.007,low,NA,non-slurried incubation,Methanol,Methylotrophic 
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,3.9,0.75,SE,3,Arctic wetland,Marsh,5,7,0,0,0.007,low,NA,non-slurried incubation,H2/CO2,Hydrogenotrophic
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,6.2,1.75,SE,3,Arctic wetland,Marsh,20,7,0,0,0.007,low,NA,non-slurried incubation,H2/CO2,Hydrogenotrophic
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,10,1,SE,3,Arctic wetland,Marsh,30,7,0,0,0.007,low,NA,non-slurried incubation,H2/CO2,Hydrogenotrophic
-Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,6.2,0.75,SE,3,Arctic wetland,Marsh,40,7,0,0,0.007,low,NA,non-slurried incubation,H2/CO2,Hydrogenotrophic
-Hanna et al 2020,47_30.304N,93_29.339W,5,10,Methanogenesis ,5.2,1.1,SE,3,Fen,Fen,18,7,12.5,12.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_30.304N,93_29.339W,5,10,Methanogenesis ,1.66,0.49,SE,3,Fen,Fen,18,7,37.5,37.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_30.304N,93_29.339W,5,10,Methanogenesis ,0.26,0.04,SE,3,Fen,Fen,18,7,75,75,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_30.304N,93_29.339W,5,10,Methanogenesis ,0.13,0.01,SE,3,Fen,Fen,18,7,125,125,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_30.304N,93_29.339W,5,10,Methanogenesis ,0.04,0.01,SE,3,Fen,Fen,18,7,175,175,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_30.388N,93_27.256W,5,11,Methanogenesis ,2.88,0.22,SE,3,Bog,Bog,18,7,12.5,12.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_30.388N,93_27.256W,5,11,Methanogenesis ,0.46,0.04,SE,3,Bog,Bog,18,7,37.5,37.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_30.388N,93_27.256W,5,11,Methanogenesis ,0.07,0,SE,3,Bog,Bog,18,7,75,75,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_30.388N,93_27.256W,5,11,Methanogenesis ,0.13,0.01,SE,3,Bog,Bog,18,7,125,125,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_30.388N,93_27.256W,5,11,Methanogenesis ,0.03,0.01,SE,3,Bog,Bog,18,7,175,175,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_10.745N,92_42.877W,5,12,Methanogenesis ,0.4,0.1,SE,3,Bog,Bog,18,7,12.5,12.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_10.745N,92_42.877W,5,12,Methanogenesis ,0.61,0.13,SE,3,Bog,Bog,18,7,37.5,37.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_10.745N,92_42.877W,5,12,Methanogenesis ,0.21,0,SE,3,Bog,Bog,18,7,75,75,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_10.745N,92_42.877W,5,12,Methanogenesis ,0.01,0,SE,3,Bog,Bog,18,7,125,125,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Hanna et al 2020,47_10.745N,92_42.877W,5,12,Methanogenesis ,0.03,0,SE,3,Bog,Bog,18,7,175,175,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA
-Smith et al 2018,41_22N, 82_30W,6,13,Aerobic methane oxidation,2.931566667,NA,NA,3,freshwater wetland,Marsh,22,14,0-5,2.5,NA,NA,Bare mudflat,soil slurry ,NA,NA
-Smith et al 2018,41_22N, 82_30W,6,13,Aerobic methane oxidation,2.185766667,NA,NA,3,freshwater wetland,Marsh,22,14,20-30,25,NA,NA,Bare mudflat,soil slurry ,NA,NA
-Smith et al 2018,41_22N, 82_30W,6,14,Aerobic methane oxidation,3.047766667,NA,NA,3,freshwater wetland,Marsh,22,14,0-5,2.5,NA,NA,Typha sp.,soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Methanogenesis ,0.04314,0.0235,SE,5,tidal freshwater swamp,Swamp,22,3,0-5,2.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Methanogenesis ,0.0332,0.01395,SE,5,tidal freshwater swamp,Swamp,22,3,10-May,7.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Methanogenesis ,0.01274,0.0035,SE,5,tidal freshwater swamp,Swamp,22,3,20-Oct,15,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Methanogenesis ,0.00385,0.00092,SE,5,tidal freshwater swamp,Swamp,22,3,20-30,25,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Methanogenesis ,0.01361,0.00471,SE,5,tidal freshwater swamp,Swamp,22,3,0-5,2.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Methanogenesis ,0.00419,0.00121,SE,5,tidal freshwater swamp,Swamp,22,3,10-May,7.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Methanogenesis ,0.03781,0.02803,SE,5,tidal freshwater swamp,Swamp,22,3,20-Oct,15,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Methanogenesis ,0.01851,0.01072,SE,5,tidal freshwater swamp,Swamp,22,3,20-30,25,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Aerobic methane oxidation,3.41,0.45,SE,5,tidal freshwater swamp,Swamp,22,3,0-5,2.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Aerobic methane oxidation,2.75,0.07,SE,5,tidal freshwater swamp,Swamp,22,3,10-May,7.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Aerobic methane oxidation,1.63,0.35,SE,5,tidal freshwater swamp,Swamp,22,3,20-Oct,15,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Aerobic methane oxidation,1.01,0.35,SE,5,tidal freshwater swamp,Swamp,22,3,20-30,25,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Aerobic methane oxidation,3.45,0.26,SE,5,tidal freshwater swamp,Swamp,22,3,0-5,2.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Aerobic methane oxidation,2.83,0.18,SE,5,tidal freshwater swamp,Swamp,22,3,10-May,7.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Aerobic methane oxidation,1.85,0.18,SE,5,tidal freshwater swamp,Swamp,22,3,20-Oct,15,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Aerobic methane oxidation,0.72,0.2,SE,5,tidal freshwater swamp,Swamp,22,3,20-30,25,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA
-Murase et al 2019,70_33.8N,148_15.9E,8,17,Aerobic methane oxidation,6.144,0.024,SE,3,Arctic wetland,Bog,15,2,0-10,5,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA
-Murase et al 2019,70_33.8N,148_15.9E,8,17,Aerobic methane oxidation,7.704,0.504,SE,3,Arctic wetland,Bog,15,2,20-Oct,15,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA
-Murase et al 2019,70_33.8N,148_15.9E,8,17,Aerobic methane oxidation,1.296,0.024,SE,3,Arctic wetland,Bog,15,2,30-40,35,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA
-Murase et al 2019,70_33.8N,148_15.9E,8,18,Aerobic methane oxidation,3.312,0.024,SE,3,Arctic wetland,Bog,15,2,0-10,5,NA,low,Carex sp.,non-slurried incubation,NA,NA
-Murase et al 2019,70_33.8N,148_15.9E,8,18,Aerobic methane oxidation,2.256,0.024,SE,3,Arctic wetland,Bog,15,2,20-Oct,15,NA,low,Carex sp.,non-slurried incubation,NA,NA
-Wang et al 2022,36_55N,117_31E,9,19,Anaerobic methane oxidation,0.0024,0.0005,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.72,med,Suaeda glauca,soil slurry ,NO3,Nitrate-dependent
-Wang et al 2022,36_55N,117_31E,9,20,Anaerobic methane oxidation,0.0024,0.0005,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.005,low,Unidentified reed,soil slurry ,NO3,Nitrate-dependent
-Wang et al 2022,36_55N,117_31E,9,21,Anaerobic methane oxidation,0.0022,0.0005,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.625,med,Tamarix sp.,soil slurry ,NO3,Nitrate-dependent
-Wang et al 2022,36_55N,117_31E,9,22,Anaerobic methane oxidation,0.0013,0.0005,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,2.23,med,Bare mudflat,soil slurry ,NO3,Nitrate-dependent
-Wang et al 2022,36_55N,117_31E,9,19,Anaerobic methane oxidation,0.0006,0.0001,SE,3,River delta estuary ,Marsh,30,5,40-50,45,1.7,med,Suaeda glauca,soil slurry ,NO3,Nitrate-dependent
-Wang et al 2022,36_55N,117_31E,9,20,Anaerobic methane oxidation,0.0011,0.0001,SE,3,River delta estuary ,Marsh,30,5,40-50,45,0.775,low,Unidentified reed,soil slurry ,NO3,Nitrate-dependent
-Wang et al 2022,36_55N,117_31E,9,21,Anaerobic methane oxidation,0.0011,0.00025,SE,3,River delta estuary ,Marsh,30,5,40-50,45,2.035,med,Tamarix sp.,soil slurry ,NO3,Nitrate-dependent
-Wang et al 2022,36_55N,117_31E,9,22,Anaerobic methane oxidation,0.0006,0.00025,SE,3,River delta estuary ,Marsh,30,5,40-50,45,1.72,med,Bare mudflat,soil slurry ,NO3,Nitrate-dependent
-Wang et al 2022,36_55N,117_31E,9,19,Anaerobic methane oxidation,0.0025,0.00025,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.72,med,Suaeda glauca,soil slurry ,NO2,Nitrite-dependent
-Wang et al 2022,36_55N,117_31E,9,20,Anaerobic methane oxidation,0.0037,0.00025,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.005,low,Unidentified reed,soil slurry ,NO2,Nitrite-dependent
-Wang et al 2022,36_55N,117_31E,9,21,Anaerobic methane oxidation,0.0032,0.000175,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.625,med,Tamarix sp.,soil slurry ,NO2,Nitrite-dependent
-Wang et al 2022,36_55N,117_31E,9,22,Anaerobic methane oxidation,0.0017,0.00025,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,2.23,med,Bare mudflat,soil slurry ,NO2,Nitrite-dependent
-Wang et al 2022,36_55N,117_31E,9,19,Anaerobic methane oxidation,0.0014,0.000175,SE,3,River delta estuary ,Marsh,30,5,40-50,45,1.7,med,Suaeda glauca,soil slurry ,NO2,Nitrite-dependent
-Wang et al 2022,36_55N,117_31E,9,20,Anaerobic methane oxidation,0.0015,0.0005,SE,3,River delta estuary ,Marsh,30,5,40-50,45,0.775,low,Unidentified reed,soil slurry ,NO2,Nitrite-dependent
-Wang et al 2022,36_55N,117_31E,9,21,Anaerobic methane oxidation,0.0013,0.000175,SE,3,River delta estuary ,Marsh,30,5,40-50,45,2.035,med,Tamarix sp.,soil slurry ,NO2,Nitrite-dependent
-Wang et al 2022,36_55N,117_31E,9,22,Anaerobic methane oxidation,0.0013,0.00005,SE,3,River delta estuary ,Marsh,30,5,40-50,45,1.72,med,Bare mudflat,soil slurry ,NO2,Nitrite-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.002,0.00075,SD,5,alpine wetland,Bog,14,50,0-10,5,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0038,NA,SD,5,alpine wetland,Bog,14,50,20-Oct,15,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.004,NA,SD,5,alpine wetland,Bog,14,50,20-30,25,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0018,NA,SD,5,alpine wetland,Bog,14,50,30-40,35,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0017,0.00075,SD,5,alpine wetland,Bog,14,50,40-50,45,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0017,NA,SD,5,alpine wetland,Bog,14,50,50-60,55,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0003,NA,SD,5,alpine wetland,Bog,14,50,60-70,65,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0001,NA,SD,5,alpine wetland,Bog,14,50,70-80,75,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.001,NA,SD,5,alpine wetland,Bog,14,50,0-10,5,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.002,0.00075,SD,5,alpine wetland,Bog,14,50,20-Oct,15,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.007,0.0025,SD,5,alpine wetland,Bog,14,50,20-30,25,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.007,0.001,SD,5,alpine wetland,Bog,14,50,30-40,35,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.009,0.002,SD,5,alpine wetland,Bog,14,50,40-50,45,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.007,0.001,SD,5,alpine wetland,Bog,14,50,50-60,55,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.002,0.0005,SD,5,alpine wetland,Bog,14,50,60-70,65,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent
-Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.002,0.00025,SD,5,alpine wetland,Bog,14,50,70-80,75,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent
-Hu et al 2014,30_30.94N,120_2.73E,11,24,Anaerobic methane oxidation,0.0002,NA,NA,3,coastal wetland,Marsh,NA,1,20-30,25,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent
-Hu et al 2014,30_15.29N,120_3.64E,11,25,Anaerobic methane oxidation,0.0007,NA,NA,3,urban wetland,Marsh,NA,1,20-30,25,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent
-Hu et al 2014,30_30.94N,120_2.73E,11,24,Anaerobic methane oxidation,0.0055,NA,NA,3,coastal wetland,Marsh,NA,1,50-60,55,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent
-Hu et al 2014,30_15.29N,120_3.64E,11,25,Anaerobic methane oxidation,0.005,NA,NA,3,urban wetland,Marsh,NA,1,50-60,55,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent
-Hu et al 2014,30_20.4N,120_16.19E,11,26,Anaerobic methane oxidation,0.002,NA,NA,3,rice paddy field,Paddy,NA,1,50-60,55,NA,NA,Oryza sp.,"13C tracer, soil slurry",NO2,Nitrite-dependent
-Hu et al 2014,30_30.94N,120_2.73E,11,24,Anaerobic methane oxidation,0.005,NA,NA,3,coastal wetland,Marsh,NA,1,90-100,95,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent
-Hu et al 2014,30_15.29N,120_3.64E,11,25,Anaerobic methane oxidation,0.004,NA,NA,3,urban wetland,Marsh,NA,1,90-100,95,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent
-Hu et al 2014,30_20.4N,120_16.19E,11,26,Anaerobic methane oxidation,0.002,NA,NA,3,rice paddy field,Paddy,NA,1,90-100,95,NA,NA,Oryza sp.,"13C tracer, soil slurry",NO2,Nitrite-dependent
-An et al 2024,31_29N ,121_57E,13,28,Methanogenesis ,0.0018,0.000075,SD,3,coastal wetland,Marsh,30,4,0-5,2.5,0.6,low,Bare mudflat,soil slurry ,NA,NA
-An et al 2024,31_29N ,121_57E,13,29,Methanogenesis ,0.0013,0.0003,SD,3,coastal wetland,Marsh,30,4,0-5,2.5,1.15,low,Phragmites australis,soil slurry ,NA,NA
-An et al 2024,31_29N ,121_57E,13,30,Methanogenesis ,0.0015,0.0001,SD,3,coastal wetland,Marsh,30,4,0-5,2.5,1.3,low,Spartina mariqueter,soil slurry ,NA,NA
-An et al 2024,31_29N ,121_57E,13,31,Methanogenesis ,0.0017,0.0002,SD,3,coastal wetland,Marsh,30,4,0-5,2.5,1.45,low,Spartina alterniflora,soil slurry ,NA,NA
-An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.016,0.0032,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",Mn,Manganese-dependent
-An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.018,0.00325,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",Humic acids,Humic acid-dependent
-An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.02,0.00325,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",Fe,Iron-dependent
-An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.008,0.00325,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",NO2,Nitrite-dependent
-An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.013,0.00325,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",NO3,Nitrate-dependent
-An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.035,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",SO4,Sulfate-dependent
-An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.02,0.01,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",Mn,Manganese-dependent
-An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.018,0.012,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",Humic acids,Humic acid-dependent
-An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.025,0.013,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",Fe,Iron-dependent
-An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.004,0.013,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",NO2,Nitrite-dependent
-An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.01,0.01,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",NO3,Nitrate-dependent
-An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.015,0.0093,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",SO4,Sulfate-dependent
-An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.04,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",Mn,Manganese-dependent
-An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.04,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",Humic acids,Humic acid-dependent
-An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.04,0.008,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",Fe,Iron-dependent
-An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.025,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",NO2,Nitrite-dependent
-An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.055,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",NO3,Nitrate-dependent
-An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.1,0.008,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",SO4,Sulfate-dependent
-An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.075,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",Mn,Manganese-dependent
-An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.07,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",Humic acids,Humic acid-dependent
-An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.05,0.007,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",Fe,Iron-dependent
-An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.05,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",NO2,Nitrite-dependent
-An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.055,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",NO3,Nitrate-dependent
-An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.125,0.007,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",SO4,Sulfate-dependent
-An et al 2024,31_29N ,121_57E,13,28,Aerobic methane oxidation,0.032,0.001,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",NA,NA
-An et al 2024,31_29N ,121_57E,13,29,Aerobic methane oxidation,0.04,0.01,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",NA,NA
-An et al 2024,31_29N ,121_57E,13,30,Aerobic methane oxidation,0.15,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",NA,NA
-An et al 2024,31_29N ,121_57E,13,31,Aerobic methane oxidation,0.16,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",NA,NA
-Barney et al 2024,47_30.476N,93_27.162W,14,32,Anaerobic methane oxidation,0.05,NA,NA,10,Bog,Bog,15,8,20-30,25,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA
-Barney et al 2024,47_30.476N,93_27.162W,14,32,Anaerobic methane oxidation,0.06,NA,NA,10,Bog,Bog,15,8,40-50,45,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA
-Barney et al 2024,47_30.476N,93_27.162W,14,32,Anaerobic methane oxidation,0.01,NA,NA,10,Bog,Bog,13,8,50-75,62.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA
-Barney et al 2024,47_30.476N,93_27.162W,14,32,Anaerobic methane oxidation,0.0001,NA,NA,10,Bog,Bog,13,8,100-125,112.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA
-Barney et al 2024,47_30.476N,93_27.162W,14,32,Anaerobic methane oxidation,0.0001,NA,NA,10,Bog,Bog,11,8,175-200,187.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA
-Barney et al 2024,47_30.476N,93_27.162W,14,32,Methanogenesis ,1,NA,NA,10,Bog,Bog,15,8,20-30,25,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA
-Barney et al 2024,47_30.476N,93_27.162W,14,32,Methanogenesis ,0.4,NA,NA,10,Bog,Bog,15,8,40-50,45,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA
-Barney et al 2024,47_30.476N,93_27.162W,14,32,Methanogenesis ,0.25,NA,NA,10,Bog,Bog,13,8,50-75,62.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA
-Barney et al 2024,47_30.476N,93_27.162W,14,32,Methanogenesis ,0.4,NA,NA,10,Bog,Bog,13,8,100-125,112.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA
-Barney et al 2024,47_30.476N,93_27.162W,14,32,Methanogenesis ,0.27,NA,NA,10,Bog,Bog,11,8,175-200,187.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA
-Liu et al 2024,28_07N,120_58E,15,33,Anaerobic methane oxidation,0.0017,NA,NA,3,coastal wetland,Marsh,22,30,0-10,5,0.0081297,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Liu et al 2024,28_07N,120_58E,15,33,Anaerobic methane oxidation,0.0003,NA,NA,3,coastal wetland,Marsh,22,30,20-Oct,15,0.0081297,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Liu et al 2024,28_07N,120_58E,15,33,Anaerobic methane oxidation,0.0008,NA,NA,3,coastal wetland,Marsh,22,30,30-40,35,0.0081297,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Liu et al 2024,30_21N,122_11E,15,34,Anaerobic methane oxidation,0.0007,NA,NA,3,coastal wetland,Marsh,22,30,0-10,5,0.00045165,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Liu et al 2024,30_21N,122_11E,15,34,Anaerobic methane oxidation,0.0006,NA,NA,3,coastal wetland,Marsh,22,30,20-Oct,15,0.00045165,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Liu et al 2024,30_21N,122_11E,15,34,Anaerobic methane oxidation,0.0001,NA,NA,3,coastal wetland,Marsh,22,30,30-40,35,0.00045165,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Liu et al 2024,24_30N,117_47N,15,35,Anaerobic methane oxidation,0.0017,NA,NA,3,coastal wetland,Marsh,22,30,0-10,5,0.0072264,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Liu et al 2024,24_30N,117_47N,15,35,Anaerobic methane oxidation,0.0006,NA,NA,3,coastal wetland,Marsh,22,30,20-Oct,15,0.0072264,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Liu et al 2024,24_30N,117_47N,15,35,Anaerobic methane oxidation,0.0014,NA,NA,3,coastal wetland,Marsh,22,30,30-40,35,0.0072264,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Liu et al 2024,21_12.8N,110_32.3N,15,36,Anaerobic methane oxidation,0.0009,NA,NA,3,coastal wetland,Marsh,22,30,0-10,5,0.0144528,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Liu et al 2024,21_12.8N,110_32.3N,15,36,Anaerobic methane oxidation,0.0015,NA,NA,3,coastal wetland,Marsh,22,30,20-Oct,15,0.0144528,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Liu et al 2024,21_12.8N,110_32.3N,15,36,Anaerobic methane oxidation,0.0016,NA,NA,3,coastal wetland,Marsh,22,30,30-40,35,0.0144528,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent
-Sabrekov et al 2024,60_53.51N,68_40.62E,16,37,Methanogenesis ,3.6,NA,NA,3,Bog,Bog,15,60,15-20,17.5,0.00144528,low,Sphagnum sp.,shaken soil slurry ,NA,NA
-Sabrekov et al 2024,60_53.51N,68_40.62E,16,37,Methanogenesis ,0.276,NA,NA,3,Bog,Bog,10,60,40-50,45,0.00144528,low,Sphagnum sp.,shaken soil slurry ,NA,NA
-Sabrekov et al 2024,60_53.51N,68_40.62E,16,37,Methanogenesis ,0.0432,NA,NA,3,Bog,Bog,5,150,100,100,0.00072264,low,Sphagnum sp.,shaken soil slurry ,NA,NA
-Sabrekov et al 2024,60_53.51N,68_40.62E,16,37,Methanogenesis ,0.036,NA,NA,3,Bog,Bog,5,150,200,200,0.00144528,low,Sphagnum sp.,shaken soil slurry ,NA,NA
-Sabrekov et al 2024,60_53.51N,68_40.62E,16,37,Methanogenesis ,0.0432,NA,NA,3,Bog,Bog,5,150,300,300,0.00234858,low,Sphagnum sp.,shaken soil slurry ,NA,NA
-Sabrekov et al 2024,61_3.83N,69_27.67E,16,38,Methanogenesis ,0.012,NA,NA,3,Bog,Bog,5,150,100,100,NA,low,Sphagnum sp.,shaken soil slurry ,NA,NA
-Sabrekov et al 2024,60_54.58N,71_17.96E,16,39,Methanogenesis ,0.024,NA,NA,3,Bog,Bog,5,150,100,100,NA,low,Sphagnum sp.,shaken soil slurry ,NA,NA
-Sabrekov et al 2024,60_54.58N,71_17.96E,16,39,Methanogenesis ,0.048,NA,NA,3,Bog,Bog,5,150,200,200,NA,low,Sphagnum sp.,shaken soil slurry ,NA,NA
-Valenzuela et al 2020,21_9.43N,90_3.15W,17,40,Anaerobic methane oxidation,1.3,0.1,SE,3,coastal wetland,Marsh,28,9,0-15,7.5,NA,NA,NA,"13C tracer, soil slurry",NA,NA
-Shi et al 2017,42_20.93N,126_22.85E,18,41,Anaerobic methane oxidation,2.22072,NA,NA,4,rice paddy field,Paddy,18,0.0417,50-60,55,NA,NA,Oryza sp.,"13C tracer, soil slurry",NO3,Nitrate-dependent
-Shi et al 2017,42_20.93N,126_22.85E,18,41,Anaerobic methane oxidation,0.53712,NA,NA,4,rice paddy field,Paddy,18,0.0417,50-60,55,NA,NA,Oryza sp.,"13C tracer, soil slurry",NA,NA
-Shi et al 2017,42_20.93N,126_22.85E,18,42,Anaerobic methane oxidation,1.67976,NA,NA,4,Fen,Fen,18,0.0417,50-60,55,NA,low,NA,"13C tracer, soil slurry",NO3,Nitrate-dependent
-Shi et al 2017,42_20.93N,126_22.85E,18,42,Anaerobic methane oxidation,0.7044,NA,NA,4,Fen,Fen,18,0.0417,50-60,55,NA,low,NA,"13C tracer, soil slurry",NA,NA
-Zhang et al 2020,31_29.9N, 121_56.0E,19,43,Anaerobic methane oxidation,0.002,0.0005,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Bare mudflat,"13C tracer, soil slurry",NA,NA
-Zhang et al 2020,31_29.9N, 121_56.0E,19,43,Anaerobic methane oxidation,0.0018,0.0001,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Bare mudflat,"13C tracer, soil slurry",NO3,Nitrate-dependent
-Zhang et al 2020,31_29.9N, 121_56.0E,19,43,Anaerobic methane oxidation,0.0012,0.00025,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Bare mudflat,"13C tracer, soil slurry",NO2,Nitrite-dependent
-Zhang et al 2020,31_29.9N, 121_56.0E,19,43,Anaerobic methane oxidation,0.001,0.00025,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Bare mudflat,"13C tracer, soil slurry",NH4,Annamox
-Zhang et al 2020,31_29.9N, 121_56.0E,19,43,Anaerobic methane oxidation,0.0025,0.00025,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Bare mudflat,"13C tracer, soil slurry",SO4,Sulfate-dependent
-Zhang et al 2020,31_29.9N, 121_56.0E,19,44,Anaerobic methane oxidation,0.0012,0.00025,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Unidentified reed,"13C tracer, soil slurry",NA,NA
-Zhang et al 2020,31_29.9N, 121_56.0E,19,44,Anaerobic methane oxidation,0.0008,0.0001,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Unidentified reed,"13C tracer, soil slurry",NO3,Nitrate-dependent
-Zhang et al 2020,31_29.9N, 121_56.0E,19,44,Anaerobic methane oxidation,0.0005,0.0001,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Unidentified reed,"13C tracer, soil slurry",NO2,Nitrite-dependent
-Zhang et al 2020,31_29.9N, 121_56.0E,19,44,Anaerobic methane oxidation,0.0005,0.0001,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Unidentified reed,"13C tracer, soil slurry",NH4,Annamox
-Zhang et al 2020,31_29.9N, 121_56.0E,19,44,Anaerobic methane oxidation,0.0025,0.00025,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Unidentified reed,"13C tracer, soil slurry",SO4,Sulfate-dependent
-Esson et al 2016,47_30.476N,93_27.162W,20,45,Aerobic methane oxidation,15,2.3,SD,4,Bog,Bog,24,14,0-10,5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA
-Glagolev et al 2022,60_53.51N,68_40.62E,21,46,Methanogenesis ,2.5,NA,NA,NA,Bog,Bog,15,NA,40-50,45,NA,low,Sphagnum sp.,shaken soil slurry ,NA,NA
-Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.08,0.0905,SE,9,freshwater wetland,Marsh,14,14,65,65,0.02,low,NA,soil slurry,NA,NA
-Vizza et al 2017,60_22.746N,144_58.508W,22,48,Methanogenesis ,0.022,0.03875,SE,5,coastal wetland,Marsh,14,14,55,55,5,high,Carex sp.,soil slurry,NA,NA
-Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.15,0.1,SE,5,freshwater wetland,Marsh,14,14,65,65,0.02,low,Bare mudflat,soil slurry,NA,NA
-Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.14,0.125,SE,5,freshwater wetland,Marsh,14,14,65,65,0.02,low,Menyanthes trifoliata,soil slurry,NA,NA
-Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.45,0.2,SE,5,freshwater wetland,Marsh,14,14,65,65,0.02,low,Equisetum variegatum,soil slurry,NA,NA
-Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.5,0.25,SE,5,freshwater wetland,Marsh,14,14,65,65,0.02,low,Nuphar polysepalum,soil slurry,NA,NA
-Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.2,0.09,SE,5,freshwater wetland,Marsh,14,14,65,65,0.02,low,Hippuris vulgaris,soil slurry,NA,NA
-Jiang et al 2024,26_0.6N,119_34.2E,23,49,Methanogenesis ,0.075,NA,SD,3,tidal wetland,Marsh,32.95,1,0-10,5,NA,NA,Cyperus malacensis,shaken soil slurry ,NA,NA
-Jiang et al 2024,26_0.6N,119_34.2E,23,50,Methanogenesis ,0.12,NA,SD,3,tidal wetland,Marsh,32.95,1,0-10,5,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA
-Jiang et al 2024,26_0.6N,119_34.2E,23,51,Methanogenesis ,0.15,NA,SD,3,tidal wetland,Marsh,32.95,1,0-10,5,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA
-Jiang et al 2024,26_0.6N,119_34.2E,23,52,Methanogenesis ,0.15,NA,SD,3,tidal wetland,Marsh,32.95,1,0-10,5,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA
-Jiang et al 2024,26_0.6N,119_34.2E,23,49,Methanogenesis ,0.04,NA,SD,3,tidal wetland,Marsh,32.95,1,20-Oct,15,NA,NA,Cyperus malacensis,shaken soil slurry ,NA,NA
-Jiang et al 2024,26_0.6N,119_34.2E,23,50,Methanogenesis ,0.08,NA,SD,3,tidal wetland,Marsh,32.95,1,20-Oct,15,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA
-Jiang et al 2024,26_0.6N,119_34.2E,23,51,Methanogenesis ,0.095,NA,SD,3,tidal wetland,Marsh,32.95,1,20-Oct,15,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA
-Jiang et al 2024,26_0.6N,119_34.2E,23,52,Methanogenesis ,0.12,NA,SD,3,tidal wetland,Marsh,32.95,1,20-Oct,15,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA
-Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,1.75,0.02,NA,3,alpine wetland,Fen,30,180,10,10,NA,low,NA,shaken soil slurry ,NA,NA
-Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,1.65,0.07,NA,3,alpine wetland,Fen,30,180,20,20,NA,low,NA,shaken soil slurry ,NA,NA
-Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,1.36,0.02,NA,3,alpine wetland,Fen,30,180,30,30,NA,low,NA,shaken soil slurry ,NA,NA
-Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.49,0.06,NA,3,alpine wetland,Fen,15,180,10,10,NA,low,NA,shaken soil slurry ,NA,NA
-Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.36,0.04,NA,3,alpine wetland,Fen,15,180,20,20,NA,low,NA,shaken soil slurry ,NA,NA
-Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.21,0.05,NA,3,alpine wetland,Fen,15,180,30,30,NA,low,NA,shaken soil slurry ,NA,NA
-Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.12,0.01,NA,3,alpine wetland,Fen,6,180,10,10,NA,low,NA,shaken soil slurry ,NA,NA
-Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.12,0.01,NA,3,alpine wetland,Fen,6,180,20,20,NA,low,NA,shaken soil slurry ,NA,NA
-Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.12,0.023,NA,3,alpine wetland,Fen,6,180,30,30,NA,low,NA,shaken soil slurry ,NA,NA
-Williams and Yavitt 2010,42_19.7N,76_28.6W,25,54,Methanogenesis ,0.067,NA,NA,50,Fen,Fen,23,3,0-25,12.5,NA,low,Lythrum salicaria,soil slurry,NA,NA
-Williams and Yavitt 2010,42_19.7N,76_28.6W,25,54,Methanogenesis ,0.675,NA,NA,50,Fen,Fen,23,3,0-25,12.5,NA,low,Carex sp.,soil slurry,NA,NA
-Williams and Yavitt 2010,42_19.7N,76_28.6W,25,54,Methanogenesis ,1.555,NA,NA,50,Fen,Fen,23,3,0-25,12.5,NA,low,Juncus effuses,soil slurry,NA,NA
-Williams and Yavitt 2010,42_19.7N,76_28.6W,25,54,Methanogenesis ,1.647,NA,NA,50,Fen,Fen,23,3,0-25,12.5,NA,low,Typha sp.,soil slurry,NA,NA
-Yang et al 2025,40_41N,121_30E,26,55,Aerobic methane oxidation,0.888,0.12,NA,5,coastal wetland,Marsh,30,6.25,0-15,7.5,NA,NA,Phragmites australis,soil slurry,NA,NA
-Yang et al 2025,41_27N,122_30E,26,56,Aerobic methane oxidation,0.6,0.24,NA,5,rice paddy field,Paddy,30,6.25,0-15,7.5,NA,NA,Oryza sp.,soil slurry,NA,NA
-Yang et al 2025,30_17N,121_5E,26,57,Aerobic methane oxidation,0.42,0.048,NA,5,coastal wetland,Marsh,30,6.25,0-15,7.5,NA,NA,Phragmites australis,soil slurry,NA,NA
-Yang et al 2025,30_20N,121_10E,26,58,Aerobic methane oxidation,0.336,0.084,NA,5,rice paddy field,Paddy,30,6.25,0-15,7.5,NA,NA,Oryza sp.,soil slurry,NA,NA
-Perryman et al 2020,68_21N,19_02E,28,60,Aerobic methane oxidation,0.0505,yes_later,SD,3,peatland,Bog,10,1,0-8,4,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA
-Perryman et al 2020,68_21N,19_02E,28,60,Aerobic methane oxidation,0.0686,yes_later,SD,3,peatland,Bog,10,1,8-15.,11.5,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA
-Perryman et al 2020,68_21N,19_02E,28,61,Aerobic methane oxidation,0.0605,yes_later,SD,3,peatland,Bog,10,1,0-7,3.5,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA
-Perryman et al 2020,68_21N,19_02E,28,61,Aerobic methane oxidation,0.0517,yes_later,SD,3,peatland,Bog,10,1,7-15.,11,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA
-Perryman et al 2020,68_21N,19_02E,28,62,Aerobic methane oxidation,0.187,yes_later,SD,3,peatland,Fen,10,1,0-10,5,NA,low,Eriophorum angustifolium,non-slurried incubation,NA,NA
-Perryman et al 2020,68_21N,19_02E,28,62,Aerobic methane oxidation,0.1621,yes_later,SD,3,peatland,Fen,10,1,10-20.,15,NA,low,Eriophorum angustifolium,non-slurried incubation,NA,NA
-Perryman et al 2020,68_21N,19_02E,28,63,Aerobic methane oxidation,0.1683,yes_later,SD,3,peatland,Fen,10,1,0-10,5,NA,low,Carex sp.,non-slurried incubation,NA,NA
-Perryman et al 2020,68_21N,19_02E,28,63,Aerobic methane oxidation,0.1434,yes_later,SD,3,peatland,Fen,10,1,10-20.,15,NA,low,Carex sp.,non-slurried incubation,NA,NA
-Zhang et al 2019,32_38.8137N,120_53.2272E,29,64,Aerobic methane oxidation,8.352,yes_later,NA,25,rice paddy,Paddy,28,2,0-20,10,0.22,NA,Oryza sp.,non-slurried incubation,NA,NA
-Basiliko et al 2004,45_5.1N,75_32.5W,30,65,Aerobic methane oxidation,0.814,yes_later,SD,18,Fen,Fen,22,4,NA,NA,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA
-Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,0.249,NA,NA,3,Forested bog ,Bog,20,5,5,5,NA,low,NA,shaken soil slurry ,NA,NA
-Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,1.558,NA,NA,3,Forested bog ,Bog,20,5,15,15,NA,low,NA,shaken soil slurry ,NA,NA
-Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,0.499,NA,NA,3,Forested bog ,Bog,20,5,25,25,NA,low,NA,shaken soil slurry ,NA,NA
-Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,0.499,NA,NA,3,Forested bog ,Bog,20,5,35,35,NA,low,NA,shaken soil slurry ,NA,NA
-Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,0.81,NA,NA,3,Forested bog ,Bog,20,5,45,45,NA,low,NA,shaken soil slurry ,NA,NA
-Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,0.499,NA,NA,3,Forested bog ,Bog,20,5,55,55,NA,low,NA,shaken soil slurry ,NA,NA
-Moore and Dalva 1997,49_10N,82_45W,31,67,Aerobic methane oxidation,3.117,NA,NA,3,Bog hollow,Bog,20,5,5,5,NA,low,NA,shaken soil slurry ,NA,NA
-Moore and Dalva 1997,49_10N,82_45W,31,67,Aerobic methane oxidation,3.429,NA,NA,3,Bog hollow,Bog,20,5,15,15,NA,low,NA,shaken soil slurry ,NA,NA
-Moore and Dalva 1997,49_10N,82_45W,31,67,Aerobic methane oxidation,4.364,NA,NA,3,Bog hollow,Bog,20,5,22,22,NA,low,NA,shaken soil slurry ,NA,NA
-Moore and Dalva 1997,49_10N,82_45W,31,67,Aerobic methane oxidation,2.805,NA,NA,3,Bog hollow,Bog,20,5,30,30,NA,low,NA,shaken soil slurry ,NA,NA
-Krumholz et al 1995,42_27.62N,71_20.93W,33,69,Aerobic methane oxidation,0.558,NA,NA,4,peatland,Bog,24,2,2,2,NA,low,NA,soil slurry,NA,NA
-Krumholz et al 1995,42_27.62N,71_20.93W,33,69,Aerobic methane oxidation,1.368,NA,NA,4,peatland,Bog,24,2,5,5,NA,low,NA,soil slurry,NA,NA
-Krumholz et al 1995,42_27.62N,71_20.93W,33,69,Aerobic methane oxidation,0.87,NA,NA,4,peatland,Bog,24,2,8,8,NA,low,NA,soil slurry,NA,NA
-Dan et al 2001,45_20N,8_25E,34,70,Aerobic methane oxidation,8.4,yes_later,SE,4,rice paddy,Paddy,25,NA,0-3,1.5,NA,NA,Oryza sp.,shaken soil slurry ,NA,NA
-Bender and Conrad 1994,45_20N,8_25E,35,71,Aerobic methane oxidation,5.04,yes_later,NA,NA,rice paddy,Paddy,25,NA,0-10,5,NA,NA,Oryza sp.,soil slurry,NA,NA
-Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,11.6,yes_later,SD,3,rice paddy,Paddy,25,3,NA,NA,0.384,yes_later,Oryza sp.,shaken soil slurry ,NA,NA
-Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,11.7,yes_later,SD,3,rice paddy,Paddy,25,3,NA,NA,3.072,yes_later,Oryza sp.,shaken soil slurry ,NA,NA
-Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,14.1,yes_later,SD,3,rice paddy,Paddy,25,3,NA,NA,6.016,yes_later,Oryza sp.,shaken soil slurry ,NA,NA
-Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,8,yes_later,SD,3,rice paddy,Paddy,25,7,NA,NA,0.384,yes_later,Oryza sp.,shaken soil slurry ,NA,NA
-Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,5,yes_later,SD,3,rice paddy,Paddy,25,7,NA,NA,3.072,yes_later,Oryza sp.,shaken soil slurry ,NA,NA
-Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,3.8,yes_later,SD,3,rice paddy,Paddy,25,7,NA,NA,6.016,yes_later,Oryza sp.,shaken soil slurry ,NA,NA
-Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,4.1,yes_later,SD,3,rice paddy,Paddy,25,7,NA,NA,17.92,yes_later,Oryza sp.,shaken soil slurry ,NA,NA
-Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,0.4324,NA,NA,2,Bog,Bog,5,NA,20-30,25,NA,low,NA,soil slurry,NA,NA
-Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,0.6209,NA,NA,2,Bog,Bog,10,NA,20-30,25,NA,low,NA,soil slurry,NA,NA
-Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,0.9725,NA,NA,2,Bog,Bog,15,NA,20-30,25,NA,low,NA,soil slurry,NA,NA
-Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,1.167,NA,NA,2,Bog,Bog,20,NA,20-30,25,NA,low,NA,soil slurry,NA,NA
-Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,1.2718,NA,NA,2,Bog,Bog,28,NA,20-30,25,NA,low,NA,soil slurry,NA,NA
-Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,1.0773,NA,NA,3,Bog,Bog,34,NA,20-30,25,NA,low,NA,soil slurry,NA,NA
-Gauthier et al 2015,57_02.17N,2_14.00W,39,77,Aerobic methane oxidation,10,yes_later,SEM,18,peatland,Bog,20,2,NA,NA,NA,low,Sphagnum sp.,13C pool dilution,NA,NA
-Gauthier et al 2015,57_02.17N,2_14.00W,39,77,Methanogenesis ,0.2,yes_later,SEM,18,peatland,Bog,20,2,NA,NA,NA,low,Sphagnum sp.,13C pool dilution,NA,NA
-Murase et al 2019,57_02.17N,2_14.00W,39,77,Methanogenesis ,0.43,yes_later,SEM,18,peatland,Bog,20,60,NA,NA,NA,low,Sphagnum sp.,13C pool dilution,NA,NA
+Paper,Lat,Long,Study,Site,Pathway,Mean_rate,errorbar_values,error_reported,sample_size,Wetland_type_reported,Wetland_type,Inc_temp,Inc_length_days,Depth_cm,Depth_representative,Salinity_ppt,Salinity_cat,dom_veg,method,labeled_substrate,subpathway,Potential
+Blazewicz et al 2012,18_18N,65_48S,1,1,Aerobic methane oxidation,0.533,0.083,SE,4,wet tropical forest,Swamp,25,80,0-15,7.5,NA,NA,Cyrilla racemiflora,"13C tracer, soil slurry",NA,NA,YES
+Blazewicz et al 2012,64_48N,147_54W,1,2,Aerobic methane oxidation,1.255,0.058,SE,5,Fen,Fen,25,80,0-15,7.5,NA,low,NA,"13C tracer, soil slurry",NA,NA,YES
+Smith et al 2018,41_22N, 82_30W,6,13,Aerobic methane oxidation,2.931566667,NA,NA,3,freshwater wetland,Marsh,22,14,0-5,2.5,NA,NA,Bare mudflat,soil slurry ,NA,NA,YES
+Smith et al 2018,41_22N, 82_30W,6,13,Aerobic methane oxidation,2.185766667,NA,NA,3,freshwater wetland,Marsh,22,14,20-30,25,NA,NA,Bare mudflat,soil slurry ,NA,NA,YES
+Smith et al 2018,41_22N, 82_30W,6,14,Aerobic methane oxidation,3.047766667,NA,NA,3,freshwater wetland,Marsh,22,14,0-5,2.5,NA,NA,Typha sp.,soil slurry ,NA,NA,YES
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Aerobic methane oxidation,3.41,0.45,SE,5,tidal freshwater swamp,Swamp,22,3,0-5,2.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,YES
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Aerobic methane oxidation,2.75,0.07,SE,5,tidal freshwater swamp,Swamp,22,3,10-May,7.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,YES
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Aerobic methane oxidation,1.63,0.35,SE,5,tidal freshwater swamp,Swamp,22,3,20-Oct,15,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,YES
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Aerobic methane oxidation,1.01,0.35,SE,5,tidal freshwater swamp,Swamp,22,3,20-30,25,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,YES
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Aerobic methane oxidation,3.45,0.26,SE,5,tidal freshwater swamp,Swamp,22,3,0-5,2.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,YES
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Aerobic methane oxidation,2.83,0.18,SE,5,tidal freshwater swamp,Swamp,22,3,10-May,7.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,YES
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Aerobic methane oxidation,1.85,0.18,SE,5,tidal freshwater swamp,Swamp,22,3,20-Oct,15,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,YES
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Aerobic methane oxidation,0.72,0.2,SE,5,tidal freshwater swamp,Swamp,22,3,20-30,25,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,YES
+Murase et al 2019,70_33.8N,148_15.9E,8,17,Aerobic methane oxidation,6.144,0.024,SE,3,Arctic wetland,Bog,15,2,0-10,5,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA,YES
+Murase et al 2019,70_33.8N,148_15.9E,8,17,Aerobic methane oxidation,7.704,0.504,SE,3,Arctic wetland,Bog,15,2,20-Oct,15,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA,YES
+Murase et al 2019,70_33.8N,148_15.9E,8,17,Aerobic methane oxidation,1.296,0.024,SE,3,Arctic wetland,Bog,15,2,30-40,35,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA,YES
+Murase et al 2019,70_33.8N,148_15.9E,8,18,Aerobic methane oxidation,3.312,0.024,SE,3,Arctic wetland,Bog,15,2,0-10,5,NA,low,Carex sp.,non-slurried incubation,NA,NA,YES
+Murase et al 2019,70_33.8N,148_15.9E,8,18,Aerobic methane oxidation,2.256,0.024,SE,3,Arctic wetland,Bog,15,2,20-Oct,15,NA,low,Carex sp.,non-slurried incubation,NA,NA,YES
+An et al 2024,31_29N ,121_57E,13,28,Aerobic methane oxidation,0.032,0.001,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",NA,NA,YES
+An et al 2024,31_29N ,121_57E,13,29,Aerobic methane oxidation,0.04,0.01,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",NA,NA,YES
+An et al 2024,31_29N ,121_57E,13,30,Aerobic methane oxidation,0.15,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",NA,NA,YES
+An et al 2024,31_29N ,121_57E,13,31,Aerobic methane oxidation,0.16,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",NA,NA,YES
+Esson et al 2016,47_30.476N,93_27.162W,20,45,Aerobic methane oxidation,15,2.3,SD,4,Bog,Bog,24,14,0-10,5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA,YES
+Yang et al 2025,40_41N,121_30E,26,55,Aerobic methane oxidation,0.888,0.12,NA,5,coastal wetland,Marsh,30,6.25,0-15,7.5,NA,NA,Phragmites australis,soil slurry,NA,NA,YES
+Yang et al 2025,41_27N,122_30E,26,56,Aerobic methane oxidation,0.6,0.24,NA,5,rice paddy field,Paddy,30,6.25,0-15,7.5,NA,NA,Oryza sp.,soil slurry,NA,NA,YES
+Yang et al 2025,30_17N,121_5E,26,57,Aerobic methane oxidation,0.42,0.048,NA,5,coastal wetland,Marsh,30,6.25,0-15,7.5,NA,NA,Phragmites australis,soil slurry,NA,NA,YES
+Yang et al 2025,30_20N,121_10E,26,58,Aerobic methane oxidation,0.336,0.084,NA,5,rice paddy field,Paddy,30,6.25,0-15,7.5,NA,NA,Oryza sp.,soil slurry,NA,NA,YES
+Perryman et al 2020,68_21N,19_02E,28,60,Aerobic methane oxidation,0.0505,yes_later,SD,3,peatland,Bog,10,1,0-8,4,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA,YES
+Perryman et al 2020,68_21N,19_02E,28,60,Aerobic methane oxidation,0.0686,yes_later,SD,3,peatland,Bog,10,1,8-15.,11.5,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA,YES
+Perryman et al 2020,68_21N,19_02E,28,61,Aerobic methane oxidation,0.0605,yes_later,SD,3,peatland,Bog,10,1,0-7,3.5,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA,YES
+Perryman et al 2020,68_21N,19_02E,28,61,Aerobic methane oxidation,0.0517,yes_later,SD,3,peatland,Bog,10,1,7-15.,11,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA,YES
+Perryman et al 2020,68_21N,19_02E,28,62,Aerobic methane oxidation,0.187,yes_later,SD,3,peatland,Fen,10,1,0-10,5,NA,low,Eriophorum angustifolium,non-slurried incubation,NA,NA,YES
+Perryman et al 2020,68_21N,19_02E,28,62,Aerobic methane oxidation,0.1621,yes_later,SD,3,peatland,Fen,10,1,10-20.,15,NA,low,Eriophorum angustifolium,non-slurried incubation,NA,NA,YES
+Perryman et al 2020,68_21N,19_02E,28,63,Aerobic methane oxidation,0.1683,yes_later,SD,3,peatland,Fen,10,1,0-10,5,NA,low,Carex sp.,non-slurried incubation,NA,NA,YES
+Perryman et al 2020,68_21N,19_02E,28,63,Aerobic methane oxidation,0.1434,yes_later,SD,3,peatland,Fen,10,1,10-20.,15,NA,low,Carex sp.,non-slurried incubation,NA,NA,YES
+Zhang et al 2019,32_38.8137N,120_53.2272E,29,64,Aerobic methane oxidation,8.352,yes_later,NA,25,rice paddy,Paddy,28,2,0-20,10,0.22,NA,Oryza sp.,non-slurried incubation,NA,NA,YES
+Basiliko et al 2004,45_5.1N,75_32.5W,30,65,Aerobic methane oxidation,0.814,yes_later,SD,18,Fen,Fen,22,4,NA,NA,NA,low,Sphagnum sp.,non-slurried incubation,NA,NA,YES
+Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,0.249,NA,NA,3,Forested bog ,Bog,20,5,5,5,NA,low,NA,shaken soil slurry ,NA,NA,YES
+Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,1.558,NA,NA,3,Forested bog ,Bog,20,5,15,15,NA,low,NA,shaken soil slurry ,NA,NA,YES
+Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,0.499,NA,NA,3,Forested bog ,Bog,20,5,25,25,NA,low,NA,shaken soil slurry ,NA,NA,YES
+Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,0.499,NA,NA,3,Forested bog ,Bog,20,5,35,35,NA,low,NA,shaken soil slurry ,NA,NA,YES
+Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,0.81,NA,NA,3,Forested bog ,Bog,20,5,45,45,NA,low,NA,shaken soil slurry ,NA,NA,YES
+Moore and Dalva 1997,49_3N,80_40W,31,66,Aerobic methane oxidation,0.499,NA,NA,3,Forested bog ,Bog,20,5,55,55,NA,low,NA,shaken soil slurry ,NA,NA,YES
+Moore and Dalva 1997,49_10N,82_45W,31,67,Aerobic methane oxidation,3.117,NA,NA,3,Bog hollow,Bog,20,5,5,5,NA,low,NA,shaken soil slurry ,NA,NA,YES
+Moore and Dalva 1997,49_10N,82_45W,31,67,Aerobic methane oxidation,3.429,NA,NA,3,Bog hollow,Bog,20,5,15,15,NA,low,NA,shaken soil slurry ,NA,NA,YES
+Moore and Dalva 1997,49_10N,82_45W,31,67,Aerobic methane oxidation,4.364,NA,NA,3,Bog hollow,Bog,20,5,22,22,NA,low,NA,shaken soil slurry ,NA,NA,YES
+Moore and Dalva 1997,49_10N,82_45W,31,67,Aerobic methane oxidation,2.805,NA,NA,3,Bog hollow,Bog,20,5,30,30,NA,low,NA,shaken soil slurry ,NA,NA,YES
+Krumholz et al 1995,42_27.62N,71_20.93W,33,69,Aerobic methane oxidation,0.558,NA,NA,4,peatland,Bog,24,2,2,2,NA,low,NA,soil slurry,NA,NA,YES
+Krumholz et al 1995,42_27.62N,71_20.93W,33,69,Aerobic methane oxidation,1.368,NA,NA,4,peatland,Bog,24,2,5,5,NA,low,NA,soil slurry,NA,NA,YES
+Krumholz et al 1995,42_27.62N,71_20.93W,33,69,Aerobic methane oxidation,0.87,NA,NA,4,peatland,Bog,24,2,8,8,NA,low,NA,soil slurry,NA,NA,YES
+Dan et al 2001,45_20N,8_25E,34,70,Aerobic methane oxidation,8.4,yes_later,SE,4,rice paddy,Paddy,25,NA,0-3,1.5,NA,NA,Oryza sp.,shaken soil slurry ,NA,NA,YES
+Bender and Conrad 1994,45_20N,8_25E,35,71,Aerobic methane oxidation,5.04,yes_later,NA,NA,rice paddy,Paddy,25,NA,0-10,5,NA,NA,Oryza sp.,soil slurry,NA,NA,YES
+Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,11.6,yes_later,SD,3,rice paddy,Paddy,25,3,NA,NA,0.384,yes_later,Oryza sp.,shaken soil slurry ,NA,NA,YES
+Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,11.7,yes_later,SD,3,rice paddy,Paddy,25,3,NA,NA,3.072,yes_later,Oryza sp.,shaken soil slurry ,NA,NA,YES
+Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,14.1,yes_later,SD,3,rice paddy,Paddy,25,3,NA,NA,6.016,yes_later,Oryza sp.,shaken soil slurry ,NA,NA,YES
+Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,8,yes_later,SD,3,rice paddy,Paddy,25,7,NA,NA,0.384,yes_later,Oryza sp.,shaken soil slurry ,NA,NA,YES
+Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,5,yes_later,SD,3,rice paddy,Paddy,25,7,NA,NA,3.072,yes_later,Oryza sp.,shaken soil slurry ,NA,NA,YES
+Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,3.8,yes_later,SD,3,rice paddy,Paddy,25,7,NA,NA,6.016,yes_later,Oryza sp.,shaken soil slurry ,NA,NA,YES
+Ho et al 2018,45_20N,8_25E,36,72,Aerobic methane oxidation,4.1,yes_later,SD,3,rice paddy,Paddy,25,7,NA,NA,17.92,yes_later,Oryza sp.,shaken soil slurry ,NA,NA,YES
+Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,0.4324,NA,NA,2,Bog,Bog,5,NA,20-30,25,NA,low,NA,soil slurry,NA,NA,YES
+Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,0.6209,NA,NA,2,Bog,Bog,10,NA,20-30,25,NA,low,NA,soil slurry,NA,NA,YES
+Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,0.9725,NA,NA,2,Bog,Bog,15,NA,20-30,25,NA,low,NA,soil slurry,NA,NA,YES
+Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,1.167,NA,NA,2,Bog,Bog,20,NA,20-30,25,NA,low,NA,soil slurry,NA,NA,YES
+Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,1.2718,NA,NA,2,Bog,Bog,28,NA,20-30,25,NA,low,NA,soil slurry,NA,NA,YES
+Whalen and Reeburgh 1996 ,64_51N,147_44W,37,75,Aerobic methane oxidation,1.0773,NA,NA,3,Bog,Bog,34,NA,20-30,25,NA,low,NA,soil slurry,NA,NA,YES
+Gauthier et al 2015,57_02.17N,2_14.00W,39,77,Aerobic methane oxidation,10,yes_later,SEM,18,peatland,Bog,20,2,NA,NA,NA,low,Sphagnum sp.,13C pool dilution,NA,NA,YES
+Blazewicz et al 2012,18_18N,65_48S,1,1,Anaerobic methane oxidation,0.0029,0.0005,SE,4,wet tropical forest,Swamp,25,80,0-15,7.5,NA,NA,Cyrilla racemiflora,"13C tracer, soil slurry",NA,NA,YES
+Blazewicz et al 2012,64_48N,147_54W,1,2,Anaerobic methane oxidation,0.021,0.002,SE,5,Fen,Fen,25,80,0-15,7.5,NA,low,NA,"13C tracer, soil slurry",NA,NA,YES
+Wang et al 2022,36_55N,117_31E,9,19,Anaerobic methane oxidation,0.0024,0.0005,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.72,med,Suaeda glauca,soil slurry ,NO3,Nitrate-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,20,Anaerobic methane oxidation,0.0024,0.0005,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.005,low,Unidentified reed,soil slurry ,NO3,Nitrate-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,21,Anaerobic methane oxidation,0.0022,0.0005,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.625,med,Tamarix sp.,soil slurry ,NO3,Nitrate-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,22,Anaerobic methane oxidation,0.0013,0.0005,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,2.23,med,Bare mudflat,soil slurry ,NO3,Nitrate-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,19,Anaerobic methane oxidation,0.0006,0.0001,SE,3,River delta estuary ,Marsh,30,5,40-50,45,1.7,med,Suaeda glauca,soil slurry ,NO3,Nitrate-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,20,Anaerobic methane oxidation,0.0011,0.0001,SE,3,River delta estuary ,Marsh,30,5,40-50,45,0.775,low,Unidentified reed,soil slurry ,NO3,Nitrate-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,21,Anaerobic methane oxidation,0.0011,0.00025,SE,3,River delta estuary ,Marsh,30,5,40-50,45,2.035,med,Tamarix sp.,soil slurry ,NO3,Nitrate-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,22,Anaerobic methane oxidation,0.0006,0.00025,SE,3,River delta estuary ,Marsh,30,5,40-50,45,1.72,med,Bare mudflat,soil slurry ,NO3,Nitrate-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,19,Anaerobic methane oxidation,0.0025,0.00025,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.72,med,Suaeda glauca,soil slurry ,NO2,Nitrite-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,20,Anaerobic methane oxidation,0.0037,0.00025,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.005,low,Unidentified reed,soil slurry ,NO2,Nitrite-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,21,Anaerobic methane oxidation,0.0032,0.000175,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,1.625,med,Tamarix sp.,soil slurry ,NO2,Nitrite-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,22,Anaerobic methane oxidation,0.0017,0.00025,SE,3,River delta estuary ,Marsh,30,5,20-Oct,15,2.23,med,Bare mudflat,soil slurry ,NO2,Nitrite-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,19,Anaerobic methane oxidation,0.0014,0.000175,SE,3,River delta estuary ,Marsh,30,5,40-50,45,1.7,med,Suaeda glauca,soil slurry ,NO2,Nitrite-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,20,Anaerobic methane oxidation,0.0015,0.0005,SE,3,River delta estuary ,Marsh,30,5,40-50,45,0.775,low,Unidentified reed,soil slurry ,NO2,Nitrite-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,21,Anaerobic methane oxidation,0.0013,0.000175,SE,3,River delta estuary ,Marsh,30,5,40-50,45,2.035,med,Tamarix sp.,soil slurry ,NO2,Nitrite-dependent,YES
+Wang et al 2022,36_55N,117_31E,9,22,Anaerobic methane oxidation,0.0013,0.00005,SE,3,River delta estuary ,Marsh,30,5,40-50,45,1.72,med,Bare mudflat,soil slurry ,NO2,Nitrite-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.002,0.00075,SD,5,alpine wetland,Bog,14,50,0-10,5,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0038,NA,SD,5,alpine wetland,Bog,14,50,20-Oct,15,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.004,NA,SD,5,alpine wetland,Bog,14,50,20-30,25,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0018,NA,SD,5,alpine wetland,Bog,14,50,30-40,35,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0017,0.00075,SD,5,alpine wetland,Bog,14,50,40-50,45,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0017,NA,SD,5,alpine wetland,Bog,14,50,50-60,55,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0003,NA,SD,5,alpine wetland,Bog,14,50,60-70,65,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.0001,NA,SD,5,alpine wetland,Bog,14,50,70-80,75,NA,low,NA,"13C tracer, non-slurried incubation",NO2,Nitrite-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.001,NA,SD,5,alpine wetland,Bog,14,50,0-10,5,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.002,0.00075,SD,5,alpine wetland,Bog,14,50,20-Oct,15,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.007,0.0025,SD,5,alpine wetland,Bog,14,50,20-30,25,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.007,0.001,SD,5,alpine wetland,Bog,14,50,30-40,35,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.009,0.002,SD,5,alpine wetland,Bog,14,50,40-50,45,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.007,0.001,SD,5,alpine wetland,Bog,14,50,50-60,55,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.002,0.0005,SD,5,alpine wetland,Bog,14,50,60-70,65,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent,YES
+Xie et al 2020,33_56.25N, 102_49.74E,10,23,Anaerobic methane oxidation,0.002,0.00025,SD,5,alpine wetland,Bog,14,50,70-80,75,NA,low,NA,"13C tracer, non-slurried incubation",NO3,Nitrate-dependent,YES
+Hu et al 2014,30_30.94N,120_2.73E,11,24,Anaerobic methane oxidation,0.0002,NA,NA,3,coastal wetland,Marsh,NA,1,20-30,25,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+Hu et al 2014,30_15.29N,120_3.64E,11,25,Anaerobic methane oxidation,0.0007,NA,NA,3,urban wetland,Marsh,NA,1,20-30,25,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+Hu et al 2014,30_30.94N,120_2.73E,11,24,Anaerobic methane oxidation,0.0055,NA,NA,3,coastal wetland,Marsh,NA,1,50-60,55,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+Hu et al 2014,30_15.29N,120_3.64E,11,25,Anaerobic methane oxidation,0.005,NA,NA,3,urban wetland,Marsh,NA,1,50-60,55,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+Hu et al 2014,30_20.4N,120_16.19E,11,26,Anaerobic methane oxidation,0.002,NA,NA,3,rice paddy field,Paddy,NA,1,50-60,55,NA,NA,Oryza sp.,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+Hu et al 2014,30_30.94N,120_2.73E,11,24,Anaerobic methane oxidation,0.005,NA,NA,3,coastal wetland,Marsh,NA,1,90-100,95,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+Hu et al 2014,30_15.29N,120_3.64E,11,25,Anaerobic methane oxidation,0.004,NA,NA,3,urban wetland,Marsh,NA,1,90-100,95,NA,NA,NA,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+Hu et al 2014,30_20.4N,120_16.19E,11,26,Anaerobic methane oxidation,0.002,NA,NA,3,rice paddy field,Paddy,NA,1,90-100,95,NA,NA,Oryza sp.,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.016,0.0032,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",Mn,Manganese-dependent,YES
+An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.018,0.00325,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",Humic acids,Humic acid-dependent,YES
+An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.02,0.00325,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",Fe,Iron-dependent,YES
+An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.008,0.00325,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.013,0.00325,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",NO3,Nitrate-dependent,YES
+An et al 2024,31_29N ,121_57E,13,28,Anaerobic methane oxidation,0.035,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,0.6,low,Bare mudflat,"13C tracer, soil slurry",SO4,Sulfate-dependent,YES
+An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.02,0.01,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",Mn,Manganese-dependent,YES
+An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.018,0.012,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",Humic acids,Humic acid-dependent,YES
+An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.025,0.013,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",Fe,Iron-dependent,YES
+An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.004,0.013,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.01,0.01,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",NO3,Nitrate-dependent,YES
+An et al 2024,31_29N ,121_57E,13,29,Anaerobic methane oxidation,0.015,0.0093,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.15,low,Phragmites australis,"13C tracer, soil slurry",SO4,Sulfate-dependent,YES
+An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.04,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",Mn,Manganese-dependent,YES
+An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.04,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",Humic acids,Humic acid-dependent,YES
+An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.04,0.008,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",Fe,Iron-dependent,YES
+An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.025,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.055,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",NO3,Nitrate-dependent,YES
+An et al 2024,31_29N ,121_57E,13,30,Anaerobic methane oxidation,0.1,0.008,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.3,low,Spartina mariqueter,"13C tracer, soil slurry",SO4,Sulfate-dependent,YES
+An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.075,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",Mn,Manganese-dependent,YES
+An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.07,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",Humic acids,Humic acid-dependent,YES
+An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.05,0.007,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",Fe,Iron-dependent,YES
+An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.05,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.055,0.005,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",NO3,Nitrate-dependent,YES
+An et al 2024,31_29N ,121_57E,13,31,Anaerobic methane oxidation,0.125,0.007,SD,3,coastal wetland,Marsh,30,1,0-5,2.5,1.45,low,Spartina alterniflora,"13C tracer, soil slurry",SO4,Sulfate-dependent,YES
+Barney et al 2024,47_30.476N,93_27.162W,14,32,Anaerobic methane oxidation,0.05,NA,NA,10,Bog,Bog,15,8,20-30,25,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA,YES
+Barney et al 2024,47_30.476N,93_27.162W,14,32,Anaerobic methane oxidation,0.06,NA,NA,10,Bog,Bog,15,8,40-50,45,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA,YES
+Barney et al 2024,47_30.476N,93_27.162W,14,32,Anaerobic methane oxidation,0.01,NA,NA,10,Bog,Bog,13,8,50-75,62.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA,YES
+Barney et al 2024,47_30.476N,93_27.162W,14,32,Anaerobic methane oxidation,0.0001,NA,NA,10,Bog,Bog,13,8,100-125,112.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA,YES
+Barney et al 2024,47_30.476N,93_27.162W,14,32,Anaerobic methane oxidation,0.0001,NA,NA,10,Bog,Bog,11,8,175-200,187.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA,YES
+Liu et al 2024,28_07N,120_58E,15,33,Anaerobic methane oxidation,0.0017,NA,NA,3,coastal wetland,Marsh,22,30,0-10,5,0.0081297,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Liu et al 2024,28_07N,120_58E,15,33,Anaerobic methane oxidation,0.0003,NA,NA,3,coastal wetland,Marsh,22,30,20-Oct,15,0.0081297,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Liu et al 2024,28_07N,120_58E,15,33,Anaerobic methane oxidation,0.0008,NA,NA,3,coastal wetland,Marsh,22,30,30-40,35,0.0081297,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Liu et al 2024,30_21N,122_11E,15,34,Anaerobic methane oxidation,0.0007,NA,NA,3,coastal wetland,Marsh,22,30,0-10,5,0.00045165,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Liu et al 2024,30_21N,122_11E,15,34,Anaerobic methane oxidation,0.0006,NA,NA,3,coastal wetland,Marsh,22,30,20-Oct,15,0.00045165,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Liu et al 2024,30_21N,122_11E,15,34,Anaerobic methane oxidation,0.0001,NA,NA,3,coastal wetland,Marsh,22,30,30-40,35,0.00045165,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Liu et al 2024,24_30N,117_47N,15,35,Anaerobic methane oxidation,0.0017,NA,NA,3,coastal wetland,Marsh,22,30,0-10,5,0.0072264,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Liu et al 2024,24_30N,117_47N,15,35,Anaerobic methane oxidation,0.0006,NA,NA,3,coastal wetland,Marsh,22,30,20-Oct,15,0.0072264,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Liu et al 2024,24_30N,117_47N,15,35,Anaerobic methane oxidation,0.0014,NA,NA,3,coastal wetland,Marsh,22,30,30-40,35,0.0072264,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Liu et al 2024,21_12.8N,110_32.3N,15,36,Anaerobic methane oxidation,0.0009,NA,NA,3,coastal wetland,Marsh,22,30,0-10,5,0.0144528,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Liu et al 2024,21_12.8N,110_32.3N,15,36,Anaerobic methane oxidation,0.0015,NA,NA,3,coastal wetland,Marsh,22,30,20-Oct,15,0.0144528,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Liu et al 2024,21_12.8N,110_32.3N,15,36,Anaerobic methane oxidation,0.0016,NA,NA,3,coastal wetland,Marsh,22,30,30-40,35,0.0144528,low,Spartina alterniflora,soil slurry,NO3,Nitrate-dependent,YES
+Valenzuela et al 2020,21_9.43N,90_3.15W,17,40,Anaerobic methane oxidation,1.3,0.1,SE,3,coastal wetland,Marsh,28,9,0-15,7.5,NA,NA,NA,"13C tracer, soil slurry",NA,NA,YES
+Shi et al 2017,42_20.93N,126_22.85E,18,41,Anaerobic methane oxidation,2.22072,NA,NA,4,rice paddy field,Paddy,18,0.0417,50-60,55,NA,NA,Oryza sp.,"13C tracer, soil slurry",NO3,Nitrate-dependent,YES
+Shi et al 2017,42_20.93N,126_22.85E,18,41,Anaerobic methane oxidation,0.53712,NA,NA,4,rice paddy field,Paddy,18,0.0417,50-60,55,NA,NA,Oryza sp.,"13C tracer, soil slurry",NA,NA,YES
+Shi et al 2017,42_20.93N,126_22.85E,18,42,Anaerobic methane oxidation,1.67976,NA,NA,4,Fen,Fen,18,0.0417,50-60,55,NA,low,NA,"13C tracer, soil slurry",NO3,Nitrate-dependent,YES
+Shi et al 2017,42_20.93N,126_22.85E,18,42,Anaerobic methane oxidation,0.7044,NA,NA,4,Fen,Fen,18,0.0417,50-60,55,NA,low,NA,"13C tracer, soil slurry",NA,NA,YES
+Zhang et al 2020,31_29.9N, 121_56.0E,19,43,Anaerobic methane oxidation,0.002,0.0005,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Bare mudflat,"13C tracer, soil slurry",NA,NA,YES
+Zhang et al 2020,31_29.9N, 121_56.0E,19,43,Anaerobic methane oxidation,0.0018,0.0001,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Bare mudflat,"13C tracer, soil slurry",NO3,Nitrate-dependent,YES
+Zhang et al 2020,31_29.9N, 121_56.0E,19,43,Anaerobic methane oxidation,0.0012,0.00025,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Bare mudflat,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+Zhang et al 2020,31_29.9N, 121_56.0E,19,43,Anaerobic methane oxidation,0.001,0.00025,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Bare mudflat,"13C tracer, soil slurry",NH4,Annamox,YES
+Zhang et al 2020,31_29.9N, 121_56.0E,19,43,Anaerobic methane oxidation,0.0025,0.00025,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Bare mudflat,"13C tracer, soil slurry",SO4,Sulfate-dependent,YES
+Zhang et al 2020,31_29.9N, 121_56.0E,19,44,Anaerobic methane oxidation,0.0012,0.00025,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Unidentified reed,"13C tracer, soil slurry",NA,NA,YES
+Zhang et al 2020,31_29.9N, 121_56.0E,19,44,Anaerobic methane oxidation,0.0008,0.0001,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Unidentified reed,"13C tracer, soil slurry",NO3,Nitrate-dependent,YES
+Zhang et al 2020,31_29.9N, 121_56.0E,19,44,Anaerobic methane oxidation,0.0005,0.0001,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Unidentified reed,"13C tracer, soil slurry",NO2,Nitrite-dependent,YES
+Zhang et al 2020,31_29.9N, 121_56.0E,19,44,Anaerobic methane oxidation,0.0005,0.0001,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Unidentified reed,"13C tracer, soil slurry",NH4,Annamox,YES
+Zhang et al 2020,31_29.9N, 121_56.0E,19,44,Anaerobic methane oxidation,0.0025,0.00025,SD,3,coastal wetland,Marsh,NA,120,0-100,50,NA,NA,Unidentified reed,"13C tracer, soil slurry",SO4,Sulfate-dependent,YES
+Blazewicz et al 2012,18_18N,65_48S,1,1,Methanogenesis ,0.351,0.069,SE,4,wet tropical forest,Swamp,25,80,0-15,7.5,NA,NA,Cyrilla racemiflora,"13C tracer, soil slurry",NA,NA,NO
+Blazewicz et al 2012,64_48N,147_54W,1,2,Methanogenesis ,7.858,0.423,SE,5,Fen,Fen,25,80,0-15,7.5,NA,low,NA,"13C tracer, soil slurry",NA,NA,NO
+Holmes et al 2014,26_17.27N, 80_24.67W,2,3,Methanogenesis ,0.6,NA,NA,3,Subtropical wetland,Marsh,23,35,NA,NA,NA,NA,Caladium jamaicense,soil slurry ,Acetate,Acetoclastic,NO
+Holmes et al 2014,26_19.02N,80_23.10W,2,4,Methanogenesis ,2.3,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,NA,soil slurry ,Acetate,Acetoclastic,NO
+Holmes et al 2014,26_21.59N,80_22.20W,2,5,Methanogenesis ,1.9,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,Typha sp.,soil slurry ,Acetate,Acetoclastic,NO
+Holmes et al 2014,26_17.27N, 80_24.67W,2,3,Methanogenesis ,0.2,NA,NA,3,Subtropical wetland,Marsh,23,35,NA,NA,NA,NA,Caladium jamaicense,soil slurry ,H2/CO2,Hydrogenotrophic,NO
+Holmes et al 2014,26_19.02N,80_23.10W,2,4,Methanogenesis ,0.8,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,NA,soil slurry ,H2/CO2,Hydrogenotrophic,NO
+Holmes et al 2014,26_21.59N,80_22.20W,2,5,Methanogenesis ,1.8,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,Typha sp.,soil slurry ,H2/CO2,Hydrogenotrophic,NO
+Holmes et al 2014,26_17.27N, 80_24.67W,2,3,Methanogenesis ,0.8,NA,NA,3,Subtropical wetland,Marsh,23,35,NA,NA,NA,NA,Caladium jamaicense,soil slurry ,NA,NA,NO
+Holmes et al 2014,26_19.02N,80_23.10W,2,4,Methanogenesis ,3.1,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,NA,soil slurry ,NA,NA,NO
+Holmes et al 2014,26_21.59N,80_22.20W,2,5,Methanogenesis ,3.7,NA,NA,3,Subtropical wetland,Marsh,23,25,NA,NA,NA,NA,Typha sp.,soil slurry ,NA,NA,NO
+Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,4.23,0.385,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,NA,NA,NO
+Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,4.07,0.385,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Acetate,Acetoclastic,YES
+Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,4.61,0.385,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,H2/CO2,Hydrogenotrophic,YES
+Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,4.07,0.769,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Methanol,Methylotrophic ,YES
+Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,4.09,0.769,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,monomethylamine,Methylotrophic ,YES
+Zalman et al 2018,47_30.304N,93_29.339W,3,6,Methanogenesis ,3.84,0.385,SE,3,Fen,Fen,18,13,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,dimethylsulfide,Methylotrophic ,YES
+Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,1.52,0.435,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,NA,NA,NO
+Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,1.74,0.435,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Acetate,Acetoclastic,YES
+Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,2.17,0.87,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,H2/CO2,Hydrogenotrophic,YES
+Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,1.72,0.217,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Methanol,Methylotrophic ,YES
+Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,2.17,0.109,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,monomethylamine,Methylotrophic ,YES
+Zalman et al 2018,47_30.388N,93_27.256W,3,7,Methanogenesis ,2.17,0.13,SE,3,Bog,Bog,18,23,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,dimethylsulfide,Methylotrophic ,YES
+Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.58,0.032,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,NA,NA,NO
+Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.65,0.13,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Acetate,Acetoclastic,YES
+Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.45,0.006,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,H2/CO2,Hydrogenotrophic,YES
+Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.58,0.013,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,Methanol,Methylotrophic ,YES
+Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.58,0.006,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,monomethylamine,Methylotrophic ,YES
+Zalman et al 2018,47_10.745N,92_42.877W,3,8,Methanogenesis ,0.58,0.13,SE,3,Bog,Bog,18,77,0-25,12.5,NA,low,Sphagnum sp.,soil slurry ,dimethylsulfide,Methylotrophic ,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,3.5,3.5,SE,3,Arctic wetland,Marsh,5,7,0,0,0.007,low,NA,non-slurried incubation,NA,NA,NO
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,4.2,2,SE,3,Arctic wetland,Marsh,20,7,0,0,0.007,low,NA,non-slurried incubation,NA,NA,NO
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,4.4,2,SE,3,Arctic wetland,Marsh,30,7,0,0,0.007,low,NA,non-slurried incubation,NA,NA,NO
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,2,1.5,SE,3,Arctic wetland,Marsh,40,7,0,0,0.007,low,NA,non-slurried incubation,NA,NA,NO
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,3.9,NA,SE,3,Arctic wetland,Marsh,5,7,0,0,0.007,low,NA,non-slurried incubation,Acetate,Acetoclastic,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,3.9,1,SE,3,Arctic wetland,Marsh,20,7,0,0,0.007,low,NA,non-slurried incubation,Acetate,Acetoclastic,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,5.1,0.75,SE,3,Arctic wetland,Marsh,30,7,0,0,0.007,low,NA,non-slurried incubation,Acetate,Acetoclastic,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,3.5,0.25,SE,3,Arctic wetland,Marsh,40,7,0,0,0.007,low,NA,non-slurried incubation,Acetate,Acetoclastic,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,1.7,1,SE,3,Arctic wetland,Marsh,5,7,0,0,0.007,low,NA,non-slurried incubation,Methanol,Methylotrophic ,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,1.8,1.5,SE,3,Arctic wetland,Marsh,20,7,0,0,0.007,low,NA,non-slurried incubation,Methanol,Methylotrophic ,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,1,NA,SE,3,Arctic wetland,Marsh,30,7,0,0,0.007,low,NA,non-slurried incubation,Methanol,Methylotrophic ,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,0.8,NA,SE,3,Arctic wetland,Marsh,40,7,0,0,0.007,low,NA,non-slurried incubation,Methanol,Methylotrophic ,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,3.9,0.75,SE,3,Arctic wetland,Marsh,5,7,0,0,0.007,low,NA,non-slurried incubation,H2/CO2,Hydrogenotrophic,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,6.2,1.75,SE,3,Arctic wetland,Marsh,20,7,0,0,0.007,low,NA,non-slurried incubation,H2/CO2,Hydrogenotrophic,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,10,1,SE,3,Arctic wetland,Marsh,30,7,0,0,0.007,low,NA,non-slurried incubation,H2/CO2,Hydrogenotrophic,YES
+Blake et al 2015,78_50N,11_30E,4,9,Methanogenesis ,6.2,0.75,SE,3,Arctic wetland,Marsh,40,7,0,0,0.007,low,NA,non-slurried incubation,H2/CO2,Hydrogenotrophic,YES
+Hanna et al 2020,47_30.304N,93_29.339W,5,10,Methanogenesis ,5.2,1.1,SE,3,Fen,Fen,18,7,12.5,12.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_30.304N,93_29.339W,5,10,Methanogenesis ,1.66,0.49,SE,3,Fen,Fen,18,7,37.5,37.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_30.304N,93_29.339W,5,10,Methanogenesis ,0.26,0.04,SE,3,Fen,Fen,18,7,75,75,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_30.304N,93_29.339W,5,10,Methanogenesis ,0.13,0.01,SE,3,Fen,Fen,18,7,125,125,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_30.304N,93_29.339W,5,10,Methanogenesis ,0.04,0.01,SE,3,Fen,Fen,18,7,175,175,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_30.388N,93_27.256W,5,11,Methanogenesis ,2.88,0.22,SE,3,Bog,Bog,18,7,12.5,12.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_30.388N,93_27.256W,5,11,Methanogenesis ,0.46,0.04,SE,3,Bog,Bog,18,7,37.5,37.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_30.388N,93_27.256W,5,11,Methanogenesis ,0.07,0,SE,3,Bog,Bog,18,7,75,75,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_30.388N,93_27.256W,5,11,Methanogenesis ,0.13,0.01,SE,3,Bog,Bog,18,7,125,125,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_30.388N,93_27.256W,5,11,Methanogenesis ,0.03,0.01,SE,3,Bog,Bog,18,7,175,175,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_10.745N,92_42.877W,5,12,Methanogenesis ,0.4,0.1,SE,3,Bog,Bog,18,7,12.5,12.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_10.745N,92_42.877W,5,12,Methanogenesis ,0.61,0.13,SE,3,Bog,Bog,18,7,37.5,37.5,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_10.745N,92_42.877W,5,12,Methanogenesis ,0.21,0,SE,3,Bog,Bog,18,7,75,75,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_10.745N,92_42.877W,5,12,Methanogenesis ,0.01,0,SE,3,Bog,Bog,18,7,125,125,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Hanna et al 2020,47_10.745N,92_42.877W,5,12,Methanogenesis ,0.03,0,SE,3,Bog,Bog,18,7,175,175,NA,low,Sphagnum sp.,"13C tracer, soil slurry",NA,NA,NO
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Methanogenesis ,0.04314,0.0235,SE,5,tidal freshwater swamp,Swamp,22,3,0-5,2.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,NO
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Methanogenesis ,0.0332,0.01395,SE,5,tidal freshwater swamp,Swamp,22,3,10-May,7.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,NO
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Methanogenesis ,0.01274,0.0035,SE,5,tidal freshwater swamp,Swamp,22,3,20-Oct,15,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,NO
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,15,Methanogenesis ,0.00385,0.00092,SE,5,tidal freshwater swamp,Swamp,22,3,20-30,25,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,NO
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Methanogenesis ,0.01361,0.00471,SE,5,tidal freshwater swamp,Swamp,22,3,0-5,2.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,NO
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Methanogenesis ,0.00419,0.00121,SE,5,tidal freshwater swamp,Swamp,22,3,10-May,7.5,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,NO
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Methanogenesis ,0.03781,0.02803,SE,5,tidal freshwater swamp,Swamp,22,3,20-Oct,15,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,NO
+Megonigal & Schlesinger 2002,34_44.94N,77_6.77W,7,16,Methanogenesis ,0.01851,0.01072,SE,5,tidal freshwater swamp,Swamp,22,3,20-30,25,NA,NA,Fraxinus caroliniana,shaken soil slurry ,NA,NA,NO
+An et al 2024,31_29N ,121_57E,13,28,Methanogenesis ,0.0018,0.000075,SD,3,coastal wetland,Marsh,30,4,0-5,2.5,0.6,low,Bare mudflat,soil slurry ,NA,NA,NO
+An et al 2024,31_29N ,121_57E,13,29,Methanogenesis ,0.0013,0.0003,SD,3,coastal wetland,Marsh,30,4,0-5,2.5,1.15,low,Phragmites australis,soil slurry ,NA,NA,NO
+An et al 2024,31_29N ,121_57E,13,30,Methanogenesis ,0.0015,0.0001,SD,3,coastal wetland,Marsh,30,4,0-5,2.5,1.3,low,Spartina mariqueter,soil slurry ,NA,NA,NO
+An et al 2024,31_29N ,121_57E,13,31,Methanogenesis ,0.0017,0.0002,SD,3,coastal wetland,Marsh,30,4,0-5,2.5,1.45,low,Spartina alterniflora,soil slurry ,NA,NA,NO
+Barney et al 2024,47_30.476N,93_27.162W,14,32,Methanogenesis ,1,NA,NA,10,Bog,Bog,15,8,20-30,25,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA,NO
+Barney et al 2024,47_30.476N,93_27.162W,14,32,Methanogenesis ,0.4,NA,NA,10,Bog,Bog,15,8,40-50,45,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA,NO
+Barney et al 2024,47_30.476N,93_27.162W,14,32,Methanogenesis ,0.25,NA,NA,10,Bog,Bog,13,8,50-75,62.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA,NO
+Barney et al 2024,47_30.476N,93_27.162W,14,32,Methanogenesis ,0.4,NA,NA,10,Bog,Bog,13,8,100-125,112.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA,NO
+Barney et al 2024,47_30.476N,93_27.162W,14,32,Methanogenesis ,0.27,NA,NA,10,Bog,Bog,11,8,175-200,187.5,NA,low,Sphagnum sp.,"13C tracer, non-slurried incubation",NA,NA,NO
+Sabrekov et al 2024,60_53.51N,68_40.62E,16,37,Methanogenesis ,3.6,NA,NA,3,Bog,Bog,15,60,15-20,17.5,0.00144528,low,Sphagnum sp.,shaken soil slurry ,NA,NA,NO
+Sabrekov et al 2024,60_53.51N,68_40.62E,16,37,Methanogenesis ,0.276,NA,NA,3,Bog,Bog,10,60,40-50,45,0.00144528,low,Sphagnum sp.,shaken soil slurry ,NA,NA,NO
+Sabrekov et al 2024,60_53.51N,68_40.62E,16,37,Methanogenesis ,0.0432,NA,NA,3,Bog,Bog,5,150,100,100,0.00072264,low,Sphagnum sp.,shaken soil slurry ,NA,NA,NO
+Sabrekov et al 2024,60_53.51N,68_40.62E,16,37,Methanogenesis ,0.036,NA,NA,3,Bog,Bog,5,150,200,200,0.00144528,low,Sphagnum sp.,shaken soil slurry ,NA,NA,NO
+Sabrekov et al 2024,60_53.51N,68_40.62E,16,37,Methanogenesis ,0.0432,NA,NA,3,Bog,Bog,5,150,300,300,0.00234858,low,Sphagnum sp.,shaken soil slurry ,NA,NA,NO
+Sabrekov et al 2024,61_3.83N,69_27.67E,16,38,Methanogenesis ,0.012,NA,NA,3,Bog,Bog,5,150,100,100,NA,low,Sphagnum sp.,shaken soil slurry ,NA,NA,NO
+Sabrekov et al 2024,60_54.58N,71_17.96E,16,39,Methanogenesis ,0.024,NA,NA,3,Bog,Bog,5,150,100,100,NA,low,Sphagnum sp.,shaken soil slurry ,NA,NA,NO
+Sabrekov et al 2024,60_54.58N,71_17.96E,16,39,Methanogenesis ,0.048,NA,NA,3,Bog,Bog,5,150,200,200,NA,low,Sphagnum sp.,shaken soil slurry ,NA,NA,NO
+Glagolev et al 2022,60_53.51N,68_40.62E,21,46,Methanogenesis ,2.5,NA,NA,NA,Bog,Bog,15,NA,40-50,45,NA,low,Sphagnum sp.,shaken soil slurry ,NA,NA,NO
+Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.08,0.0905,SE,9,freshwater wetland,Marsh,14,14,65,65,0.02,low,NA,soil slurry,NA,NA,NO
+Vizza et al 2017,60_22.746N,144_58.508W,22,48,Methanogenesis ,0.022,0.03875,SE,5,coastal wetland,Marsh,14,14,55,55,5,high,Carex sp.,soil slurry,NA,NA,NO
+Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.15,0.1,SE,5,freshwater wetland,Marsh,14,14,65,65,0.02,low,Bare mudflat,soil slurry,NA,NA,NO
+Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.14,0.125,SE,5,freshwater wetland,Marsh,14,14,65,65,0.02,low,Menyanthes trifoliata,soil slurry,NA,NA,NO
+Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.45,0.2,SE,5,freshwater wetland,Marsh,14,14,65,65,0.02,low,Equisetum variegatum,soil slurry,NA,NA,NO
+Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.5,0.25,SE,5,freshwater wetland,Marsh,14,14,65,65,0.02,low,Nuphar polysepalum,soil slurry,NA,NA,NO
+Vizza et al 2017,60_22.746N,144_58.508W,22,47,Methanogenesis ,0.2,0.09,SE,5,freshwater wetland,Marsh,14,14,65,65,0.02,low,Hippuris vulgaris,soil slurry,NA,NA,NO
+Jiang et al 2024,26_0.6N,119_34.2E,23,49,Methanogenesis ,0.075,NA,SD,3,tidal wetland,Marsh,32.95,1,0-10,5,NA,NA,Cyperus malacensis,shaken soil slurry ,NA,NA,NO
+Jiang et al 2024,26_0.6N,119_34.2E,23,50,Methanogenesis ,0.12,NA,SD,3,tidal wetland,Marsh,32.95,1,0-10,5,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA,NO
+Jiang et al 2024,26_0.6N,119_34.2E,23,51,Methanogenesis ,0.15,NA,SD,3,tidal wetland,Marsh,32.95,1,0-10,5,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA,NO
+Jiang et al 2024,26_0.6N,119_34.2E,23,52,Methanogenesis ,0.15,NA,SD,3,tidal wetland,Marsh,32.95,1,0-10,5,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA,NO
+Jiang et al 2024,26_0.6N,119_34.2E,23,49,Methanogenesis ,0.04,NA,SD,3,tidal wetland,Marsh,32.95,1,20-Oct,15,NA,NA,Cyperus malacensis,shaken soil slurry ,NA,NA,NO
+Jiang et al 2024,26_0.6N,119_34.2E,23,50,Methanogenesis ,0.08,NA,SD,3,tidal wetland,Marsh,32.95,1,20-Oct,15,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA,NO
+Jiang et al 2024,26_0.6N,119_34.2E,23,51,Methanogenesis ,0.095,NA,SD,3,tidal wetland,Marsh,32.95,1,20-Oct,15,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA,NO
+Jiang et al 2024,26_0.6N,119_34.2E,23,52,Methanogenesis ,0.12,NA,SD,3,tidal wetland,Marsh,32.95,1,20-Oct,15,NA,NA,Spartina alterniflora,shaken soil slurry ,NA,NA,NO
+Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,1.75,0.02,NA,3,alpine wetland,Fen,30,180,10,10,NA,low,NA,shaken soil slurry ,NA,NA,NO
+Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,1.65,0.07,NA,3,alpine wetland,Fen,30,180,20,20,NA,low,NA,shaken soil slurry ,NA,NA,NO
+Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,1.36,0.02,NA,3,alpine wetland,Fen,30,180,30,30,NA,low,NA,shaken soil slurry ,NA,NA,NO
+Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.49,0.06,NA,3,alpine wetland,Fen,15,180,10,10,NA,low,NA,shaken soil slurry ,NA,NA,NO
+Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.36,0.04,NA,3,alpine wetland,Fen,15,180,20,20,NA,low,NA,shaken soil slurry ,NA,NA,NO
+Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.21,0.05,NA,3,alpine wetland,Fen,15,180,30,30,NA,low,NA,shaken soil slurry ,NA,NA,NO
+Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.12,0.01,NA,3,alpine wetland,Fen,6,180,10,10,NA,low,NA,shaken soil slurry ,NA,NA,NO
+Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.12,0.01,NA,3,alpine wetland,Fen,6,180,20,20,NA,low,NA,shaken soil slurry ,NA,NA,NO
+Tian et al 2011,33_56N,102_52E,24,53,Methanogenesis ,0.12,0.023,NA,3,alpine wetland,Fen,6,180,30,30,NA,low,NA,shaken soil slurry ,NA,NA,NO
+Williams and Yavitt 2010,42_19.7N,76_28.6W,25,54,Methanogenesis ,0.067,NA,NA,50,Fen,Fen,23,3,0-25,12.5,NA,low,Lythrum salicaria,soil slurry,NA,NA,NO
+Williams and Yavitt 2010,42_19.7N,76_28.6W,25,54,Methanogenesis ,0.675,NA,NA,50,Fen,Fen,23,3,0-25,12.5,NA,low,Carex sp.,soil slurry,NA,NA,NO
+Williams and Yavitt 2010,42_19.7N,76_28.6W,25,54,Methanogenesis ,1.555,NA,NA,50,Fen,Fen,23,3,0-25,12.5,NA,low,Juncus effuses,soil slurry,NA,NA,NO
+Williams and Yavitt 2010,42_19.7N,76_28.6W,25,54,Methanogenesis ,1.647,NA,NA,50,Fen,Fen,23,3,0-25,12.5,NA,low,Typha sp.,soil slurry,NA,NA,NO
+Gauthier et al 2015,57_02.17N,2_14.00W,39,77,Methanogenesis ,0.2,yes_later,SEM,18,peatland,Bog,20,2,NA,NA,NA,low,Sphagnum sp.,13C pool dilution,NA,NA,NO
+Murase et al 2019,57_02.17N,2_14.00W,39,77,Methanogenesis ,0.43,yes_later,SEM,18,peatland,Bog,20,60,NA,NA,NA,low,Sphagnum sp.,13C pool dilution,NA,NA,NO

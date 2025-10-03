@@ -1,7 +1,7 @@
 ---
-title: "A quantitative synthesis of wetland methane production and consumption rates with regression tree driver analysis—full reproducible code"
+title: "A quantitative synthesis of ex situ methane production and consumption rates in wetlands with regression tree driver analysis—full reproducible code"
 author: "Satya Kent"
-date: "2025-3-14"
+date: "2025-10-3"
 output: html_document
 ---
 
@@ -10,17 +10,29 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Install packages
+```{r}
+library(tidyverse)
+library(dplyr)
+library(GGally)
+library(forcats)
+library(dunn.test)
+library(ggsignif)
+library(dplyr)
+library(maps)
+library(xgboost)
+library(tidymodels)
+library(pdp)
+```
+
+
 Abbreviations:
 MOx = aerobic methane oxidation
 AOM = anaerobic methane oxidation
 
 Load data and clean for modeling
 ```{r}
-
 #Load data 
-library(tidyverse)
-library(dplyr)
-
 flux_rates=read_csv("flux_rates_meta-analysis_final.csv") 
 
 # Specify the order of x-axis categories
@@ -38,10 +50,9 @@ flux_rates_filtered <- flux_rates[, c("Pathway", "Mean_rate", "Wetland_type", "I
 flux_rates_filtered <- flux_rates_filtered %>%
   dplyr::select(-Salinity_cat)
 
-#re-organize datasets for modeling of each pathway separately.
-
-#hot encode categorical values to integers (machine learning models generally perform better when hot encoding categorical predictors, plus xgboost requires this)
-#Save the factor levels for categorical variables before encoding (we'll need later to plot the PDP's for categorical predictors)
+#re-organize datasets for modeling of each pathway separately 
+#hot encode categorical values to integers (ML models generally perform better when hot encoding categorical predictors)
+#Save the factor levels for categorical variables before encoding (we'll need later to plot the PDPs for categorical predictors)
 
 #MGEN
 MGEN_filtered <- flux_rates_filtered[flux_rates_filtered$Pathway == "Methanogenesis", ]
@@ -100,8 +111,6 @@ AOM_encoded <- AOM_filtered %>%
 
 Data exploration 
 ```{r, warning=FALSE, message=FALSE}
-library(GGally)
-
 #Methanogenesis 
 
 boxplot(MGEN_filtered$Mean_rate)
@@ -164,8 +173,6 @@ chisq_test_MGEN <- MGEN_filtered %>%
     chisq.test()
 
 print(chisq_test_MGEN)
-
-library(forcats)
 
 proportions_MGEN <- MGEN_filtered %>%
     filter(!is.na(Dominant_vegetation), !is.na(Wetland_type)) %>%
@@ -263,8 +270,42 @@ summarise(unique_studies = n_distinct(Study))
 
 Rate data significance testing and boxplot figure.
 ```{r}
-library(dunn.test)
-library(ggsignif)
+#Mann Whitney U Test 
+
+#Median (IQR) potential methanogenesis rates were 2.17 μmol CH4 g-1 soil d-1 (1.35–4.07), significantly higher than median (IQR) substrate-limited methanogenesis rates of 0.21 μmol CH4 g-1 soil d-1 (0.043–1.00) (W=337.5, p < 0.001). 
+
+#Subset the dataframe to only include the Methanogenesis pathway with the Potential column 
+  methanogenesis_data <- flux_rates %>%
+     filter(Pathway == "Methanogenesis")
+
+wilcox.test(Mean_rate ~ Potential, data = methanogenesis_data)
+
+#Compare Group Medians and IQR (Q1-Q3)
+group_summary <- methanogenesis_data %>%
+     group_by(Potential) %>%
+     summarise(
+         median_rate = median(Mean_rate, na.rm = TRUE),
+         q1_rate = quantile(Mean_rate, probs = 0.25, na.rm = TRUE),
+         q3_rate = quantile(Mean_rate, probs = 0.75, na.rm = TRUE),
+         mean_rate = mean(Mean_rate, na.rm = TRUE),
+         n = n()
+     )
+ 
+print(group_summary)
+
+ if ("YES" %in% group_summary$Potential && "NO" %in% group_summary$Potential) {
+     potential_median <- group_summary$median_rate[group_summary$Potential == "YES"]
+     unmended_median <- group_summary$median_rate[group_summary$Potential == "NO"]
+     
+     if (potential_median > unmended_median) {
+        cat("\nConclusion: The 'Potential' group (YES) has a significantly higher median rate than the 'Unamended' group (NO).\n")
+     } else {
+         cat("\nConclusion: The 'Unamended' group (NO) has a significantly higher median rate than the 'Potential' group (YES).\n")
+     }
+ } else {
+     cat("\nCould not automatically determine the direction of the difference.\nPlease inspect the summary table above.\n")
+ }
+
 
 #Kruskal-Wallis Test with post-hoc Dunn test.
 
@@ -335,14 +376,11 @@ flux_rates$Lat_Dec <- sapply(flux_rates$Lat, convert_to_decimal)
 flux_rates$Long_Dec <- sapply(flux_rates$Long, convert_to_decimal)
 
 # create a count column counting each coordinate grouped by process (this is only for plotting purposes)
-library(dplyr)
 flux_rates <- flux_rates %>%
   group_by(Lat_Dec, Long_Dec, Pathway) %>%
   mutate(count = n()) %>% 
   ungroup()
 
-
-library(maps)
 
 # Create a world map
 world_map <- map_data("world")
@@ -382,10 +420,6 @@ Fig1=ggplot() +
 Methanogenesis boosted regression tree model
 ```{r}
 #This workflow combines the strengths of xgboost for model building and tidymodels for cross-validation, tuning, and organizing the workflow.
-
-# Load necessary libraries
-library(xgboost)
-library(tidymodels)
 
 # Set variables for model
 data <- MGEN_encoded
@@ -634,26 +668,6 @@ k <- 9000
 aic_xgb <- n * log(rss / n) + 2 * k
 
 
-
-# AIC=nlog(RMSE)+2p (Shabani 2017)
-
-# Get number of observations
-n <- nrow(MGEN_encoded)
-
-# Extract RMSE from collected metrics
-RMSE_value <- 1.27
-
-# Define number of explanatory variables (excluding response variable)
-P <- ncol(MGEN_encoded) - 1  
-
-# Compute AIC
-AIC_value <- n * log(RMSE_value) + 2 * P
-
-# Print result
-AIC_value
-
-
-
 # Fit the final model on the full dataset. 
 final_xgb_fit <- workflow_final %>%
   fit(data = data)
@@ -698,8 +712,6 @@ triMGEN=ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gai
 
 
 ##partial dependency plots. 
-
-library(pdp)
 
 predictor_names <- colnames(predictors)
 
@@ -820,10 +832,6 @@ MGEN_pdp_domveg <- ggplot(pdp_domveg_df, aes(x = factor(species, levels = specie
 Aerobic methane oxidation boosted regression tree model
 ```{r}
 #This workflow combines the strengths of xgboost for model building and tidymodels for cross-validation, tuning, and organizing the workflow.
-
-# Load necessary libraries
-library(xgboost)
-library(tidymodels)
 
 # Set variables for model
 data <- MOX_encoded
@@ -1074,23 +1082,6 @@ k <- 8500
 # Compute AIC
 aic_xgb <- n * log(rss / n) + 2 * k
 
-# AIC=nlog(RMSE)+2p (Shabani 2017)
-
-# Get number of observations
-n <- nrow(MOX_encoded)
-
-# Extract RMSE from collected metrics
-RMSE_value <- 2.76
-
-# Define number of explanatory variables (excluding response variable)
-P <- ncol(MOX_encoded) - 1  
-
-# Compute AIC
-AIC_value <- n * log(RMSE_value) + 2 * P
-
-# Print result
-AIC_value
-
 # Extract the trained model and plot variable importance
 xgb_model_final <- extract_fit_engine(final_xgb_fit)
 importance_matrix_final <- xgb.importance(model = xgb_model_final)
@@ -1130,8 +1121,6 @@ triMOX=ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gain
 
 
 ##partial dependency plots. 
-
-library(pdp)
 
 predictor_names <- colnames(predictors)
 
@@ -1252,10 +1241,6 @@ print(MOX_pdp_domveg)
 Anaerobic methane oxidation boosted regression tree model
 ```{r}
 #This workflow combines the strengths of xgboost for model building and tidymodels for cross-validation, tuning, and organizing the workflow.
-
-# Load necessary libraries
-library(xgboost)
-library(tidymodels)
 
 # Set variables for model
 data <- AOM_encoded
@@ -1489,9 +1474,6 @@ final_xgb_fit <- workflow_final %>%
   fit(data = data)
 
 #Calculate AIC
-
-#RSS method. AIC=nlog(rss/n) + 2k
-
 # Extract predictions from the final model
 preds <- predict(final_xgb_fit, new_data = data)$.pred
 
@@ -1507,22 +1489,7 @@ k <- 7500
 # Compute AIC
 aic_xgb <- n * log(rss / n) + 2 * k
 
-# RMSE method. AIC=nlog(RMSE)+2p (Shabani 2017)
 
-# Get number of observations
-n <- nrow(AOM_encoded)
-
-# Extract RMSE from collected metrics
-RMSE_value <- 0.21
-
-# Define number of explanatory variables (excluding response variable)
-P <- ncol(AOM_encoded) - 1  
-
-# Compute AIC
-AIC_value <- n * log(RMSE_value) + 2 * P
-
-# Print result
-AIC_value
 
 # Extract the trained model and plot variable importance
 xgb_model_final <- extract_fit_engine(final_xgb_fit)
@@ -1563,8 +1530,6 @@ triAOM=ggplot(importance_df, aes(x = reorder(Feature, Gain_percentage), y = Gain
         legend.position = "none", text = element_text(size = 12))
 
 ##partial dependency plots. 
-
-library(pdp)
 
 predictor_names <- colnames(predictors)
 
@@ -1683,10 +1648,9 @@ print(AOM_pdp_domveg)
 
 Final figures for paper
 ```{r}
-library(ggpubr)
+#Saved as .tiff files with dpi=1000
 
-#Main paper. Saved as .tiff files with dpi=1000
-
+#Main text
 # Fig 1
 ggsave("Fig1.tiff", plot = Fig1, device = "tiff", dpi = 800, width = 8, height = 5.3, bg="white")
 
@@ -1703,7 +1667,7 @@ Fig4=ggarrange(MGEN_pdp_domveg,MOX_pdp_domveg, AOM_pdp_domveg, MGEN_pdp_temp, MO
 
 ggsave("Fig4.tiff", plot = Fig4, device = "tiff", dpi = 1000, width = 13, height = 11,  bg="white")
 
-#supplement
+#supplemental text
 
 #learning curves. Vertical
 ggarrange(MGEN_LC,MOX_LC, AOM_LC, ncol = 1, nrow = 3)
